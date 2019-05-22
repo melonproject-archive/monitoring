@@ -6,5 +6,11 @@ export default gql`
       id
       name
     }
+
+    fundCounts(orderBy: timestamp) {
+      active
+      nonActive
+      timestamp
+    }
   }
 `;

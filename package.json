@@ -29,11 +29,13 @@
     "graphql-tag": "^2.10.0",
     "hoist-non-react-statics": "^3.3.0",
     "isomorphic-ws": "^4.0.1",
+    "moment": "^2.24.0",
     "next-with-apollo": "^3.3.2",
     "ramda": "^0.26.0",
     "react": "^16.8.3",
     "react-apollo": "^2.5.5",
     "react-dom": "^16.8.3",
+    "recharts": "^1.6.2",
     "subscriptions-transport-ws": "^0.9.16"
   },
   "devDependencies": {
