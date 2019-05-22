@@ -1,0 +1,20 @@
+# Dependencies.
+node_modules/
+
+# Generated files.
+coverage/
+build/
+
+# Ignore all log files.
+*.log
+
+# Ignore all dot files.
+.*
+
+# Allowed dot files.
+!.babelrc
+!.gitignore
+!.prettierignore
+!.prettierrc
+!.editorconfig
+!.dockerignore
