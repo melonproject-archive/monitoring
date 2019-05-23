@@ -19,7 +19,9 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
   return (
     <Grid container={true} spacing={6}>
       <Grid item={true} xs={12}>
-        <Link href="/engine">Engine</Link>
+        <Link href={'/engine'}>
+          <a>Engine</a>
+        </Link>
       </Grid>
       <Grid item={true} xs={12}>
         <Paper>
@@ -32,8 +34,8 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
                 tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
               />
               <YAxis domain={[0, 30]} />
-              <Area type="linear" dataKey="active" stroke="#8884d8" />
-              <Area type="linear" dataKey="nonActive" stroke="#aaaaaa" />
+              <Area type="stepAfter" dataKey="active" stroke="#8884d8" />
+              <Area type="stepAfter" dataKey="nonActive" stroke="#aaaaaa" />
               <Tooltip />
             </AreaChart>
           </ResponsiveContainer>
