@@ -5,5 +5,10 @@ export default gql`
     investors(orderBy: id) {
       id
     }
+
+    investorCounts(orderBy: timestamp) {
+      numberOfInvestors
+      timestamp
+    }
   }
 `;

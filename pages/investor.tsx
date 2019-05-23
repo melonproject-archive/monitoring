@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, withStyles, WithStyles, StyleRulesCallback } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 import { createQuantity, createToken, toFixed } from '@melonproject/token-math';
@@ -40,11 +40,13 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
       <Grid item={true} xs={12}>
         {investor && (
           <>
+            <Typography variant="h5">Investor</Typography>
             <div>Address: {investor.id}</div>
           </>
         )}
       </Grid>
       <Grid item={true} xs={12}>
+        <Typography variant="h5">Investment Log</Typography>
         {investmentLog.map(item => (
           <div key={item.id}>
             {item.time} - {item.action} - {item.shares} - {item.fund.name}
