@@ -5,6 +5,10 @@ export default gql`
     fund(id: $fund) {
       id
       name
+      calculationsUpdates(orderBy: timestamp) {
+        gav
+        timestamp
+      }
     }
   }
 `;
