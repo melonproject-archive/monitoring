@@ -17,7 +17,7 @@ const Assets: React.FunctionComponent<AssetProps> = props => {
   return (
     <Grid container={true} spacing={6}>
       <Grid item={true} xs={12}>
-        <Typography variant="h4">Asset list</Typography>
+        <Typography variant="h5">Asset list</Typography>
 
         {assets.map(item => (
           <div key={item.id}>

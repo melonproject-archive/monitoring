@@ -21,7 +21,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
   return (
     <Grid container={true} spacing={6}>
       <Grid item={true} xs={12}>
-        <Typography variant="h4">Number of investors</Typography>
+        <Typography variant="h5">Number of investors</Typography>
         <ResponsiveContainer height={200} width="90%">
           <LineChart width={400} height={400} data={investorCounts}>
             <XAxis
@@ -32,12 +32,15 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
             />
             <YAxis domain={[0, 40]} />
             <Line type="stepAfter" dataKey="numberOfInvestors" dot={false} />
-            <Tooltip />
+            <Tooltip
+              labelFormatter={value => 'Date: ' + moment(value * 1000).format('MM/DD/YYYY')}
+              formatter={value => [value, 'Number of investors']}
+            />
           </LineChart>
         </ResponsiveContainer>
       </Grid>
       <Grid item={true} xs={12}>
-        <Typography variant="h4">Investor list</Typography>
+        <Typography variant="h5">Investor list</Typography>
 
         {investors.map(item => (
           <div key={item.id}>

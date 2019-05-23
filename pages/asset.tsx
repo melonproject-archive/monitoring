@@ -37,7 +37,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
   return (
     <Grid container={true} spacing={6}>
       <Grid item={true} xs={12}>
-        <Typography variant="h4">Asset price</Typography>
+        <Typography variant="h5">Asset</Typography>
 
         {asset && (
           <>
@@ -47,6 +47,8 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
         )}
       </Grid>
       <Grid item={true} xs={12}>
+        <Typography variant="h5">Asset price</Typography>
+
         <ResponsiveContainer height={200} width="80%">
           <LineChart width={400} height={400} data={priceUpdates}>
             <XAxis

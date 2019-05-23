@@ -8,6 +8,10 @@ import { createQuantity, createToken, toFixed } from '@melonproject/token-math';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine } from 'recharts';
 import moment from 'moment';
 
+import MaterialTable from 'material-table';
+
+import { standardDeviation } from '../utils/finance';
+
 const styles: StyleRulesCallback = theme => ({});
 
 type FundProps = WithStyles<typeof styles>;
@@ -34,11 +38,33 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         gav: item.gav ? toFixed(createQuantity(token, item.gav)) : 0,
         totalSupply: item.totalSupply ? toFixed(createQuantity(token, item.totalSupply)) : 0,
         change: index > 0 ? (item.grossSharePrice / array[index - 1].grossSharePrice - 1) * 100 : 0,
+        logReturn: index > 0 ? Math.log(item.grossSharePrice / array[index - 1].grossSharePrice) : 0,
       };
     });
 
+  const returnSinceInception =
+    normalizedGavs &&
+    (normalizedGavs[normalizedGavs.length - 1].grossSharePrice / normalizedGavs[0].grossSharePrice - 1) * 100;
+  const annualizedReturn =
+    returnSinceInception &&
+    normalizedGavs &&
+    (returnSinceInception / (normalizedGavs[normalizedGavs.length - 1].timestamp - normalizedGavs[0].timestamp)) *
+      (60 * 60 * 24 * 365.25);
+
+  const volatility =
+    normalizedGavs && standardDeviation(normalizedGavs.map(item => item.logReturn)) * 100 * Math.sqrt(365.25);
+
   const shares = fund && fund.totalSupply && toFixed(createQuantity(token, fund.totalSupply));
-  const investmentLog = fund && fund.investmentLog;
+  const investmentLog =
+    fund &&
+    fund.investmentLog.map(item => {
+      return {
+        ...item,
+        time: moment(item.timestamp).format('MM/DD/YYYY'),
+        shares: toFixed(createQuantity(token, item.shares)),
+      };
+    });
+
   const holdingsLog = fund && fund.holdingsLog;
   const holdingsLength = holdingsLog && holdingsLog.length;
 
@@ -55,6 +81,15 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       groupedHoldingsLog[groupedHoldingsLog.length - 1][holdingsLog[k].asset.symbol] = holdingsLog[k].holding;
     }
   }
+
+  const investments =
+    fund &&
+    fund.investments.map(item => {
+      return {
+        ...item,
+        shares: toFixed(createQuantity(token, item.shares)),
+      };
+    });
 
   return (
     <Grid container={true} spacing={6}>
@@ -90,6 +125,10 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       <Grid item={true} xs={12}>
         <Typography variant="h5">Share Price</Typography>
 
+        <div>Return since inception: {returnSinceInception}%</div>
+        <div>Annualized return: {annualizedReturn}%</div>
+        <div>Volatility: {volatility}%</div>
+
         <ResponsiveContainer height={200} width="80%">
           <LineChart width={400} height={400} data={normalizedGavs}>
             <XAxis
@@ -123,13 +162,52 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         </ResponsiveContainer>
       </Grid>
       <Grid item={true} xs={12}>
-        <Typography variant="h5">Investment Log</Typography>
-        {investmentLog &&
-          investmentLog.map(item => (
-            <div key={item.id}>
-              {item.timestamp} - {item.action} - {item.shares} - {item.owner.id}
-            </div>
-          ))}
+        <MaterialTable
+          columns={[
+            {
+              title: 'Investor',
+              field: 'owner.id',
+            },
+            {
+              title: 'Shares',
+              field: 'shares',
+              type: 'numeric',
+            },
+          ]}
+          data={investments}
+          title="Investors"
+          options={{
+            paging: false,
+          }}
+        />
+      </Grid>
+      <Grid item={true} xs={12}>
+        <MaterialTable
+          columns={[
+            {
+              title: 'Time',
+              field: 'timestamp',
+            },
+            {
+              title: 'Investor',
+              field: 'owner.id',
+            },
+            {
+              title: 'Action',
+              field: 'action',
+            },
+            {
+              title: 'Shares',
+              field: 'shares',
+              type: 'numeric',
+            },
+          ]}
+          data={investmentLog}
+          title="Investment Log"
+          options={{
+            paging: false,
+          }}
+        />
       </Grid>
       <Grid item={true} xs={12}>
         <Typography variant="h5">Fund holdings</Typography>

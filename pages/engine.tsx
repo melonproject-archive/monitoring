@@ -27,7 +27,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
   return (
     <Grid container={true} spacing={6}>
       <Grid item={true} xs={12}>
-        <Typography variant="h4">Amgu Price</Typography>
+        <Typography variant="h5">Amgu Price</Typography>
 
         <ResponsiveContainer height={200} width="80%">
           <LineChart width={400} height={400} data={amguPrices}>
@@ -44,7 +44,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
         </ResponsiveContainer>
       </Grid>
       <Grid item={true} xs={12}>
-        <Typography variant="h4">Cumulative amgu paid</Typography>
+        <Typography variant="h5">Cumulative amgu paid</Typography>
 
         <ResponsiveContainer height={200} width="80%">
           <LineChart width={400} height={400} data={amguCumulative}>

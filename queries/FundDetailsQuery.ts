@@ -30,6 +30,12 @@ export default gql`
           symbol
         }
       }
+      investments {
+        shares
+        owner {
+          id
+        }
+      }
     }
 
     assets {

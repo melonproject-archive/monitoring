@@ -5,10 +5,17 @@ export default gql`
     investor(id: $investor) {
       id
       investments {
+        id
         shares
+        gav
         fund {
           id
           name
+        }
+        valuations(orderBy: timestamp) {
+          id
+          gav
+          timestamp
         }
       }
       investmentLog(orderBy: timestamp) {

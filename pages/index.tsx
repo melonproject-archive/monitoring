@@ -45,7 +45,7 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
         </Link>
       </Grid>
       <Grid item={true} xs={12}>
-        <Typography variant="h4">Total assets under management</Typography>
+        <Typography variant="h5">Total assets under management</Typography>
         <ResponsiveContainer height={200} width="80%">
           <LineChart width={400} height={400} data={aggregateValues}>
             <XAxis
@@ -61,7 +61,7 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
         </ResponsiveContainer>
       </Grid>
       <Grid item={true} xs={12}>
-        <Typography variant="h4">Total number of Funds</Typography>
+        <Typography variant="h5">Total number of Funds</Typography>
         <ResponsiveContainer height={200} width="80%">
           <AreaChart width={400} height={400} data={fundCounts}>
             <XAxis
@@ -78,7 +78,7 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
         </ResponsiveContainer>
       </Grid>
       <Grid item={true} xs={12}>
-        <Typography variant="h4">Fund List</Typography>
+        <Typography variant="h5">Fund List</Typography>
         {funds.map(item => (
           <div key={item.id}>
             <Link href={`/fund?address=${item.id}`}>
