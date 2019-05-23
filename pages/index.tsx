@@ -61,7 +61,7 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
         </ResponsiveContainer>
       </Grid>
       <Grid item={true} xs={12}>
-        <Typography variant="h4">Number of Funds</Typography>
+        <Typography variant="h4">Total number of Funds</Typography>
         <ResponsiveContainer height={200} width="80%">
           <AreaChart width={400} height={400} data={fundCounts}>
             <XAxis

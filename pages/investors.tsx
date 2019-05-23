@@ -37,6 +37,8 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
         </ResponsiveContainer>
       </Grid>
       <Grid item={true} xs={12}>
+        <Typography variant="h4">Investor list</Typography>
+
         {investors.map(item => (
           <div key={item.id}>
             <Link href={`/investor?address=${item.id}`}>

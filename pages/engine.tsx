@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, withStyles, WithStyles, StyleRulesCallback } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import EngineQuery from '~/queries/EngineQuery';
 import moment from 'moment';
@@ -27,6 +27,8 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
   return (
     <Grid container={true} spacing={6}>
       <Grid item={true} xs={12}>
+        <Typography variant="h4">Amgu Price</Typography>
+
         <ResponsiveContainer height={200} width="80%">
           <LineChart width={400} height={400} data={amguPrices}>
             <XAxis
@@ -42,6 +44,8 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
         </ResponsiveContainer>
       </Grid>
       <Grid item={true} xs={12}>
+        <Typography variant="h4">Cumulative amgu paid</Typography>
+
         <ResponsiveContainer height={200} width="80%">
           <LineChart width={400} height={400} data={amguCumulative}>
             <XAxis

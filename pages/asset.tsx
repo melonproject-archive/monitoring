@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, withStyles, WithStyles, StyleRulesCallback } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 
@@ -37,6 +37,8 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
   return (
     <Grid container={true} spacing={6}>
       <Grid item={true} xs={12}>
+        <Typography variant="h4">Asset price</Typography>
+
         {asset && (
           <>
             <div>Address: {asset.id}</div>

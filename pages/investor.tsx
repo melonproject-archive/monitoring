@@ -37,6 +37,8 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
 
   return (
     <Grid container={true} spacing={6}>
+      <Typography variant="h4">Investor information</Typography>
+
       <Grid item={true} xs={12}>
         {investor && (
           <>
@@ -44,6 +46,14 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
             <div>Address: {investor.id}</div>
           </>
         )}
+      </Grid>
+      <Grid item={true} xs={12}>
+        <Typography variant="h5">Investments</Typography>
+        {investmentLog.map(item => (
+          <div key={item.id}>
+            {item.time} - {item.action} - {item.shares} - {item.fund.name}
+          </div>
+        ))}
       </Grid>
       <Grid item={true} xs={12}>
         <Typography variant="h5">Investment Log</Typography>

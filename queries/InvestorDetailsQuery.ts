@@ -4,6 +4,13 @@ export default gql`
   query InvestorDetailsQuery($investor: ID!) {
     investor(id: $investor) {
       id
+      investments {
+        shares
+        fund {
+          id
+          name
+        }
+      }
       investmentLog(orderBy: timestamp) {
         id
         action

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Link } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, StyleRulesCallback, Link, Typography } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import AssetsQuery from '~/queries/AssetsQuery';
 
@@ -17,6 +17,8 @@ const Assets: React.FunctionComponent<AssetProps> = props => {
   return (
     <Grid container={true} spacing={6}>
       <Grid item={true} xs={12}>
+        <Typography variant="h4">Asset list</Typography>
+
         {assets.map(item => (
           <div key={item.id}>
             <Link href={`/asset?address=${item.id}`}>
