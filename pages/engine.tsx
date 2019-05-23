@@ -8,9 +8,9 @@ import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'rec
 
 const styles: StyleRulesCallback = theme => ({});
 
-type FundProps = WithStyles<typeof styles>;
+type EngineProps = WithStyles<typeof styles>;
 
-const Engine: React.FunctionComponent<FundProps> = props => {
+const Engine: React.FunctionComponent<EngineProps> = props => {
   const result = useQuery(EngineQuery, {
     ssr: false,
   });

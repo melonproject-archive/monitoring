@@ -1,54 +1,52 @@
 import React from 'react';
 import { Grid, withStyles, WithStyles, StyleRulesCallback } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
-import FundDetailsQuery from '~/queries/FundDetailsQuery';
 import { useRouter } from 'next/router';
-import { createQuantity, createToken, toFixed } from '@melonproject/token-math';
 
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import moment from 'moment';
+import AssetDetailsQuery from '~/queries/AssetDetailsQuery';
+import { createToken, toFixed, createQuantity } from '@melonproject/token-math';
 
 const styles: StyleRulesCallback = theme => ({});
 
-type FundProps = WithStyles<typeof styles>;
+type AssetProps = WithStyles<typeof styles>;
 
-const Fund: React.FunctionComponent<FundProps> = props => {
+const Asset: React.FunctionComponent<AssetProps> = props => {
   const router = useRouter();
-  const result = useQuery(FundDetailsQuery, {
+  const result = useQuery(AssetDetailsQuery, {
     ssr: false,
     variables: {
-      fund: router.query.address,
+      asset: router.query.address,
     },
   });
 
-  const fund = result.data && result.data.fund;
+  const asset = result.data && result.data.asset;
 
-  const token = createToken('WETH', undefined, 18);
+  const token = asset && createToken(asset.symbol, undefined, 18);
 
-  const normalizedGavs =
-    fund &&
-    fund.calculationsUpdates.map(item => {
+  const priceUpdates =
+    asset &&
+    asset.priceUpdates.map(item => {
       return {
         timestamp: item.timestamp,
-        gav: toFixed(createQuantity(token, item.gav)),
+        price: toFixed(createQuantity(token, item.price)),
       };
     });
-
-  // console.log(normalizedGavs);
 
   return (
     <Grid container={true} spacing={6}>
       <Grid item={true} xs={12}>
-        {fund && (
+        {asset && (
           <>
-            <div>Address: {fund.id}</div>
-            <div>Name: {fund.name}</div>
+            <div>Address: {asset.id}</div>
+            <div>Symbol: {asset.symbol}</div>
           </>
         )}
       </Grid>
       <Grid item={true} xs={12}>
         <ResponsiveContainer height={200} width="80%">
-          <LineChart width={400} height={400} data={normalizedGavs}>
+          <LineChart width={400} height={400} data={priceUpdates}>
             <XAxis
               dataKey="timestamp"
               type="number"
@@ -56,7 +54,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
             />
             <YAxis />
-            <Line type="monotone" dataKey="gav" stroke="#8884d8" dot={false} />
+            <Line type="monotone" dataKey="price" stroke="#8884d8" dot={false} />
             <Tooltip />
           </LineChart>
         </ResponsiveContainer>
@@ -65,4 +63,4 @@ const Fund: React.FunctionComponent<FundProps> = props => {
   );
 };
 
-export default withStyles(styles)(Fund);
+export default withStyles(styles)(Asset);

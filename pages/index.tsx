@@ -21,6 +21,14 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
       <Grid item={true} xs={12}>
         <Link href={'/engine'}>
           <a>Engine</a>
+        </Link>{' '}
+        |
+        <Link href={'/assets'}>
+          <a>Assets</a>
+        </Link>{' '}
+        |
+        <Link href={'/investors'}>
+          <a>Investors</a>
         </Link>
       </Grid>
       <Grid item={true} xs={12}>
