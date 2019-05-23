@@ -5,7 +5,7 @@ import FundDetailsQuery from '~/queries/FundDetailsQuery';
 import { useRouter } from 'next/router';
 import { createQuantity, createToken, toFixed } from '@melonproject/token-math';
 
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine } from 'recharts';
 import moment from 'moment';
 
 const styles: StyleRulesCallback = theme => ({});
@@ -31,13 +31,13 @@ const Fund: React.FunctionComponent<FundProps> = props => {
     fund.calculationsUpdates.map((item, index, array) => {
       return {
         ...item,
-        gav: toFixed(createQuantity(token, item.gav)),
-        totalSupply: toFixed(createQuantity(token, item.totalSupply)),
-        change: index > 0 ? item.grossSharePrice / array[index - 1].grossSharePrice - 1 : 0,
+        gav: item.gav ? toFixed(createQuantity(token, item.gav)) : 0,
+        totalSupply: item.totalSupply ? toFixed(createQuantity(token, item.totalSupply)) : 0,
+        change: index > 0 ? (item.grossSharePrice / array[index - 1].grossSharePrice - 1) * 100 : 0,
       };
     });
 
-  const shares = fund && toFixed(createQuantity(token, fund.totalSupply));
+  const shares = fund && fund.totalSupply && toFixed(createQuantity(token, fund.totalSupply));
   const investmentLog = fund && fund.investmentLog;
   const holdingsLog = fund && fund.holdingsLog;
   const holdingsLength = holdingsLog && holdingsLog.length;
@@ -105,7 +105,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         </ResponsiveContainer>
       </Grid>
       <Grid item={true} xs={12}>
-        <Typography variant="h5">Daily change</Typography>
+        <Typography variant="h5">Daily change (%)</Typography>
 
         <ResponsiveContainer height={200} width="80%">
           <LineChart width={400} height={400} data={normalizedGavs}>
@@ -116,6 +116,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
             />
             <YAxis />
+            <ReferenceLine y={0} stroke="gray" strokeDasharray="3 3" />
             <Line type="monotone" dataKey="change" dot={false} />
             <Tooltip />
           </LineChart>
