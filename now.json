@@ -1,5 +1,5 @@
 {
   "version": 2,
   "builds": [{ "src": "next.config.js", "use": "@now/next" }],
-  "alias": "melon-monitoring.now.sh"
+  "alias": "melon-subgraph.now.sh"
 }
