@@ -1,18 +1,20 @@
 import React from 'react';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import FundDetailsQuery from '~/queries/FundDetailsQuery';
 import { useRouter } from 'next/router';
 import { createQuantity, createToken, toFixed } from '@melonproject/token-math';
-
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine } from 'recharts';
 import moment from 'moment';
-
 import MaterialTable from 'material-table';
-
 import { standardDeviation } from '../utils/finance';
+import Navigation from '~/components/Navigation';
 
-const styles: StyleRulesCallback = theme => ({});
+const styles: StyleRulesCallback = theme => ({
+  paper: {
+    padding: theme.spacing(2),
+  },
+});
 
 type FundProps = WithStyles<typeof styles>;
 
@@ -92,76 +94,105 @@ const Fund: React.FunctionComponent<FundProps> = props => {
     });
 
   return (
-    <Grid container={true} spacing={6}>
+    <Grid container={true} spacing={2}>
+      <Navigation />
       <Grid item={true} xs={12}>
-        <Typography variant="h5">Fund information</Typography>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">Fund information</Typography>
 
-        {fund && (
-          <>
-            <div>Address: {fund.id}</div>
-            <div>Name: {fund.name}</div>
-            <div># shares: {shares}</div>
-          </>
-        )}
+          {fund && (
+            <>
+              <div>Address: {fund.id}</div>
+              <div>Name: {fund.name}</div>
+              <div># shares: {shares}</div>
+            </>
+          )}
+        </Paper>
       </Grid>
-      <Grid item={true} xs={12}>
-        <Typography variant="h5">GAV / # Shares</Typography>
+      <Grid item={true} xs={6}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">GAV / # Shares</Typography>
 
-        <ResponsiveContainer height={200} width="80%">
-          <LineChart width={400} height={400} data={normalizedGavs}>
-            <XAxis
-              dataKey="timestamp"
-              type="number"
-              domain={['dataMin', 'dataMax']}
-              tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
-            />
-            <YAxis />
-            <Line type="monotone" dataKey="gav" dot={false} />
-            <Line type="monotone" dataKey="totalSupply" dot={false} />
-            <Tooltip />
-          </LineChart>
-        </ResponsiveContainer>
+          <ResponsiveContainer height={200} width="80%">
+            <LineChart width={400} height={400} data={normalizedGavs}>
+              <XAxis
+                dataKey="timestamp"
+                type="number"
+                domain={['dataMin', 'dataMax']}
+                tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
+              />
+              <YAxis />
+              <Line type="monotone" dataKey="gav" dot={false} />
+              <Line type="monotone" dataKey="totalSupply" dot={false} />
+              <Tooltip />
+            </LineChart>
+          </ResponsiveContainer>
+        </Paper>
       </Grid>
-      <Grid item={true} xs={12}>
-        <Typography variant="h5">Share Price</Typography>
+      <Grid item={true} xs={6}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">Share Price</Typography>
 
-        <div>Return since inception: {returnSinceInception}%</div>
-        <div>Annualized return: {annualizedReturn}%</div>
-        <div>Volatility: {volatility}%</div>
+          <div>Return since inception: {returnSinceInception}%</div>
+          <div>Annualized return: {annualizedReturn}%</div>
+          <div>Volatility: {volatility}%</div>
 
-        <ResponsiveContainer height={200} width="80%">
-          <LineChart width={400} height={400} data={normalizedGavs}>
-            <XAxis
-              dataKey="timestamp"
-              type="number"
-              domain={['dataMin', 'dataMax']}
-              tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
-            />
-            <YAxis />
-            <Line type="monotone" dataKey="grossSharePrice" dot={false} />
-            <Tooltip />
-          </LineChart>
-        </ResponsiveContainer>
+          <ResponsiveContainer height={200} width="80%">
+            <LineChart width={400} height={400} data={normalizedGavs}>
+              <XAxis
+                dataKey="timestamp"
+                type="number"
+                domain={['dataMin', 'dataMax']}
+                tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
+              />
+              <YAxis />
+              <Line type="monotone" dataKey="grossSharePrice" dot={false} />
+              <Tooltip />
+            </LineChart>
+          </ResponsiveContainer>
+        </Paper>
       </Grid>
-      <Grid item={true} xs={12}>
-        <Typography variant="h5">Daily change (%)</Typography>
+      <Grid item={true} xs={6}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">Daily change (%)</Typography>
 
-        <ResponsiveContainer height={200} width="80%">
-          <LineChart width={400} height={400} data={normalizedGavs}>
-            <XAxis
-              dataKey="timestamp"
-              type="number"
-              domain={['dataMin', 'dataMax']}
-              tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
-            />
-            <YAxis />
-            <ReferenceLine y={0} stroke="gray" strokeDasharray="3 3" />
-            <Line type="monotone" dataKey="change" dot={false} />
-            <Tooltip />
-          </LineChart>
-        </ResponsiveContainer>
+          <ResponsiveContainer height={200} width="80%">
+            <LineChart width={400} height={400} data={normalizedGavs}>
+              <XAxis
+                dataKey="timestamp"
+                type="number"
+                domain={['dataMin', 'dataMax']}
+                tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
+              />
+              <YAxis />
+              <ReferenceLine y={0} stroke="gray" strokeDasharray="3 3" />
+              <Line type="monotone" dataKey="change" dot={false} />
+              <Tooltip />
+            </LineChart>
+          </ResponsiveContainer>
+        </Paper>
       </Grid>
-      <Grid item={true} xs={12}>
+      <Grid item={true} xs={6}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">Fund holdings</Typography>
+          <ResponsiveContainer height={200} width="80%">
+            <LineChart width={400} height={400} data={groupedHoldingsLog}>
+              <XAxis
+                dataKey="timestamp"
+                type="number"
+                domain={['dataMin', 'dataMax']}
+                tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
+              />
+              <YAxis />
+              {assets.map(item => (
+                <Line type="monotone" dataKey={item.symbol} dot={false} key={item.id} />
+              ))}
+              <Tooltip />
+            </LineChart>
+          </ResponsiveContainer>
+        </Paper>
+      </Grid>
+      <Grid item={true} xs={6}>
         <MaterialTable
           columns={[
             {
@@ -181,7 +212,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           }}
         />
       </Grid>
-      <Grid item={true} xs={12}>
+      <Grid item={true} xs={6}>
         <MaterialTable
           columns={[
             {
@@ -208,24 +239,6 @@ const Fund: React.FunctionComponent<FundProps> = props => {
             paging: false,
           }}
         />
-      </Grid>
-      <Grid item={true} xs={12}>
-        <Typography variant="h5">Fund holdings</Typography>
-        <ResponsiveContainer height={200} width="80%">
-          <LineChart width={400} height={400} data={groupedHoldingsLog}>
-            <XAxis
-              dataKey="timestamp"
-              type="number"
-              domain={['dataMin', 'dataMax']}
-              tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
-            />
-            <YAxis />
-            {assets.map(item => (
-              <Line type="monotone" dataKey={item.symbol} dot={false} key={item.id} />
-            ))}
-            <Tooltip />
-          </LineChart>
-        </ResponsiveContainer>
       </Grid>
     </Grid>
   );

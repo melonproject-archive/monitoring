@@ -6,6 +6,9 @@ export default gql`
       id
       name
       gav
+      grossSharePrice
+      isShutdown
+      creationTime
     }
 
     fundCounts(orderBy: timestamp) {

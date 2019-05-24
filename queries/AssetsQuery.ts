@@ -5,6 +5,11 @@ export default gql`
     assets(orderBy: symbol) {
       id
       symbol
+      decimals
+      priceUpdates(orderBy: timestamp) {
+        price
+        timestamp
+      }
     }
   }
 `;

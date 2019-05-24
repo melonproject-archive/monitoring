@@ -36,7 +36,9 @@
   "include": [
     "pages/**/*",
     "queries/**/*",
-    "components/**/*"
+    "components/**/*",
+    "theme.ts",
+    "types.ts"
   ],
   "exclude": [
     "node_modules"
