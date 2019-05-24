@@ -58,7 +58,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Asset price</Typography>
 
-          <ResponsiveContainer height={200} width="80%">
+          <ResponsiveContainer height={200} width="100%">
             <LineChart width={400} height={400} data={priceUpdates}>
               <XAxis
                 dataKey="timestamp"

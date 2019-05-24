@@ -64,7 +64,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
               <Typography variant="h5">{item.fund.name}</Typography>
               <div key={item.id}>Shares currently owned: {toFixed(createQuantity(token, item.shares))}</div>
               <div key={item.id}>Current value: {toFixed(createQuantity(token, item.gav))}</div>
-              <ResponsiveContainer height={200} width="80%">
+              <ResponsiveContainer height={200} width="100%">
                 <LineChart width={400} height={400} data={item.valuations}>
                   <XAxis
                     dataKey="timestamp"

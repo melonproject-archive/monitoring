@@ -117,7 +117,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         <Paper className={props.classes.paper}>
           <Typography variant="h5">GAV / # Shares</Typography>
 
-          <ResponsiveContainer height={200} width="80%">
+          <ResponsiveContainer height={200} width="100%">
             <LineChart width={400} height={400} data={normalizedGavs}>
               <XAxis
                 dataKey="timestamp"
@@ -141,7 +141,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           <div>Annualized return: {annualizedReturn}%</div>
           <div>Volatility: {volatility}%</div>
 
-          <ResponsiveContainer height={200} width="80%">
+          <ResponsiveContainer height={200} width="100%">
             <LineChart width={400} height={400} data={normalizedGavs}>
               <XAxis
                 dataKey="timestamp"
@@ -160,7 +160,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Daily change (%)</Typography>
 
-          <ResponsiveContainer height={200} width="80%">
+          <ResponsiveContainer height={200} width="100%">
             <LineChart width={400} height={400} data={normalizedGavs}>
               <XAxis
                 dataKey="timestamp"
@@ -179,7 +179,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       <Grid item={true} xs={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Fund holdings</Typography>
-          <ResponsiveContainer height={200} width="80%">
+          <ResponsiveContainer height={200} width="100%">
             <LineChart width={400} height={400} data={groupedHoldingsLog}>
               <XAxis
                 dataKey="timestamp"

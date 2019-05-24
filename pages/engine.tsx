@@ -36,7 +36,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Amgu Price</Typography>
 
-          <ResponsiveContainer height={200} width="80%">
+          <ResponsiveContainer height={200} width="100%">
             <LineChart width={400} height={400} data={amguPrices}>
               <XAxis
                 dataKey="timestamp"
@@ -55,7 +55,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Cumulative amgu paid</Typography>
 
-          <ResponsiveContainer height={200} width="80%">
+          <ResponsiveContainer height={200} width="100%">
             <LineChart width={400} height={400} data={amguCumulative}>
               <XAxis
                 dataKey="timestamp"
