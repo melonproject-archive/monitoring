@@ -13,8 +13,8 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
     <Table>
       <TableHead>
         <TableRow>
-          <TableCell align="right">Name</TableCell>
-          <TableCell align="right">Address</TableCell>
+          <TableCell align="left">Name</TableCell>
+          <TableCell align="left">Address</TableCell>
           <TableCell align="right">Creation date</TableCell>
           <TableCell align="right">Active</TableCell>
           <TableCell align="right">Share price</TableCell>
@@ -23,8 +23,8 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
       <TableBody>
         {(props.funds || []).map(item => (
           <TableRow key={item.id}>
-            <TableCell align="right">{item.name}</TableCell>
-            <TableCell align="right">
+            <TableCell align="left">{item.name}</TableCell>
+            <TableCell align="left">
               <Link href={`/fund?address=${item.id}`}>
                 <a>{item.id}</a>
               </Link>

@@ -50,8 +50,12 @@ const Fund: React.FunctionComponent<FundProps> = props => {
   const annualizedReturn =
     returnSinceInception &&
     normalizedGavs &&
-    (returnSinceInception / (normalizedGavs[normalizedGavs.length - 1].timestamp - normalizedGavs[0].timestamp)) *
-      (60 * 60 * 24 * 365.25);
+    (Math.pow(
+      1 + returnSinceInception / 100,
+      (60 * 60 * 24 * 365.25) / (normalizedGavs[normalizedGavs.length - 1].timestamp - normalizedGavs[0].timestamp),
+    ) -
+      1) *
+      100;
 
   const volatility =
     normalizedGavs && standardDeviation(normalizedGavs.map(item => item.logReturn)) * 100 * Math.sqrt(365.25);
