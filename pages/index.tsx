@@ -69,7 +69,7 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
                 domain={['dataMin', 'dataMax']}
                 tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
               />
-              <YAxis domain={[0, 30]} />
+              <YAxis domain={[0, 100]} />
               <Area type="stepAfter" dataKey="active" stroke="#8884d8" />
               <Area type="stepAfter" dataKey="nonActive" stroke="#aaaaaa" />
               <Tooltip />

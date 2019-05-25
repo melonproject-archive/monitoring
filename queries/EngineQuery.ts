@@ -11,5 +11,17 @@ export default gql`
       amount
       timestamp
     }
+
+    contracts(orderBy: creationTime) {
+      id
+      name
+      creationTime
+      parent {
+        id
+      }
+      children {
+        id
+      }
+    }
   }
 `;
