@@ -46,7 +46,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
 
   const graphConfig = {
     nodeHighlightBehavior: true,
-    width: 1200,
+    width: 600,
     height: 400,
     node: {
       color: 'black',
@@ -64,7 +64,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
   return (
     <Grid container={true} spacing={2}>
       <Navigation />
-      <Grid item={true} xs={6}>
+      <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Amgu Price</Typography>
 
@@ -83,7 +83,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
           </ResponsiveContainer>
         </Paper>
       </Grid>
-      <Grid item={true} xs={6}>
+      <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Cumulative amgu paid</Typography>
 
@@ -102,14 +102,16 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
           </ResponsiveContainer>
         </Paper>
       </Grid>
-      <Grid item={true} xs={6}>
-        {graphData.nodes && graphData.nodes.length && (
-          <Graph
-            id="graph-id" // id is mandatory, if no id is defined rd3g will throw an error
-            data={graphData}
-            config={graphConfig}
-          />
-        )}
+      <Grid item={true} xs={12} sm={12} md={12}>
+        <Paper className={props.classes.paper}>
+          {graphData.nodes && graphData.nodes.length && (
+            <Graph
+              id="graph-id" // id is mandatory, if no id is defined rd3g will throw an error
+              data={graphData}
+              config={graphConfig}
+            />
+          )}
+        </Paper>
       </Grid>
     </Grid>
   );

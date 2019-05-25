@@ -100,7 +100,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
   return (
     <Grid container={true} spacing={2}>
       <Navigation />
-      <Grid item={true} xs={12}>
+      <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Fund information</Typography>
 
@@ -113,7 +113,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           )}
         </Paper>
       </Grid>
-      <Grid item={true} xs={6}>
+      <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">GAV / # Shares</Typography>
 
@@ -133,7 +133,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           </ResponsiveContainer>
         </Paper>
       </Grid>
-      <Grid item={true} xs={6}>
+      <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Share Price</Typography>
 
@@ -156,7 +156,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           </ResponsiveContainer>
         </Paper>
       </Grid>
-      <Grid item={true} xs={6}>
+      <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Daily change (%)</Typography>
 
@@ -176,7 +176,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           </ResponsiveContainer>
         </Paper>
       </Grid>
-      <Grid item={true} xs={6}>
+      <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Fund holdings</Typography>
           <ResponsiveContainer height={200} width="100%">
@@ -196,7 +196,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           </ResponsiveContainer>
         </Paper>
       </Grid>
-      <Grid item={true} xs={6}>
+      <Grid item={true} xs={12} sm={6} md={6}>
         <MaterialTable
           columns={[
             {

@@ -40,7 +40,7 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
   return (
     <Grid container={true} spacing={2}>
       <Navigation />
-      <Grid item={true} xs={6}>
+      <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Total assets under management</Typography>
           <ResponsiveContainer height={200} width="100%">
@@ -51,14 +51,14 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
                 domain={['dataMin', 'dataMax']}
                 tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
               />
-              <YAxis domain={[0, 150]} />
+              <YAxis domain={[0, 200]} />
               <Line type="monotone" dataKey="gav" stroke="#8884d8" dot={false} />
               <Tooltip />
             </LineChart>
           </ResponsiveContainer>
         </Paper>
       </Grid>
-      <Grid item={true} xs={6}>
+      <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Total number of Funds</Typography>
           <ResponsiveContainer height={200} width="100%">
@@ -69,7 +69,7 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
                 domain={['dataMin', 'dataMax']}
                 tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
               />
-              <YAxis domain={[0, 100]} />
+              <YAxis domain={[0, 80]} />
               <Area type="stepAfter" dataKey="active" stroke="#8884d8" />
               <Area type="stepAfter" dataKey="nonActive" stroke="#aaaaaa" />
               <Tooltip />
@@ -77,7 +77,7 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
           </ResponsiveContainer>
         </Paper>
       </Grid>
-      <Grid item={true} xs={12}>
+      <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Fund List</Typography>
           <FundList funds={funds} />

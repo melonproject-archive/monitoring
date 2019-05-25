@@ -37,7 +37,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
                 domain={['dataMin', 'dataMax']}
                 tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
               />
-              <YAxis domain={[0, 40]} />
+              <YAxis domain={[0, 100]} />
               <Line type="stepAfter" dataKey="numberOfInvestors" dot={false} />
               <Tooltip
                 labelFormatter={value => 'Date: ' + moment(parseInt(value as string, 10) * 1000).format('MM/DD/YYYY')}
