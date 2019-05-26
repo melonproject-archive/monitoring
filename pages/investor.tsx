@@ -62,6 +62,9 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
           <Grid item={true} xs={12} key={item.id}>
             <Paper className={props.classes.paper}>
               <Typography variant="h5">{item.fund.name}</Typography>
+              <div key={item.id}>
+                Fund address: <a href={'/fund?address=' + item.fund.id}>{item.fund.id}</a>
+              </div>
               <div key={item.id}>Shares currently owned: {toFixed(createQuantity(token, item.shares))}</div>
               <div key={item.id}>Current value: {toFixed(createQuantity(token, item.gav))}</div>
               <ResponsiveContainer height={200} width="100%">

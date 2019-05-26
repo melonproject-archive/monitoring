@@ -66,7 +66,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
     fund.investmentLog.map(item => {
       return {
         ...item,
-        time: moment(item.timestamp).format('MM/DD/YYYY'),
+        time: moment(item.timestamp).format('MM/DD/YYYY hh:mm'),
         shares: toFixed(createQuantity(token, item.shares)),
       };
     });
@@ -202,7 +202,9 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           columns={[
             {
               title: 'Investor',
-              field: 'owner.id',
+              render: rowData => {
+                return <a href={'/investor?address=' + rowData.owner.id}>{rowData.owner.id}</a>;
+              },
             },
             {
               title: 'Shares',
@@ -223,10 +225,15 @@ const Fund: React.FunctionComponent<FundProps> = props => {
             {
               title: 'Time',
               field: 'timestamp',
+              render: rowData => {
+                return moment(rowData.timestamp * 1000).format('MM/DD/YYYY');
+              },
             },
             {
               title: 'Investor',
-              field: 'owner.id',
+              render: rowData => {
+                return <a href={'/investor?address=' + rowData.owner.id}>{rowData.owner.id}</a>;
+              },
             },
             {
               title: 'Action',
