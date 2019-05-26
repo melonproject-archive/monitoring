@@ -18,6 +18,8 @@ const styles: StyleRulesCallback = theme => ({
 
 type InvestorProps = WithStyles<typeof styles>;
 
+const token = createToken('MLNF', undefined, 18);
+
 const Investor: React.FunctionComponent<InvestorProps> = props => {
   const router = useRouter();
   const result = useQuery(InvestorDetailsQuery, {
@@ -28,9 +30,20 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
   });
 
   const investor = result.data && result.data.investor;
-  const investments = result.data && result.data.investor && result.data.investor.investments;
-
-  const token = createToken('MLNF', undefined, 18);
+  const investments =
+    result.data &&
+    result.data.investor &&
+    result.data.investor.investments.map(inv => {
+      return {
+        ...inv,
+        valuations: inv.valuations.map(valuations => {
+          return {
+            ...valuations,
+            gav: valuations.gav ? toFixed(createQuantity(token, parseInt(valuations.gav.toString(), 10))) : 0,
+          };
+        }),
+      };
+    });
 
   const investmentLog =
     (investor &&

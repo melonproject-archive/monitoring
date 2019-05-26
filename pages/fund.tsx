@@ -37,6 +37,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
     fund.calculationsUpdates.map((item, index, array) => {
       return {
         ...item,
+        grossSharePrice: toFixed(createQuantity(token, item.grossSharePrice)),
         gav: item.gav ? toFixed(createQuantity(token, item.gav)) : 0,
         totalSupply: item.totalSupply ? toFixed(createQuantity(token, item.totalSupply)) : 0,
         change: index > 0 ? (item.grossSharePrice / array[index - 1].grossSharePrice - 1) * 100 : 0,
@@ -108,8 +109,12 @@ const Fund: React.FunctionComponent<FundProps> = props => {
             <>
               <div>Address: {fund.id}</div>
               <div>Name: {fund.name}</div>
-              <div>Manager: {fund.manager}</div>
+              <div>Manager: {fund.manager.id}</div>
               <div># shares: {shares}</div>
+              <div>&nbsp;</div>
+              <div>Return since inception: {returnSinceInception.toFixed(2)}%</div>
+              <div>Annualized return: {annualizedReturn.toFixed(2)}%</div>
+              <div>Volatility: {volatility.toFixed(2)}%</div>
             </>
           )}
         </Paper>
@@ -137,11 +142,6 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Share Price</Typography>
-
-          <div>Return since inception: {returnSinceInception}%</div>
-          <div>Annualized return: {annualizedReturn}%</div>
-          <div>Volatility: {volatility}%</div>
-
           <ResponsiveContainer height={200} width="100%">
             <LineChart width={400} height={400} data={normalizedGavs}>
               <XAxis
@@ -152,7 +152,10 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               />
               <YAxis />
               <Line type="monotone" dataKey="grossSharePrice" dot={false} />
-              <Tooltip />
+              <Tooltip
+                labelFormatter={value => 'Date: ' + moment(parseInt(value as string, 10) * 1000).format('MM/DD/YYYY')}
+                formatter={value => [value, 'Share price (gross)']}
+              />
             </LineChart>
           </ResponsiveContainer>
         </Paper>
