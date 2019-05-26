@@ -46,7 +46,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
 
   const graphConfig = {
     nodeHighlightBehavior: true,
-    width: 600,
+    width: 1200,
     height: 400,
     node: {
       color: 'black',
