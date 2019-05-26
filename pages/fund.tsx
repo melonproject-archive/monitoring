@@ -108,6 +108,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
             <>
               <div>Address: {fund.id}</div>
               <div>Name: {fund.name}</div>
+              <div>Manager: {fund.manager}</div>
               <div># shares: {shares}</div>
             </>
           )}

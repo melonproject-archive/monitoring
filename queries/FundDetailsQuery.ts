@@ -5,6 +5,7 @@ export default gql`
     fund(id: $fund) {
       id
       name
+      manager
       gav
       totalSupply
       grossSharePrice

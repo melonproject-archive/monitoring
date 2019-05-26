@@ -12,7 +12,7 @@ export default gql`
       timestamp
     }
 
-    contracts(orderBy: creationTime) {
+    contracts(where: { name_in: ["Registry", "Engine", "Version", "Hub/Fund"] }) {
       id
       name
       creationTime
