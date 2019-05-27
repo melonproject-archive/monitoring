@@ -69,6 +69,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         ...item,
         time: moment(item.timestamp).format('MM/DD/YYYY hh:mm'),
         shares: toFixed(createQuantity(token, item.shares)),
+        sharePrice: toFixed(createQuantity(token, item.sharePrice)),
       };
     });
 
@@ -222,7 +223,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           }}
         />
       </Grid>
-      <Grid item={true} xs={6}>
+      <Grid item={true} xs={12} sm={12} md={12}>
         <MaterialTable
           columns={[
             {
@@ -245,6 +246,11 @@ const Fund: React.FunctionComponent<FundProps> = props => {
             {
               title: 'Shares',
               field: 'shares',
+              type: 'numeric',
+            },
+            {
+              title: 'Share Price',
+              field: 'sharePrice',
               type: 'numeric',
             },
           ]}

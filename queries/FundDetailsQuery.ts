@@ -21,6 +21,7 @@ export default gql`
         action
         timestamp
         shares
+        sharePrice
         owner {
           id
         }

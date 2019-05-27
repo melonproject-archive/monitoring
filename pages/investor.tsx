@@ -36,14 +36,16 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
     result.data.investor.investments.map(inv => {
       return {
         ...inv,
-        valuations: inv.valuations.map(valuations => {
+        valuations: inv.valuations.map(vals => {
           return {
-            ...valuations,
-            gav: valuations.gav ? toFixed(createQuantity(token, parseInt(valuations.gav.toString(), 10))) : 0,
+            ...vals,
+            gav: vals.gav ? toFixed(createQuantity(token, parseInt(vals.gav.toString(), 10))) : 0,
           };
         }),
       };
     });
+
+  const valuations = result.data && result.data.investor && result.data.investor.valuations;
 
   const investmentLog =
     (investor &&
@@ -59,7 +61,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
   return (
     <Grid container={true} spacing={2}>
       <Navigation />
-      <Grid item={true} xs={12}>
+      <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Investor information</Typography>
           {investor && (
@@ -70,11 +72,30 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
         </Paper>
       </Grid>
 
+      <Grid item={true} xs={12} sm={12} md={12}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">All assets</Typography>
+          <ResponsiveContainer height={200} width="100%">
+            <LineChart width={400} height={400} data={valuations}>
+              <XAxis
+                dataKey="timestamp"
+                type="number"
+                domain={['dataMin', 'dataMax']}
+                tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
+              />
+              <YAxis />
+              <Line type="monotone" dataKey="gav" dot={false} />
+              <Tooltip />
+            </LineChart>
+          </ResponsiveContainer>
+        </Paper>
+      </Grid>
+
       {investments &&
         investments.map(item => (
-          <Grid item={true} xs={12} key={item.id}>
+          <Grid item={true} xs={12} sm={6} md={6} key={item.id}>
             <Paper className={props.classes.paper}>
-              <Typography variant="h5">{item.fund.name}</Typography>
+              <Typography variant="h6">{item.fund.name}</Typography>
               <div key={item.id}>
                 Fund address: <a href={'/fund?address=' + item.fund.id}>{item.fund.id}</a>
               </div>
@@ -102,7 +123,8 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
           <Typography variant="h5">Investment Log</Typography>
           {investmentLog.map(item => (
             <div key={item.id}>
-              {item.time} - {item.action} - {item.shares} - {item.fund.name}
+              {item.time} - {item.action} - {item.shares} - {toFixed(createQuantity(token, item.sharePrice))} -{' '}
+              {item.fund.name}
             </div>
           ))}
         </Paper>

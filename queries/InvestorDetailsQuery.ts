@@ -22,11 +22,16 @@ export default gql`
         id
         action
         shares
+        sharePrice
         timestamp
         fund {
           id
           name
         }
+      }
+      valuations(orderBy: timestamp) {
+        timestamp
+        gav
       }
     }
   }

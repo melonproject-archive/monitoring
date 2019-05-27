@@ -53,7 +53,10 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
               />
               <YAxis domain={[0, 200]} />
               <Line type="monotone" dataKey="gav" stroke="#8884d8" dot={false} />
-              <Tooltip />
+              <Tooltip
+                labelFormatter={value => 'Date: ' + moment(parseInt(value as string, 10) * 1000).format('MM/DD/YYYY')}
+                formatter={value => [value, 'Total assets']}
+              />
             </LineChart>
           </ResponsiveContainer>
         </Paper>
@@ -72,7 +75,9 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
               <YAxis domain={[0, 80]} />
               <Area type="stepAfter" dataKey="active" stroke="#8884d8" />
               <Area type="stepAfter" dataKey="nonActive" stroke="#aaaaaa" />
-              <Tooltip />
+              <Tooltip
+                labelFormatter={value => 'Date: ' + moment(parseInt(value as string, 10) * 1000).format('MM/DD/YYYY')}
+              />
             </AreaChart>
           </ResponsiveContainer>
         </Paper>
