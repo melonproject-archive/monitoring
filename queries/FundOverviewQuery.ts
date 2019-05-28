@@ -17,7 +17,7 @@ export default gql`
       timestamp
     }
 
-    aggregateValues(orderBy: timestamp) {
+    networkValues(orderBy: timestamp) {
       timestamp
       gav
     }

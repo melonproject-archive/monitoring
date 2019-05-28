@@ -9,15 +9,17 @@ export default gql`
         id
       }
       gav
+      nav
       totalSupply
-      grossSharePrice
-      calculationsUpdates(orderBy: timestamp) {
+      sharePrice
+      calculationsHistory(orderBy: timestamp) {
         gav
+        nav
         totalSupply
-        grossSharePrice
+        sharePrice
         timestamp
       }
-      investmentLog(orderBy: timestamp) {
+      investmentHistory(orderBy: timestamp) {
         action
         timestamp
         shares
@@ -26,7 +28,7 @@ export default gql`
           id
         }
       }
-      holdingsLog(orderBy: timestamp) {
+      holdingsHistory(orderBy: timestamp) {
         timestamp
         holding
         asset {

@@ -32,39 +32,41 @@ const Fund: React.FunctionComponent<FundProps> = props => {
 
   const token = createToken('WETH', undefined, 18);
 
-  const normalizedGavs =
+  const normalizedNumbers =
     fund &&
-    fund.calculationsUpdates.map((item, index, array) => {
+    fund.calculationsHistory.map((item, index, array) => {
       return {
         ...item,
-        grossSharePrice: toFixed(createQuantity(token, item.grossSharePrice)),
+        sharePrice: toFixed(createQuantity(token, item.sharePrice)),
         gav: item.gav ? toFixed(createQuantity(token, item.gav)) : 0,
+        nav: item.nav ? toFixed(createQuantity(token, item.nav)) : 0,
         totalSupply: item.totalSupply ? toFixed(createQuantity(token, item.totalSupply)) : 0,
-        change: index > 0 ? (item.grossSharePrice / array[index - 1].grossSharePrice - 1) * 100 : 0,
-        logReturn: index > 0 ? Math.log(item.grossSharePrice / array[index - 1].grossSharePrice) : 0,
+        change: index > 0 ? (item.sharePrice / array[index - 1].sharePrice - 1) * 100 : 0,
+        logReturn: index > 0 ? Math.log(item.sharePrice / array[index - 1].sharePrice) : 0,
       };
     });
 
   const returnSinceInception =
-    normalizedGavs &&
-    (normalizedGavs[normalizedGavs.length - 1].grossSharePrice / normalizedGavs[0].grossSharePrice - 1) * 100;
+    normalizedNumbers &&
+    (normalizedNumbers[normalizedNumbers.length - 1].sharePrice / normalizedNumbers[0].sharePrice - 1) * 100;
   const annualizedReturn =
     returnSinceInception &&
-    normalizedGavs &&
+    normalizedNumbers &&
     (Math.pow(
       1 + returnSinceInception / 100,
-      (60 * 60 * 24 * 365.25) / (normalizedGavs[normalizedGavs.length - 1].timestamp - normalizedGavs[0].timestamp),
+      (60 * 60 * 24 * 365.25) /
+        (normalizedNumbers[normalizedNumbers.length - 1].timestamp - normalizedNumbers[0].timestamp),
     ) -
       1) *
       100;
 
   const volatility =
-    normalizedGavs && standardDeviation(normalizedGavs.map(item => item.logReturn)) * 100 * Math.sqrt(365.25);
+    normalizedNumbers && standardDeviation(normalizedNumbers.map(item => item.logReturn)) * 100 * Math.sqrt(365.25);
 
   const shares = fund && fund.totalSupply && toFixed(createQuantity(token, fund.totalSupply));
-  const investmentLog =
+  const investmentHistory =
     fund &&
-    fund.investmentLog.map(item => {
+    fund.investmentHistory.map(item => {
       return {
         ...item,
         time: moment(item.timestamp).format('MM/DD/YYYY hh:mm'),
@@ -73,20 +75,20 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       };
     });
 
-  const holdingsLog = fund && fund.holdingsLog;
-  const holdingsLength = holdingsLog && holdingsLog.length;
+  const holdingsHistory = fund && fund.holdingsHistory;
+  const holdingsLength = holdingsHistory && holdingsHistory.length;
 
   const groupedHoldingsLog: any[] = [];
   let ts = 0;
   for (let k = 0; k < holdingsLength; k++) {
-    if (ts !== holdingsLog[k].timestamp) {
+    if (ts !== holdingsHistory[k].timestamp) {
       groupedHoldingsLog.push({
-        timestamp: holdingsLog[k].timestamp,
-        [holdingsLog[k].asset.symbol]: holdingsLog[k].holding,
+        timestamp: holdingsHistory[k].timestamp,
+        [holdingsHistory[k].asset.symbol]: holdingsHistory[k].holding,
       });
-      ts = holdingsLog[k].timestamp;
+      ts = holdingsHistory[k].timestamp;
     } else {
-      groupedHoldingsLog[groupedHoldingsLog.length - 1][holdingsLog[k].asset.symbol] = holdingsLog[k].holding;
+      groupedHoldingsLog[groupedHoldingsLog.length - 1][holdingsHistory[k].asset.symbol] = holdingsHistory[k].holding;
     }
   }
 
@@ -122,10 +124,9 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       </Grid>
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
-          <Typography variant="h5">GAV / # Shares</Typography>
-
+          <Typography variant="h5">Share Price</Typography>
           <ResponsiveContainer height={200} width="100%">
-            <LineChart width={400} height={400} data={normalizedGavs}>
+            <LineChart width={400} height={400} data={normalizedNumbers}>
               <XAxis
                 dataKey="timestamp"
                 type="number"
@@ -133,40 +134,62 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
               />
               <YAxis />
+              <Line type="monotone" dataKey="sharePrice" dot={false} />
+              <Tooltip
+                labelFormatter={value => 'Date: ' + moment(parseInt(value as string, 10) * 1000).format('MM/DD/YYYY')}
+                formatter={value => [value, 'Share price']}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </Paper>
+      </Grid>
+      <Grid item={true} xs={12} sm={6} md={6}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">NAV & GAV</Typography>
+
+          <ResponsiveContainer height={200} width="100%">
+            <LineChart width={400} height={400} data={normalizedNumbers}>
+              <XAxis
+                dataKey="timestamp"
+                type="number"
+                domain={['dataMin', 'dataMax']}
+                tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
+              />
+              <YAxis />
+              <Line type="monotone" dataKey="nav" dot={false} />
               <Line type="monotone" dataKey="gav" dot={false} />
+              <Tooltip />
+            </LineChart>
+          </ResponsiveContainer>
+        </Paper>
+      </Grid>
+
+      <Grid item={true} xs={12} sm={6} md={6}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5"># Shares</Typography>
+
+          <ResponsiveContainer height={200} width="100%">
+            <LineChart width={400} height={400} data={normalizedNumbers}>
+              <XAxis
+                dataKey="timestamp"
+                type="number"
+                domain={['dataMin', 'dataMax']}
+                tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
+              />
+              <YAxis />
               <Line type="monotone" dataKey="totalSupply" dot={false} />
               <Tooltip />
             </LineChart>
           </ResponsiveContainer>
         </Paper>
       </Grid>
-      <Grid item={true} xs={12} sm={6} md={6}>
-        <Paper className={props.classes.paper}>
-          <Typography variant="h5">Share Price</Typography>
-          <ResponsiveContainer height={200} width="100%">
-            <LineChart width={400} height={400} data={normalizedGavs}>
-              <XAxis
-                dataKey="timestamp"
-                type="number"
-                domain={['dataMin', 'dataMax']}
-                tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
-              />
-              <YAxis />
-              <Line type="monotone" dataKey="grossSharePrice" dot={false} />
-              <Tooltip
-                labelFormatter={value => 'Date: ' + moment(parseInt(value as string, 10) * 1000).format('MM/DD/YYYY')}
-                formatter={value => [value, 'Share price (gross)']}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </Paper>
-      </Grid>
+
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Daily change (%)</Typography>
 
           <ResponsiveContainer height={200} width="100%">
-            <LineChart width={400} height={400} data={normalizedGavs}>
+            <LineChart width={400} height={400} data={normalizedNumbers}>
               <XAxis
                 dataKey="timestamp"
                 type="number"
@@ -254,7 +277,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               type: 'numeric',
             },
           ]}
-          data={investmentLog}
+          data={investmentHistory}
           title="Investment Log"
           options={{
             paging: false,

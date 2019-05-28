@@ -36,20 +36,20 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
     result.data.investor.investments.map(inv => {
       return {
         ...inv,
-        valuations: inv.valuations.map(vals => {
+        valuationHistory: inv.valuationHistory.map(vals => {
           return {
             ...vals,
-            gav: vals.gav ? toFixed(createQuantity(token, parseInt(vals.gav.toString(), 10))) : 0,
+            nav: vals.gav ? toFixed(createQuantity(token, parseInt(vals.gav.toString(), 10))) : 0,
           };
         }),
       };
     });
 
-  const valuations = result.data && result.data.investor && result.data.investor.valuations;
+  const valuationHistory = result.data && result.data.investor && result.data.investor.valuationHistory;
 
-  const investmentLog =
+  const investmentHistory =
     (investor &&
-      investor.investmentLog.map(item => {
+      investor.investmentHistory.map(item => {
         return {
           ...item,
           time: moment(item.timestamp * 1000).format('YYYY-MM-DD HH:mm'),
@@ -76,7 +76,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
         <Paper className={props.classes.paper}>
           <Typography variant="h5">All assets</Typography>
           <ResponsiveContainer height={200} width="100%">
-            <LineChart width={400} height={400} data={valuations}>
+            <LineChart width={400} height={400} data={valuationHistory}>
               <XAxis
                 dataKey="timestamp"
                 type="number"
@@ -96,13 +96,13 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
           <Grid item={true} xs={12} sm={6} md={6} key={item.id}>
             <Paper className={props.classes.paper}>
               <Typography variant="h6">{item.fund.name}</Typography>
-              <div key={item.id}>
+              <div>
                 Fund address: <a href={'/fund?address=' + item.fund.id}>{item.fund.id}</a>
               </div>
-              <div key={item.id}>Shares currently owned: {toFixed(createQuantity(token, item.shares))}</div>
-              <div key={item.id}>Current value: {toFixed(createQuantity(token, item.gav))}</div>
+              <div>Shares currently owned: {toFixed(createQuantity(token, item.shares))}</div>
+              <div>Current value: {toFixed(createQuantity(token, item.gav))}</div>
               <ResponsiveContainer height={200} width="100%">
-                <LineChart width={400} height={400} data={item.valuations}>
+                <LineChart width={400} height={400} data={item.valuationHistory}>
                   <XAxis
                     dataKey="timestamp"
                     type="number"
@@ -121,7 +121,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
       <Grid item={true} xs={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Investment Log</Typography>
-          {investmentLog.map(item => (
+          {investmentHistory.map(item => (
             <div key={item.id}>
               {item.time} - {item.action} - {item.shares} - {toFixed(createQuantity(token, item.sharePrice))} -{' '}
               {item.fund.name}

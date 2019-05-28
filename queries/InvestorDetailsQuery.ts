@@ -12,13 +12,13 @@ export default gql`
           id
           name
         }
-        valuations(orderBy: timestamp) {
+        valuationHistory(orderBy: timestamp) {
           id
           gav
           timestamp
         }
       }
-      investmentLog(orderBy: timestamp) {
+      investmentHistory(orderBy: timestamp) {
         id
         action
         shares
@@ -29,7 +29,7 @@ export default gql`
           name
         }
       }
-      valuations(orderBy: timestamp) {
+      valuationHistory(orderBy: timestamp) {
         timestamp
         gav
       }

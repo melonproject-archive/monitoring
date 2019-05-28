@@ -22,17 +22,17 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
   const data = result.data || {};
   const fundCounts = data.fundCounts || [];
   const funds = (data.funds || []).sort((a, b) => {
-    return b.grossSharePrice - a.grossSharePrice;
+    return b.sharePrice - a.sharePrice;
   });
 
   const token = funds && createToken('WETH', undefined, 18);
 
-  const aggregateValues =
+  const networkValues =
     result.data &&
-    result.data.aggregateValues &&
-    result.data.aggregateValues.map(item => {
+    result.data.networkValues &&
+    result.data.networkValues.map(item => {
       return {
-        timestamp: item.timestamp,
+        ...item,
         gav: toFixed(createQuantity(token, item.gav)),
       };
     });
@@ -44,7 +44,7 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Total assets under management</Typography>
           <ResponsiveContainer height={200} width="100%">
-            <LineChart width={400} height={400} data={aggregateValues}>
+            <LineChart width={400} height={400} data={networkValues}>
               <XAxis
                 dataKey="timestamp"
                 type="number"
