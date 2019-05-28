@@ -13,6 +13,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import introspection from '~/introspection.json';
 import { theme } from '~/theme';
+import { OperationDefinitionNode } from 'graphql';
 
 export type RedirectFn = (target: string, code?: number) => void;
 
@@ -72,7 +73,7 @@ const createDataLink = () => {
 
   return ApolloLink.split(
     op => {
-      const { kind, operation } = getMainDefinition(op.query);
+      const { kind, operation } = getMainDefinition(op.query) as OperationDefinitionNode;
       return kind === 'OperationDefinition' && operation === 'subscription';
     },
     wsLink,

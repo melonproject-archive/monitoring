@@ -2,11 +2,11 @@ import { useQuery } from '@apollo/react-hooks';
 import { useRef, useEffect } from 'react';
 import { DocumentNode } from 'graphql';
 
-type QueryPair = [DocumentNode, DocumentNode?];
+type QueryPair = [DocumentNode, DocumentNode];
 
 type ProceedOrNotFn = (result: any, expected: number) => boolean;
 
-export function useScrapingQuery([query, more = query]: QueryPair, proceed: ProceedOrNotFn, props?: any) {
+export function useScrapingQuery([query, more]: QueryPair, proceed: ProceedOrNotFn, props?: any) {
   const limit = (props.variables && props.variables.limit) || 100;
   const skip = useRef((props.variables && props.variables.skip) || 0);
   const result = useQuery(query, {
@@ -19,7 +19,7 @@ export function useScrapingQuery([query, more = query]: QueryPair, proceed: Proc
   });
 
   useEffect(() => {
-    if (!!result.loading || !proceed(result.data, skip.current + limit)) {
+    if (!!result.loading || !!result.error || !proceed(result.data, skip.current + limit)) {
       return;
     }
 
