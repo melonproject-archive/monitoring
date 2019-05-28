@@ -1,4 +1,5 @@
 const path = require('path');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const { PHASE_PRODUCTION_SERVER } = require('next/constants');
 
 module.exports = (phase) => {
@@ -21,6 +22,10 @@ module.exports = (phase) => {
         // Easy root level access to our file hierarcy.
         '~': path.join(options.dir),
       });
+      
+      config.plugins = config.plugins.filter(
+        plugin => !(plugin instanceof ForkTsCheckerWebpackPlugin),
+      );
 
       return config;
     },

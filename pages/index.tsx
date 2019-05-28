@@ -1,12 +1,12 @@
 import React from 'react';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper } from '@material-ui/core';
-import { useQuery } from '@apollo/react-hooks';
-import FundOverviewQuery from '~/queries/FundOverviewQuery';
+import { FundOverviewQuery, FundOverviewScrapingQuery } from '~/queries/FundOverviewQuery';
 import { LineChart, AreaChart, Area, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
-import moment from 'moment';
 import { toFixed, createToken, createQuantity } from '@melonproject/token-math';
 import FundList from '~/components/FundList';
-import Navigation from '~/components/Navigation';
+import Layout from '~/components/Layout';
+import { formatDate } from '~/utils/formatDate';
+import { useScrapingQuery } from '~/utils/useScrapingQuery';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -15,7 +15,15 @@ const styles: StyleRulesCallback = theme => ({
 });
 
 const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
-  const result = useQuery(FundOverviewQuery, {
+  const proceed = (current: any, expected: number) => {
+    if (current.funds && current.funds.length === expected) {
+      return true;
+    }
+
+    return false;
+  };
+
+  const result = useScrapingQuery([FundOverviewQuery, FundOverviewScrapingQuery], proceed, {
     ssr: false,
   });
 
@@ -38,8 +46,7 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
     });
 
   return (
-    <Grid container={true} spacing={2}>
-      <Navigation />
+    <Layout>
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Total assets under management</Typography>
@@ -49,12 +56,12 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
                 dataKey="timestamp"
                 type="number"
                 domain={['dataMin', 'dataMax']}
-                tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
+                tickFormatter={timeStr => formatDate(timeStr)}
               />
               <YAxis domain={[0, 200]} />
               <Line type="monotone" dataKey="gav" stroke="#8884d8" dot={false} />
               <Tooltip
-                labelFormatter={value => 'Date: ' + moment(parseInt(value as string, 10) * 1000).format('MM/DD/YYYY')}
+                labelFormatter={value => `Date: ${formatDate(value)}`}
                 formatter={value => [value, 'Total assets']}
               />
             </LineChart>
@@ -70,14 +77,12 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
                 dataKey="timestamp"
                 type="number"
                 domain={['dataMin', 'dataMax']}
-                tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
+                tickFormatter={timeStr => formatDate(timeStr)}
               />
               <YAxis domain={[0, 80]} />
               <Area type="stepAfter" dataKey="active" stroke="#8884d8" />
               <Area type="stepAfter" dataKey="nonActive" stroke="#aaaaaa" />
-              <Tooltip
-                labelFormatter={value => 'Date: ' + moment(parseInt(value as string, 10) * 1000).format('MM/DD/YYYY')}
-              />
+              <Tooltip labelFormatter={value => `Date: ${formatDate(value)}`} />
             </AreaChart>
           </ResponsiveContainer>
         </Paper>
@@ -88,7 +93,7 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
           <FundList funds={funds} />
         </Paper>
       </Grid>
-    </Grid>
+    </Layout>
   );
 };
 

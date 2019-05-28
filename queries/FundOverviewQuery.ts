@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
-export default gql`
-  query FundOverviewQuery {
-    funds(orderBy: name) {
+export const FundOverviewQuery = gql`
+  query FundOverviewQuery($limit: Int!) {
+    funds(orderBy: name, first: $limit) {
       id
       name
       gav
@@ -20,6 +20,19 @@ export default gql`
     networkValues(orderBy: timestamp) {
       timestamp
       gav
+    }
+  }
+`;
+
+export const FundOverviewScrapingQuery = gql`
+  query FundOverviewScrapingQuery($limit: Int!, $skip: Int!) {
+    funds(orderBy: name, first: $limit, skip: $skip) {
+      id
+      name
+      gav
+      grossSharePrice
+      isShutdown
+      creationTime
     }
   }
 `;
