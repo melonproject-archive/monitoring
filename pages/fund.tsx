@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import FundDetailsQuery from '~/queries/FundDetailsQuery';
 import { useRouter } from 'next/router';
@@ -22,8 +22,9 @@ const Fund: React.FunctionComponent<FundProps> = props => {
   const router = useRouter();
   const result = useQuery(FundDetailsQuery, {
     ssr: false,
+    skip: !router,
     variables: {
-      fund: router.query.address,
+      fund: router && router.query.address,
     },
   });
 
@@ -225,64 +226,68 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         </Paper>
       </Grid>
       <Grid item={true} xs={12} sm={6} md={6}>
-        <MaterialTable
-          columns={[
-            {
-              title: 'Investor',
-              render: rowData => {
-                return <a href={'/investor?address=' + rowData.owner.id}>{rowData.owner.id}</a>;
+        <NoSsr>
+          <MaterialTable
+            columns={[
+              {
+                title: 'Investor',
+                render: rowData => {
+                  return <a href={'/investor?address=' + rowData.owner.id}>{rowData.owner.id}</a>;
+                },
               },
-            },
-            {
-              title: 'Shares',
-              field: 'shares',
-              type: 'numeric',
-            },
-          ]}
-          data={investments}
-          title="Investors"
-          options={{
-            paging: false,
-          }}
-        />
+              {
+                title: 'Shares',
+                field: 'shares',
+                type: 'numeric',
+              },
+            ]}
+            data={investments}
+            title="Investors"
+            options={{
+              paging: false,
+            }}
+          />
+        </NoSsr>
       </Grid>
       <Grid item={true} xs={12} sm={12} md={12}>
-        <MaterialTable
-          columns={[
-            {
-              title: 'Time',
-              field: 'timestamp',
-              render: rowData => {
-                return moment(rowData.timestamp * 1000).format('MM/DD/YYYY');
+        <NoSsr>
+          <MaterialTable
+            columns={[
+              {
+                title: 'Time',
+                field: 'timestamp',
+                render: rowData => {
+                  return moment(rowData.timestamp * 1000).format('MM/DD/YYYY');
+                },
               },
-            },
-            {
-              title: 'Investor',
-              render: rowData => {
-                return <a href={'/investor?address=' + rowData.owner.id}>{rowData.owner.id}</a>;
+              {
+                title: 'Investor',
+                render: rowData => {
+                  return <a href={'/investor?address=' + rowData.owner.id}>{rowData.owner.id}</a>;
+                },
               },
-            },
-            {
-              title: 'Action',
-              field: 'action',
-            },
-            {
-              title: 'Shares',
-              field: 'shares',
-              type: 'numeric',
-            },
-            {
-              title: 'Share Price',
-              field: 'sharePrice',
-              type: 'numeric',
-            },
-          ]}
-          data={investmentHistory}
-          title="Investment Log"
-          options={{
-            paging: false,
-          }}
-        />
+              {
+                title: 'Action',
+                field: 'action',
+              },
+              {
+                title: 'Shares',
+                field: 'shares',
+                type: 'numeric',
+              },
+              {
+                title: 'Share Price',
+                field: 'sharePrice',
+                type: 'numeric',
+              },
+            ]}
+            data={investmentHistory}
+            title="Investment Log"
+            options={{
+              paging: false,
+            }}
+          />
+        </NoSsr>
       </Grid>
     </Grid>
   );
