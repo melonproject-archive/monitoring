@@ -6,7 +6,7 @@ export const FundOverviewQuery = gql`
       id
       name
       gav
-      grossSharePrice
+      sharePrice
       isShutdown
       creationTime
     }
@@ -30,7 +30,7 @@ export const FundOverviewScrapingQuery = gql`
       id
       name
       gav
-      grossSharePrice
+      sharePrice
       isShutdown
       creationTime
     }

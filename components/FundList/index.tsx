@@ -31,7 +31,7 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
             </TableCell>
             <TableCell align="right">{moment(parseInt(item.creationTime!, 10) * 1000).format('MM/DD/YYYY')}</TableCell>
             <TableCell align="right">{item.isShutdown ? 'No' : 'Yes'}</TableCell>
-            <TableCell align="right">{parseFloat(item.grossSharePrice!).toFixed(4)}</TableCell>
+            <TableCell align="right">{parseFloat(item.sharePrice! / Math.pow(10, 18)).toFixed(4)}</TableCell>
           </TableRow>
         ))}
       </TableBody>

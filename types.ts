@@ -20,7 +20,6 @@ export interface Fund {
   feesInShares?: string;
   nav?: string;
   sharePrice?: string;
-  grossSharePrice?: string;
   gavPerShareNetManagementFee?: string;
   allocatedFees?: string;
   totalSupply?: string;
