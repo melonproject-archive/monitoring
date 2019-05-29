@@ -118,7 +118,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
       </Grid>
       <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
-          {graphData.nodes && graphData.nodes.length && (
+          {graphData.nodes && graphData.nodes.length > 0 && (
             <Graph
               id="graph-id" // id is mandatory, if no id is defined rd3g will throw an error
               data={graphData}
