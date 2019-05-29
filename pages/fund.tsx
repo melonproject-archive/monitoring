@@ -5,10 +5,10 @@ import FundDetailsQuery from '~/queries/FundDetailsQuery';
 import { useRouter } from 'next/router';
 import { createQuantity, createToken, toFixed } from '@melonproject/token-math';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine } from 'recharts';
-import moment from 'moment';
 import MaterialTable from 'material-table';
 import { standardDeviation } from '../utils/finance';
 import Navigation from '~/components/Navigation';
+import { formatDate } from '../utils/formatDate';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -38,7 +38,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
     fund.calculationsHistory.map((item, index, array) => {
       return {
         ...item,
-        sharePrice: toFixed(createQuantity(token, item.sharePrice)),
+        sharePrice: item.sharePrice ? toFixed(createQuantity(token, item.sharePrice)) : 0,
         gav: item.gav ? toFixed(createQuantity(token, item.gav)) : 0,
         nav: item.nav ? toFixed(createQuantity(token, item.nav)) : 0,
         totalSupply: item.totalSupply ? toFixed(createQuantity(token, item.totalSupply)) : 0,
@@ -70,9 +70,9 @@ const Fund: React.FunctionComponent<FundProps> = props => {
     fund.investmentHistory.map(item => {
       return {
         ...item,
-        time: moment(item.timestamp).format('MM/DD/YYYY hh:mm'),
-        shares: toFixed(createQuantity(token, item.shares)),
-        sharePrice: toFixed(createQuantity(token, item.sharePrice)),
+        time: formatDate(item.timestamp),
+        shares: item.shares ? toFixed(createQuantity(token, item.shares)) : 0,
+        sharePrice: item.sharePrice ? toFixed(createQuantity(token, item.sharePrice)) : 0,
       };
     });
 
@@ -132,12 +132,12 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 dataKey="timestamp"
                 type="number"
                 domain={['dataMin', 'dataMax']}
-                tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
+                tickFormatter={timeStr => formatDate(timeStr)}
               />
               <YAxis />
               <Line type="monotone" dataKey="sharePrice" dot={false} />
               <Tooltip
-                labelFormatter={value => 'Date: ' + moment(parseInt(value as string, 10) * 1000).format('MM/DD/YYYY')}
+                labelFormatter={value => 'Date: ' + formatDate(value)}
                 formatter={value => [value, 'Share price']}
               />
             </LineChart>
@@ -154,7 +154,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 dataKey="timestamp"
                 type="number"
                 domain={['dataMin', 'dataMax']}
-                tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
+                tickFormatter={timeStr => formatDate(timeStr)}
               />
               <YAxis />
               <Line type="monotone" dataKey="nav" dot={false} />
@@ -175,7 +175,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 dataKey="timestamp"
                 type="number"
                 domain={['dataMin', 'dataMax']}
-                tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
+                tickFormatter={timeStr => formatDate(timeStr)}
               />
               <YAxis />
               <Line type="monotone" dataKey="totalSupply" dot={false} />
@@ -195,7 +195,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 dataKey="timestamp"
                 type="number"
                 domain={['dataMin', 'dataMax']}
-                tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
+                tickFormatter={timeStr => formatDate(timeStr)}
               />
               <YAxis />
               <ReferenceLine y={0} stroke="gray" strokeDasharray="3 3" />
@@ -214,7 +214,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 dataKey="timestamp"
                 type="number"
                 domain={['dataMin', 'dataMax']}
-                tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
+                tickFormatter={timeStr => formatDate(timeStr)}
               />
               <YAxis />
               {assets.map(item => (
@@ -257,7 +257,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 title: 'Time',
                 field: 'timestamp',
                 render: rowData => {
-                  return moment(rowData.timestamp * 1000).format('MM/DD/YYYY');
+                  return formatDate(rowData.timestamp);
                 },
               },
               {

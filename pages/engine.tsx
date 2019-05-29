@@ -1,13 +1,13 @@
 import React from 'react';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper } from '@material-ui/core';
-import { useQuery } from '@apollo/react-hooks';
-import EngineQuery from '~/queries/EngineQuery';
+import { AmguPaymentsQuery, EngineQuery, ContractsQuery, ContractsScrapingQuery } from '~/queries/EngineQuery';
 import moment from 'moment';
 
 import { Graph } from 'react-d3-graph';
 
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import Navigation from '~/components/Navigation';
+import { useScrapingQuery } from '~/utils/useScrapingQuery';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -18,13 +18,27 @@ const styles: StyleRulesCallback = theme => ({
 type EngineProps = WithStyles<typeof styles>;
 
 const Engine: React.FunctionComponent<EngineProps> = props => {
-  const result = useQuery(EngineQuery, {
-    ssr: false,
-  });
+  const proceed = (current: any, expected: number) => {
+    if (current.amguPayments && current.amguPayments.length === expected) {
+      return true;
+    }
+
+    return false;
+  };
+  const result = useScrapingQuery([EngineQuery, AmguPaymentsQuery], proceed, { ssr: false });
+
+  const proceedContracts = (current: any, expected: number) => {
+    if (current.contracts && current.contracts.length === expected) {
+      return true;
+    }
+
+    return false;
+  };
+  const contractResult = useScrapingQuery([ContractsQuery, ContractsScrapingQuery], proceedContracts, { ssr: false });
 
   const amguPrices = (result.data && result.data.amguPrices) || [];
   const amguPayments = (result.data && result.data.amguPayments) || [];
-  const contracts = (result.data && result.data.contracts) || [];
+  const contracts = (contractResult.data && contractResult.data.contracts) || [];
 
   const amguCumulative: any[] = [];
   amguPayments.reduce((carry, item) => {
