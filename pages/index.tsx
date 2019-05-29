@@ -88,10 +88,7 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
         </Paper>
       </Grid>
       <Grid item={true} xs={12} sm={12} md={12}>
-        <Paper className={props.classes.paper}>
-          <Typography variant="h5">Fund List</Typography>
-          <FundList funds={funds} />
-        </Paper>
+        <FundList funds={funds} />
       </Grid>
     </Layout>
   );

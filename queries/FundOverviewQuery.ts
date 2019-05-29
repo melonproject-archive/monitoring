@@ -7,8 +7,12 @@ export const FundOverviewQuery = gql`
       name
       gav
       sharePrice
+      totalSupply
       isShutdown
       creationTime
+      investments {
+        id
+      }
     }
 
     fundCounts(orderBy: timestamp) {

@@ -1,41 +1,98 @@
 import React from 'react';
 import { Fund } from '~/types';
-import Link from 'next/link';
-import { Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
-import moment from 'moment';
+import MaterialTable from 'material-table';
+import { formatDate } from '~/utils/formatDate';
+
+import BigNumber from 'bignumber.js';
 
 export interface FundListProps {
   funds: Fund[];
 }
 
+const columns = [
+  {
+    title: 'Name',
+    field: 'name',
+  },
+  {
+    title: 'Creation date',
+    render: rowData => {
+      return formatDate(rowData.creationTime);
+    },
+  },
+  {
+    title: 'Investments',
+    field: 'investments.length',
+    type: 'numeric',
+  },
+  {
+    title: 'AUM [ETH]',
+    type: 'numeric',
+    render: rowData => {
+      return new BigNumber(rowData.gav).div(new BigNumber('1e18')).toFixed(3);
+    },
+    customSort: (a, b) => {
+      return new BigNumber(a.gav).isGreaterThan(new BigNumber(b.gav))
+        ? 1
+        : new BigNumber(b.gav).isGreaterThan(new BigNumber(a.gav))
+        ? -1
+        : 0;
+    },
+  },
+  {
+    title: 'Share price',
+    type: 'numeric',
+    render: rowData => {
+      return new BigNumber(rowData.sharePrice).div(new BigNumber('1e18')).toFixed(3);
+    },
+    customSort: (a, b) => {
+      return new BigNumber(a.sharePrice).isGreaterThan(new BigNumber(b.sharePrice))
+        ? 1
+        : new BigNumber(b.sharePrice).isGreaterThan(new BigNumber(a.sharePrice))
+        ? -1
+        : 0;
+    },
+    defaultSort: 'desc',
+  },
+  {
+    title: 'Number of shares',
+    type: 'numeric',
+    render: rowData => {
+      return new BigNumber(rowData.totalSupply).div(new BigNumber('1e18')).toFixed(3);
+    },
+    customSort: (a, b) => {
+      return new BigNumber(a.totalSupply).isGreaterThan(new BigNumber(b.totalSupply))
+        ? 1
+        : new BigNumber(b.totalSupply).isGreaterThan(new BigNumber(a.totalSupply))
+        ? -1
+        : 0;
+    },
+  },
+  {
+    title: 'Status',
+    render: rowData => {
+      return rowData.isShutdown ? 'Not active' : 'Active';
+    },
+    customSort: (a, b) => {
+      return a.isShutdown === b.isShutdown ? 0 : a.isShutdown ? 1 : -1;
+    },
+  },
+];
+
 const FundList: React.FunctionComponent<FundListProps> = props => {
   return (
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell align="left">Name</TableCell>
-          <TableCell align="left">Address</TableCell>
-          <TableCell align="right">Creation date</TableCell>
-          <TableCell align="right">Active</TableCell>
-          <TableCell align="right">Share price</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {(props.funds || []).map(item => (
-          <TableRow key={item.id}>
-            <TableCell align="left">{item.name}</TableCell>
-            <TableCell align="left">
-              <Link href={`/fund?address=${item.id}`}>
-                <a>{item.id}</a>
-              </Link>
-            </TableCell>
-            <TableCell align="right">{moment(parseInt(item.creationTime!, 10) * 1000).format('MM/DD/YYYY')}</TableCell>
-            <TableCell align="right">{item.isShutdown ? 'No' : 'Yes'}</TableCell>
-            <TableCell align="right">{(parseFloat(item.sharePrice!) / Math.pow(10, 18)).toFixed(4)}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <MaterialTable
+      columns={columns as any}
+      data={props.funds}
+      title="Funds"
+      options={{
+        paging: false,
+      }}
+      onRowClick={(_, rowData) => {
+        const url = '/fund?address=' + rowData.id;
+        window.open(url, '_self');
+      }}
+    />
   );
 };
 

@@ -31,6 +31,8 @@ export default class Document extends BaseDocument {
           <meta name="theme-color" content={theme.palette.primary.main} />
           <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
           <link rel="shortcut icon" href="/static/favicon.png" />
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
+          <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
         </Head>
         <body>
           <Main />
