@@ -22,6 +22,13 @@ const columns = [
     render: rowData => {
       return formatDate(rowData.creationTime);
     },
+    customSort: (a, b) => {
+      return new BigNumber(a.creationTime).isGreaterThan(new BigNumber(b.creationTime))
+        ? 1
+        : new BigNumber(b.creationTime).isGreaterThan(new BigNumber(a.creationTime))
+        ? -1
+        : 0;
+    },
   },
   {
     title: 'Investments',

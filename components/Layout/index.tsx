@@ -2,7 +2,6 @@ import React, { ReactNode } from 'react';
 import {
   Grid,
   withStyles,
-  Link,
   Typography,
   Divider,
   List,
@@ -15,9 +14,10 @@ import {
   Drawer,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import Link from 'next/link';
 
 // import Navigation from '../Navigation';
-// import { Head } from 'next/document';
+// import { Head  } from 'next/document';
 
 export interface LayoutProps {
   title: string;
@@ -26,15 +26,16 @@ export interface LayoutProps {
 }
 
 const menuItems = [
-  { title: 'Engine', link: '/' },
-  { title: 'Funds', link: 'funds' },
+  { title: 'Funds', link: '/' },
+  { title: 'Engine', link: 'engine' },
   { title: 'Investors', link: 'investors' },
   { title: 'Asset Universe', link: 'assets' },
+  { title: 'Contracts', link: 'contracts' },
   { title: 'Addresses', link: 'addresses' },
   { title: 'Glossary', link: 'glossary' },
 ];
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const styles = theme => ({
   root: {
@@ -45,6 +46,42 @@ const styles = theme => ({
       width: drawerWidth,
       flexShrink: 0,
     },
+  },
+  topDrawer: {
+    ...theme.mixins.toolbar,
+    background: theme.palette.primary.main,
+    display: 'flex',
+    alignItems: 'center',
+    paddingLeft: theme.spacing.unit,
+  },
+  appBar: {
+    marginLeft: drawerWidth,
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(100% - ${drawerWidth}px)`,
+    },
+  },
+  menuButton: {
+    marginRight: 20,
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    },
+  },
+  toolbar: {
+    ...theme.mixins.toolbar,
+    textAlign: 'center',
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  content: {
+    flexGrow: 1,
+    width: `calc(100% - ${drawerWidth}px)`,
+    padding: theme.spacing.unit,
+    paddingTop: '0px',
+  },
+  aStyle: {
+    textDecoration: 'none',
+    color: 'white',
   },
 });
 
@@ -149,7 +186,8 @@ class Layout extends React.Component<LayoutProps> {
           <main className={classes.content}>
             <div className={classes.toolbar} />
             <Grid container={true}>
-              <Grid item={true} xs={12} sm={12} md={12}>
+              <p />
+              <Grid container={true} item={true} xs={12} spacing={2}>
                 {this.props.children}
               </Grid>
             </Grid>

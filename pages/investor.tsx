@@ -7,8 +7,8 @@ import { createQuantity, createToken, toFixed } from '@melonproject/token-math';
 import InvestorDetailsQuery from '~/queries/InvestorDetailsQuery';
 
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
-import Navigation from '~/components/Navigation';
 import { formatDate } from '~/utils/formatDate';
+import Layout from '~/components/Layout';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -59,8 +59,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
     [];
 
   return (
-    <Grid container={true} spacing={2}>
-      <Navigation />
+    <Layout title="Investor">
       <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Investor information</Typography>
@@ -129,7 +128,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
           ))}
         </Paper>
       </Grid>
-    </Grid>
+    </Layout>
   );
 };
 

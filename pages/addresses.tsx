@@ -14,9 +14,9 @@ const styles: StyleRulesCallback = theme => ({
   },
 });
 
-type AssetProps = WithStyles<typeof styles>;
+type AddressesProps = WithStyles<typeof styles>;
 
-const Assets: React.FunctionComponent<AssetProps> = props => {
+const Addresses: React.FunctionComponent<AddressesProps> = props => {
   const result = useQuery(AssetsQuery, {
     ssr: false,
   });
@@ -80,4 +80,4 @@ const Assets: React.FunctionComponent<AssetProps> = props => {
   );
 };
 
-export default withStyles(styles)(Assets);
+export default withStyles(styles)(Addresses);

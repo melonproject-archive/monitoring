@@ -2,10 +2,10 @@ import React from 'react';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Link, Typography, Paper } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import InvestorsQuery from '~/queries/InvestorsQuery';
-import moment from 'moment';
 
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
-import Navigation from '~/components/Navigation';
+import Layout from '~/components/Layout';
+import { formatDate } from '~/utils/formatDate';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -24,8 +24,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
   const investorCounts = (result.data && result.data.investorCounts) || [];
 
   return (
-    <Grid container={true} spacing={2}>
-      <Navigation />
+    <Layout title="Investors">
       <Grid item={true} xs={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Number of investors</Typography>
@@ -35,12 +34,12 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
                 dataKey="timestamp"
                 type="number"
                 domain={['dataMin', 'dataMax']}
-                tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
+                tickFormatter={timeStr => formatDate(timeStr)}
               />
               <YAxis domain={[0, 100]} />
               <Line type="stepAfter" dataKey="numberOfInvestors" dot={false} />
               <Tooltip
-                labelFormatter={value => 'Date: ' + moment(parseInt(value as string, 10) * 1000).format('MM/DD/YYYY')}
+                labelFormatter={value => 'Date: ' + formatDate(value)}
                 formatter={value => [value, 'Number of investors']}
               />
             </LineChart>
@@ -60,7 +59,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
           ))}
         </Paper>
       </Grid>
-    </Grid>
+    </Layout>
   );
 };
 

@@ -26,6 +26,10 @@ const Navigation: React.FunctionComponent<WithStyles<typeof styles>> = props => 
       <Link href={'/investors'}>
         <a>Investors</a>
       </Link>
+      |{' '}
+      <Link href={'/contracts'}>
+        <a>Contracts</a>
+      </Link>
     </Paper>
   </Grid>
 );
