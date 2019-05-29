@@ -4,11 +4,11 @@ import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 import { createQuantity, createToken, toFixed } from '@melonproject/token-math';
 
-import moment from 'moment';
 import InvestorDetailsQuery from '~/queries/InvestorDetailsQuery';
 
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import Navigation from '~/components/Navigation';
+import { formatDate } from '~/utils/formatDate';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -52,7 +52,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
       investor.investmentHistory.map(item => {
         return {
           ...item,
-          time: moment(item.timestamp * 1000).format('YYYY-MM-DD HH:mm'),
+          time: formatDate(item.timestamp),
           shares: toFixed(createQuantity(token, item.shares)),
         };
       })) ||
@@ -81,7 +81,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
                 dataKey="timestamp"
                 type="number"
                 domain={['dataMin', 'dataMax']}
-                tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
+                tickFormatter={timeStr => formatDate(timeStr)}
               />
               <YAxis />
               <Line type="monotone" dataKey="gav" dot={false} />
@@ -107,7 +107,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
                     dataKey="timestamp"
                     type="number"
                     domain={['dataMin', 'dataMax']}
-                    tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
+                    tickFormatter={timeStr => formatDate(timeStr)}
                   />
                   <YAxis />
                   <Line type="monotone" dataKey="gav" dot={false} />
@@ -123,8 +123,8 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
           <Typography variant="h5">Investment Log</Typography>
           {investmentHistory.map(item => (
             <div key={item.id}>
-              {item.time} - {item.action} - {item.shares} - {toFixed(createQuantity(token, item.sharePrice))} -{' '}
-              {item.fund.name}
+              {item.time} - {item.action} - {item.shares} -{' '}
+              {item.sharePrice ? toFixed(createQuantity(token, item.sharePrice)) : ''} - {item.fund.name}
             </div>
           ))}
         </Paper>
