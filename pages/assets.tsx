@@ -1,17 +1,20 @@
 import React from 'react';
 import * as R from 'ramda';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Paper } from '@material-ui/core';
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { useQuery } from '@apollo/react-hooks';
 import { AssetsQuery } from '~/queries/AssetsQuery';
 import Layout from '~/components/Layout';
-import { formatDate } from '~/utils/formatDate';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import Link from 'next/link';
+import TimeSeriesChart from '~/components/TimeSeriesChart';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
     padding: theme.spacing(2),
+  },
+  aStyle: {
+    textDecoration: 'none',
+    color: 'white',
   },
 });
 
@@ -46,7 +49,7 @@ const Assets: React.FunctionComponent<AssetProps> = props => {
             <Grid container={true}>
               <Grid item={true} xs={12} sm={6} md={6}>
                 <Link href={`/asset?address=${item.id}`}>
-                  <a>{item.symbol}</a>
+                  <a className={props.classes.aStyle}>{item.symbol}</a>
                 </Link>
                 <div>
                   <br />
@@ -54,19 +57,7 @@ const Assets: React.FunctionComponent<AssetProps> = props => {
                 </div>
               </Grid>
               <Grid item={true} xs={12} sm={6} md={6}>
-                <ResponsiveContainer height={100} width="100%">
-                  <LineChart data={grouped}>
-                    <XAxis
-                      dataKey="timestamp"
-                      type="number"
-                      domain={['dataMin', 'dataMax']}
-                      tickFormatter={timeStr => formatDate(timeStr)}
-                    />
-                    <YAxis />
-                    <Line key={item.symbol} type="monotone" dataKey={item.symbol} dot={false} />;
-                    <Tooltip />
-                  </LineChart>
-                </ResponsiveContainer>
+                <TimeSeriesChart data={grouped} dataKeys={[item.symbol]} height={100} />
               </Grid>
             </Grid>
           </Paper>

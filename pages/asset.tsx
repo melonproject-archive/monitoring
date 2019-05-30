@@ -2,11 +2,10 @@ import React from 'react';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
-import moment from 'moment';
 import AssetDetailsQuery from '~/queries/AssetDetailsQuery';
 import { createToken, toFixed, createQuantity } from '@melonproject/token-math';
 import Layout from '~/components/Layout';
+import TimeSeriesChart from '~/components/TimeSeriesChart';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -56,20 +55,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
       <Grid item={true} xs={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Asset price</Typography>
-
-          <ResponsiveContainer height={200} width="100%">
-            <LineChart width={400} height={400} data={priceHistory}>
-              <XAxis
-                dataKey="timestamp"
-                type="number"
-                domain={['dataMin', 'dataMax']}
-                tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
-              />
-              <YAxis />
-              <Line type="monotone" dataKey="price" stroke="#8884d8" dot={false} />
-              <Tooltip />
-            </LineChart>
-          </ResponsiveContainer>
+          <TimeSeriesChart data={priceHistory} dataKeys={['price']} />
         </Paper>
       </Grid>
     </Layout>

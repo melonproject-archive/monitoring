@@ -1,12 +1,11 @@
 import React from 'react';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
-import InvestorsQuery from '~/queries/InvestorsQuery';
+import { InvestorCountQuery } from '~/queries/InvestorsQuery';
 
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import Layout from '~/components/Layout';
-import { formatDate } from '~/utils/formatDate';
-import Link from 'next/link';
+import TimeSeriesChart from '~/components/TimeSeriesChart';
+import InvestorList from '~/components/InvestorList';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -17,11 +16,10 @@ const styles: StyleRulesCallback = theme => ({
 type InvestorsProps = WithStyles<typeof styles>;
 
 const Investors: React.FunctionComponent<InvestorsProps> = props => {
-  const result = useQuery(InvestorsQuery, {
+  const result = useQuery(InvestorCountQuery, {
     ssr: false,
   });
 
-  const investors = (result.data && result.data.investors) || [];
   const investorCounts = (result.data && result.data.investorCounts) || [];
 
   return (
@@ -29,35 +27,12 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
       <Grid item={true} xs={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Number of investors</Typography>
-          <ResponsiveContainer height={200} width="90%">
-            <LineChart width={400} height={400} data={investorCounts}>
-              <XAxis
-                dataKey="timestamp"
-                type="number"
-                domain={['dataMin', 'dataMax']}
-                tickFormatter={timeStr => formatDate(timeStr)}
-              />
-              <YAxis domain={[0, 100]} />
-              <Line type="stepAfter" dataKey="numberOfInvestors" dot={false} />
-              <Tooltip
-                labelFormatter={value => 'Date: ' + formatDate(value)}
-                formatter={value => [value, 'Number of investors']}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <TimeSeriesChart data={investorCounts} dataKeys={['numberOfInvestors']} yMax="100" />
         </Paper>
       </Grid>
       <Grid item={true} xs={12}>
         <Paper className={props.classes.paper}>
-          <Typography variant="h5">Investor list</Typography>
-
-          {investors.map(item => (
-            <div key={item.id}>
-              <Link href={`/investor?address=${item.id}`}>
-                <a>{item.id}</a>
-              </Link>
-            </div>
-          ))}
+          <InvestorList />
         </Paper>
       </Grid>
     </Layout>

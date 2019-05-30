@@ -36,13 +36,15 @@ const Contracts: React.FunctionComponent<ContractsProps> = props => {
     width: 1200,
     height: 800,
     node: {
-      color: 'black',
+      color: '#999999',
       size: 120,
-      highlightStrokeColor: 'blue',
+      highlightStrokeColor: '#aaaaaa',
       labelProperty: 'name',
+      fontColor: '#ffffff',
     },
     link: {
-      highlightColor: 'lightblue',
+      color: '#666666',
+      highlightColor: '#aaaaaa',
     },
   };
 
