@@ -50,7 +50,7 @@ const InvestorList: React.FunctionComponent<InvestorListProps> = props => {
         ...investor,
         aum: formatBigNumber(
           investor.investments.reduce((carry, item) => {
-            return new BigNumber(carry).plus(new BigNumber(item.nav));
+            return new BigNumber(carry).plus(new BigNumber(item.gav));
           }, new BigNumber(0)),
         ),
       };
