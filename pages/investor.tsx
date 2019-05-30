@@ -1,12 +1,14 @@
 import React from 'react';
+import * as R from 'ramda';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
-import { createQuantity, createToken, toFixed } from '@melonproject/token-math';
 import InvestorDetailsQuery from '~/queries/InvestorDetailsQuery';
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { formatDate } from '~/utils/formatDate';
 import Layout from '~/components/Layout';
+import TimeSeriesChart from '~/components/TimeSeriesChart';
+import { formatBigNumber } from '~/utils/formatBigNumber';
+import InvestmentList from '~/components/InvestmentList';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -15,8 +17,6 @@ const styles: StyleRulesCallback = theme => ({
 });
 
 type InvestorProps = WithStyles<typeof styles>;
-
-const token = createToken('MLNF', undefined, 18);
 
 const Investor: React.FunctionComponent<InvestorProps> = props => {
   const router = useRouter();
@@ -28,23 +28,30 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
     },
   });
 
-  const investor = result.data && result.data.investor;
-  const investments =
+  const investor = R.pathOr(undefined, ['data', 'investor'], result);
+  const investments = R.pathOr([], ['data', 'investor', 'investments'], result).map(inv => {
+    return {
+      ...inv,
+      valuationHistory: inv.valuationHistory.map(vals => {
+        return {
+          ...vals,
+          nav: vals.nav ? formatBigNumber(vals.nav) : 0,
+          gav: vals.gav ? formatBigNumber(vals.gav) : 0,
+        };
+      }),
+    };
+  });
+
+  const valuationHistory =
     result.data &&
     result.data.investor &&
-    result.data.investor.investments.map(inv => {
+    result.data.investor.valuationHistory.map(valuation => {
       return {
-        ...inv,
-        valuationHistory: inv.valuationHistory.map(vals => {
-          return {
-            ...vals,
-            nav: vals.gav ? toFixed(createQuantity(token, parseInt(vals.gav.toString(), 10))) : 0,
-          };
-        }),
+        ...valuation,
+        nav: valuation.nav ? formatBigNumber(valuation.nav) : 0,
+        gav: valuation.gav ? formatBigNumber(valuation.gav) : 0,
       };
     });
-
-  const valuationHistory = result.data && result.data.investor && result.data.investor.valuationHistory;
 
   const investmentHistory =
     (investor &&
@@ -52,7 +59,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
         return {
           ...item,
           time: formatDate(item.timestamp),
-          shares: toFixed(createQuantity(token, item.shares)),
+          shares: formatBigNumber(item.shares),
         };
       })) ||
     [];
@@ -71,21 +78,13 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
       </Grid>
 
       <Grid item={true} xs={12} sm={12} md={12}>
+        <InvestmentList investments={investments} />
+      </Grid>
+
+      <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">All assets</Typography>
-          <ResponsiveContainer height={200} width="100%">
-            <LineChart width={400} height={400} data={valuationHistory}>
-              <XAxis
-                dataKey="timestamp"
-                type="number"
-                domain={['dataMin', 'dataMax']}
-                tickFormatter={timeStr => formatDate(timeStr)}
-              />
-              <YAxis />
-              <Line type="monotone" dataKey="gav" dot={false} />
-              <Tooltip />
-            </LineChart>
-          </ResponsiveContainer>
+          <TimeSeriesChart data={valuationHistory} dataKeys={['gav']} />
         </Paper>
       </Grid>
 
@@ -94,35 +93,18 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
           <Grid item={true} xs={12} sm={6} md={6} key={item.id}>
             <Paper className={props.classes.paper}>
               <Typography variant="h6">{item.fund.name}</Typography>
-              <div>
-                Fund address: <a href={'/fund?address=' + item.fund.id}>{item.fund.id}</a>
-              </div>
-              <div>Shares currently owned: {toFixed(createQuantity(token, item.shares))}</div>
-              <div>Current value: {toFixed(createQuantity(token, item.gav))}</div>
-              <ResponsiveContainer height={200} width="100%">
-                <LineChart width={400} height={400} data={item.valuationHistory}>
-                  <XAxis
-                    dataKey="timestamp"
-                    type="number"
-                    domain={['dataMin', 'dataMax']}
-                    tickFormatter={timeStr => formatDate(timeStr)}
-                  />
-                  <YAxis />
-                  <Line type="monotone" dataKey="gav" dot={false} />
-                  <Tooltip />
-                </LineChart>
-              </ResponsiveContainer>
+              <TimeSeriesChart data={item.valuationHistory} dataKeys={['gav']} />
             </Paper>
           </Grid>
         ))}
 
       <Grid item={true} xs={12}>
         <Paper className={props.classes.paper}>
-          <Typography variant="h5">Investment Log</Typography>
+          <Typography variant="h5">Investment History</Typography>
           {investmentHistory.map(item => (
             <div key={item.id}>
-              {item.time} - {item.action} - {item.shares} -{' '}
-              {item.sharePrice ? toFixed(createQuantity(token, item.sharePrice)) : ''} - {item.fund.name}
+              {item.time} - {item.action} - {item.shares}- {item.sharePrice ? formatBigNumber(item.sharePrice) : ''} -
+              {item.fund.name}
             </div>
           ))}
         </Paper>

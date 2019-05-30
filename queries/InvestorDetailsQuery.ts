@@ -8,6 +8,7 @@ export default gql`
         id
         shares
         gav
+        nav
         fund {
           id
           name
@@ -15,6 +16,7 @@ export default gql`
         valuationHistory(orderBy: timestamp) {
           id
           gav
+          nav
           timestamp
         }
       }

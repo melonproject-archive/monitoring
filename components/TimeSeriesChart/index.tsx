@@ -6,16 +6,19 @@ import { StyleRulesCallback } from '@material-ui/core';
 import { ResponsiveContainer, LineChart, XAxis, YAxis, Line, Tooltip, ReferenceLine } from 'recharts';
 
 export interface TimeSeriesChartProps {
-  data: any;
+  data: any[];
   dataKeys: string[];
   referenceLine?: boolean;
+  height?: number;
+  yMin?: any;
+  yMax?: any;
 }
 
 const styles: StyleRulesCallback = theme => ({});
 
 const TimeSeriesChart: React.FunctionComponent<TimeSeriesChartProps> = props => {
   return (
-    <ResponsiveContainer height={200} width="100%">
+    <ResponsiveContainer height={props.height || 200} width="100%">
       <LineChart data={props.data}>
         <XAxis
           dataKey="timestamp"
@@ -24,7 +27,7 @@ const TimeSeriesChart: React.FunctionComponent<TimeSeriesChartProps> = props => 
           tickFormatter={timeStr => formatDate(timeStr)}
           stroke="#dddddd"
         />
-        <YAxis stroke="#dddddd" />
+        <YAxis domain={[props.yMin || 0, props.yMax || 'auto']} stroke="#dddddd" />
         {props.referenceLine && <ReferenceLine y={0} stroke="gray" strokeDasharray="3 3" />}
         {props.dataKeys.map(key => (
           <Line key={key} type="monotone" dataKey={key} dot={false} stroke="#aaaaaa" />
