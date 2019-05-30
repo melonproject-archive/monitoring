@@ -4,13 +4,10 @@ import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
 
 import BigNumber from 'bignumber.js';
-import { withStyles } from '@material-ui/styles';
 
 export interface FundListProps {
   funds: Fund[];
 }
-
-const styles = theme => ({});
 
 const columns = [
   {
@@ -106,4 +103,4 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
   );
 };
 
-export default withStyles(styles)(FundList);
+export default FundList;
