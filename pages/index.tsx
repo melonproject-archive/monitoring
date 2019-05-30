@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper } from '@material-ui/core';
 import { FundOverviewQuery, FundOverviewScrapingQuery } from '~/queries/FundOverviewQuery';
 import { LineChart, AreaChart, Area, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
-import FundList from '~/components/FundList';
+// import FundList from '~/components/FundList';
 import Layout from '~/components/Layout';
 import { formatDate } from '~/utils/formatDate';
 import { useScrapingQuery } from '~/utils/useScrapingQuery';
@@ -29,9 +29,9 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
 
   const data = result.data || {};
   const fundCounts = data.fundCounts || [];
-  const funds = (data.funds || []).sort((a, b) => {
-    return b.sharePrice - a.sharePrice;
-  });
+  // const funds = (data.funds || []).sort((a, b) => {
+  //   return b.sharePrice - a.sharePrice;
+  // });
 
   const networkValues =
     result.data &&
@@ -85,9 +85,9 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
           </ResponsiveContainer>
         </Paper>
       </Grid>
-      <Grid item={true} xs={12} sm={12} md={12}>
+      {/* <Grid item={true} xs={12} sm={12} md={12}>
         <FundList funds={funds} />
-      </Grid>
+      </Grid> */}
     </Layout>
   );
 };
