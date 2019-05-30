@@ -1,12 +1,12 @@
 import React from 'react';
 import * as R from 'ramda';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, Link } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, StyleRulesCallback, Paper, Link } from '@material-ui/core';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
-import moment from 'moment';
 import { useQuery } from '@apollo/react-hooks';
-import AssetsQuery from '~/queries/AssetsQuery';
-import { createToken, toFixed, createQuantity } from '@melonproject/token-math';
-import Navigation from '~/components/Navigation';
+import { AssetsQuery } from '~/queries/AssetsQuery';
+import Layout from '~/components/Layout';
+import { formatDate } from '~/utils/formatDate';
+import { formatBigNumber } from '~/utils/formatBigNumber';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -25,59 +25,53 @@ const Assets: React.FunctionComponent<AssetProps> = props => {
 
   const prices = filtered
     .map((asset: any) => {
-      const token = createToken(asset.symbol, undefined, 18);
-      const updates = (asset.priceUpdates || []).map((update: any) => ({
+      const history = (asset.priceHistory || []).map((update: any) => ({
         timestamp: update.timestamp,
-        [asset.symbol]: toFixed(createQuantity(token, update.price)),
+        [asset.symbol]: formatBigNumber(update.price, asset.decimals),
       }));
 
-      return updates;
+      return history;
     })
     .reduce((carry, current) => carry.concat(current), []);
 
-  const assets = filtered.map((asset: any) => asset.symbol);
+  // const assets = filtered.map((asset: any) => asset.symbol);
   const grouped = Object.values(R.groupBy(value => value.timestamp, prices)).map(group => R.mergeAll(group));
 
   return (
-    <Grid container={true} spacing={2}>
-      <Navigation />
-      <Grid item={true} xs={12}>
-        <Paper className={props.classes.paper}>
-          <Typography variant="h5">Asset prices</Typography>
-          <ResponsiveContainer height={200} width="100%">
-            <LineChart width={400} height={400} data={grouped}>
-              <XAxis
-                dataKey="timestamp"
-                type="number"
-                domain={['dataMin', 'dataMax']}
-                tickFormatter={timeStr => moment(timeStr * 1000).format('MM/DD/YYYY')}
-              />
-              <YAxis />
-              {assets.map(symbol => {
-                const stroke = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-
-                return <Line key={symbol} type="monotone" dataKey={symbol} stroke={stroke} dot={false} />;
-              })}
-              <Tooltip />
-            </LineChart>
-          </ResponsiveContainer>
-        </Paper>
-      </Grid>
-      <Grid item={true} xs={12}>
-        <Paper className={props.classes.paper}>
-          <Typography variant="h5">Asset list</Typography>
-
-          {filtered.map(item => (
-            <div key={item.id}>
-              <Link href={`/asset?address=${item.id}`}>
-                <a>{item.symbol}</a>
-              </Link>{' '}
-              ({item.id})
-            </div>
-          ))}
-        </Paper>
-      </Grid>
-    </Grid>
+    <Layout title="Asset Universe">
+      {filtered.map(item => (
+        <Grid item={true} xs={12} sm={12} md={12} key={item.id}>
+          <Paper className={props.classes.paper}>
+            <Grid container={true}>
+              <Grid item={true} xs={12} sm={6} md={6}>
+                <Link href={`/asset?address=${item.id}`}>
+                  <a>{item.symbol}</a>
+                </Link>
+                <div>
+                  <br />
+                  {item.id}
+                </div>
+              </Grid>
+              <Grid item={true} xs={12} sm={6} md={6}>
+                <ResponsiveContainer height={100} width="100%">
+                  <LineChart data={grouped}>
+                    <XAxis
+                      dataKey="timestamp"
+                      type="number"
+                      domain={['dataMin', 'dataMax']}
+                      tickFormatter={timeStr => formatDate(timeStr)}
+                    />
+                    <YAxis />
+                    <Line key={item.symbol} type="monotone" dataKey={item.symbol} dot={false} />;
+                    <Tooltip />
+                  </LineChart>
+                </ResponsiveContainer>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+      ))}
+    </Layout>
   );
 };
 

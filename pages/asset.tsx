@@ -7,7 +7,7 @@ import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'rec
 import moment from 'moment';
 import AssetDetailsQuery from '~/queries/AssetDetailsQuery';
 import { createToken, toFixed, createQuantity } from '@melonproject/token-math';
-import Navigation from '~/components/Navigation';
+import Layout from '~/components/Layout';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -40,8 +40,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
     });
 
   return (
-    <Grid container={true} spacing={2}>
-      <Navigation />
+    <Layout title="Assets">
       <Grid item={true} xs={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Asset</Typography>
@@ -73,7 +72,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
           </ResponsiveContainer>
         </Paper>
       </Grid>
-    </Grid>
+    </Layout>
   );
 };
 

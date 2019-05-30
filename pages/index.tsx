@@ -46,7 +46,7 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
     });
 
   return (
-    <Layout>
+    <Layout title="Funds">
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Total assets under management</Typography>

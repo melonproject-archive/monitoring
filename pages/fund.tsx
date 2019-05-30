@@ -7,8 +7,8 @@ import { createQuantity, createToken, toFixed } from '@melonproject/token-math';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine } from 'recharts';
 import MaterialTable from 'material-table';
 import { standardDeviation } from '../utils/finance';
-import Navigation from '~/components/Navigation';
 import { formatDate } from '../utils/formatDate';
+import Layout from '~/components/Layout';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -103,8 +103,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
     });
 
   return (
-    <Grid container={true} spacing={2}>
-      <Navigation />
+    <Layout title="Fund">
       <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Fund information</Typography>
@@ -289,7 +288,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           />
         </NoSsr>
       </Grid>
-    </Grid>
+    </Layout>
   );
 };
 

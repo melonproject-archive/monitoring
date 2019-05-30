@@ -4,10 +4,13 @@ import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
 
 import BigNumber from 'bignumber.js';
+import { withStyles } from '@material-ui/styles';
 
 export interface FundListProps {
   funds: Fund[];
 }
+
+const styles = theme => ({});
 
 const columns = [
   {
@@ -18,6 +21,13 @@ const columns = [
     title: 'Creation date',
     render: rowData => {
       return formatDate(rowData.creationTime);
+    },
+    customSort: (a, b) => {
+      return new BigNumber(a.creationTime).isGreaterThan(new BigNumber(b.creationTime))
+        ? 1
+        : new BigNumber(b.creationTime).isGreaterThan(new BigNumber(a.creationTime))
+        ? -1
+        : 0;
     },
   },
   {
@@ -96,4 +106,4 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
   );
 };
 
-export default FundList;
+export default withStyles(styles)(FundList);
