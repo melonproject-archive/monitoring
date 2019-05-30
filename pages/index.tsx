@@ -2,11 +2,11 @@ import React from 'react';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper } from '@material-ui/core';
 import { FundOverviewQuery, FundOverviewScrapingQuery } from '~/queries/FundOverviewQuery';
 import { LineChart, AreaChart, Area, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
-import { toFixed, createToken, createQuantity } from '@melonproject/token-math';
 import FundList from '~/components/FundList';
 import Layout from '~/components/Layout';
 import { formatDate } from '~/utils/formatDate';
 import { useScrapingQuery } from '~/utils/useScrapingQuery';
+import { formatBigNumber } from '~/utils/formatBigNumber';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -33,15 +33,13 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
     return b.sharePrice - a.sharePrice;
   });
 
-  const token = funds && createToken('WETH', undefined, 18);
-
   const networkValues =
     result.data &&
     result.data.networkValues &&
     result.data.networkValues.map(item => {
       return {
         ...item,
-        gav: toFixed(createQuantity(token, item.gav)),
+        gav: formatBigNumber(item.gav),
       };
     });
 

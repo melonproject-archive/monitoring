@@ -52,7 +52,7 @@ const styles = theme => ({
     background: theme.palette.primary.main,
     display: 'flex',
     alignItems: 'center',
-    paddingLeft: theme.spacing.unit,
+    paddingLeft: theme.spacing(1),
   },
   appBar: {
     marginLeft: drawerWidth,
@@ -76,7 +76,7 @@ const styles = theme => ({
   content: {
     flexGrow: 1,
     width: `calc(100% - ${drawerWidth}px)`,
-    padding: theme.spacing.unit,
+    padding: theme.spacing(1),
     paddingTop: '0px',
   },
   aStyle: {
