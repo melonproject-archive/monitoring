@@ -2,9 +2,21 @@ import gql from 'graphql-tag';
 
 export const EngineQuery = gql`
   query EngineQuery($limit: Int!) {
-    amguPrices(orderBy: timestamp) {
-      price
-      timestamp
+    state(id: "0x") {
+      currentEngine {
+        id
+        amguPrice
+        totalAmguConsumed
+        frozenEther
+        liquidEther
+        lastThaw
+        thawingDelay
+        totalEtherConsumed
+        totalAmguConsumed
+        totalMlnBurned
+        premiumPercent
+        lastUpdate
+      }
     }
 
     amguPayments(orderBy: timestamp, first: $limit) {

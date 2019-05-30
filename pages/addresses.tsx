@@ -4,7 +4,7 @@ import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, Li
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import moment from 'moment';
 import { useQuery } from '@apollo/react-hooks';
-import AssetsQuery from '~/queries/AssetsQuery';
+import { AssetsQuery } from '~/queries/AssetsQuery';
 import { createToken, toFixed, createQuantity } from '@melonproject/token-math';
 import Layout from '~/components/Layout';
 

@@ -31,8 +31,8 @@ const menuItems = [
   { title: 'Investors', link: 'investors' },
   { title: 'Asset Universe', link: 'assets' },
   { title: 'Contracts', link: 'contracts' },
-  { title: 'Addresses', link: 'addresses' },
-  { title: 'Glossary', link: 'glossary' },
+  // { title: 'Addresses', link: 'addresses' },
+  // { title: 'Glossary', link: 'glossary' },
 ];
 
 const drawerWidth = 200;
