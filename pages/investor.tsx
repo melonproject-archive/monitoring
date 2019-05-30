@@ -4,11 +4,11 @@ import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper } f
 import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 import InvestorDetailsQuery from '~/queries/InvestorDetailsQuery';
-import { formatDate } from '~/utils/formatDate';
 import Layout from '~/components/Layout';
 import TimeSeriesChart from '~/components/TimeSeriesChart';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import InvestmentList from '~/components/InvestmentList';
+import InvestorActivity from '~/components/InvestorActivity';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -53,16 +53,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
       };
     });
 
-  const investmentHistory =
-    (investor &&
-      investor.investmentHistory.map(item => {
-        return {
-          ...item,
-          time: formatDate(item.timestamp),
-          shares: formatBigNumber(item.shares),
-        };
-      })) ||
-    [];
+  const investmentHistory = (investor && investor.investmentHistory) || [];
 
   return (
     <Layout title="Investor">
@@ -100,13 +91,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
 
       <Grid item={true} xs={12}>
         <Paper className={props.classes.paper}>
-          <Typography variant="h5">Investment History</Typography>
-          {investmentHistory.map(item => (
-            <div key={item.id}>
-              {item.time} - {item.action} - {item.shares}- {item.sharePrice ? formatBigNumber(item.sharePrice) : ''} -
-              {item.fund.name}
-            </div>
-          ))}
+          <InvestorActivity activity={investmentHistory} />
         </Paper>
       </Grid>
     </Layout>

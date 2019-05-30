@@ -4,9 +4,10 @@ import MaterialTable, { Column } from 'material-table';
 import { withStyles } from '@material-ui/styles';
 import { StyleRulesCallback } from '@material-ui/core';
 import { formatBigNumber } from '~/utils/formatBigNumber';
+import { formatDate } from '~/utils/formatDate';
 
-export interface InvestmentListProps {
-  investments: any;
+export interface InvestorActivityProps {
+  activity: any;
 }
 
 const styles: StyleRulesCallback = theme => ({
@@ -17,7 +18,20 @@ const styles: StyleRulesCallback = theme => ({
 
 const columns: Column[] = [
   {
-    title: 'Find',
+    title: 'Date',
+    render: rowData => {
+      return formatDate(rowData.timestamp);
+    },
+    defaultSort: 'asc',
+  },
+  {
+    title: 'Activity',
+    render: rowData => {
+      return rowData.action.charAt(0).toUpperCase() + rowData.action.slice(1);
+    },
+  },
+  {
+    title: 'Fund',
     field: 'fund.name',
     defaultSort: 'asc',
   },
@@ -25,45 +39,24 @@ const columns: Column[] = [
     title: 'Shares',
     type: 'numeric',
     render: rowData => {
-      return formatBigNumber(rowData.shares, 18, 3);
+      return formatBigNumber(rowData.shares);
     },
   },
   {
-    title: 'Invested amount',
+    title: 'Share Price',
     type: 'numeric',
     render: rowData => {
-      return '(todo)';
-    },
-  },
-  {
-    title: 'Redeemed amount',
-    type: 'numeric',
-    render: rowData => {
-      return '(todo)';
-    },
-  },
-  {
-    title: 'Current Value [ETH]',
-    type: 'numeric',
-    render: rowData => {
-      return formatBigNumber(rowData.nav, 18, 3);
-    },
-  },
-  {
-    title: 'Return [%]',
-    type: 'numeric',
-    render: rowData => {
-      return '(todo)';
+      return rowData.sharePrice ? formatBigNumber(rowData.sharePrice) : '';
     },
   },
 ];
 
-const InvestmentList: React.FunctionComponent<InvestmentListProps> = props => {
+const InvestorActivity: React.FunctionComponent<InvestorActivityProps> = props => {
   return (
     <MaterialTable
       columns={columns}
-      data={props.investments}
-      title="Investments"
+      data={props.activity}
+      title="Activity"
       options={{
         paging: false,
         search: false,
@@ -76,4 +69,4 @@ const InvestmentList: React.FunctionComponent<InvestmentListProps> = props => {
   );
 };
 
-export default withStyles(styles)(InvestmentList);
+export default withStyles(styles)(InvestorActivity);

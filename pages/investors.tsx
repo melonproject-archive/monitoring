@@ -26,7 +26,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
     <Layout title="Investors">
       <Grid item={true} xs={12}>
         <Paper className={props.classes.paper}>
-          <Typography variant="h5">Number of investors</Typography>
+          <Typography variant="h5">Total number of investments into Melon funds</Typography>
           <TimeSeriesChart data={investorCounts} dataKeys={['numberOfInvestors']} yMax={100} />
         </Paper>
       </Grid>

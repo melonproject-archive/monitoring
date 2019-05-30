@@ -46,7 +46,7 @@ const columns = [
     title: 'AUM [ETH]',
     type: 'numeric',
     render: rowData => {
-      return new BigNumber(rowData.gav).div(new BigNumber('1e18')).toFixed(3);
+      return formatBigNumber(rowData.gav, 18, 3);
     },
     customSort: (a, b) => {
       return new BigNumber(a.gav).isGreaterThan(new BigNumber(b.gav))
@@ -60,7 +60,7 @@ const columns = [
     title: 'Share price',
     type: 'numeric',
     render: rowData => {
-      return new BigNumber(rowData.sharePrice).div(new BigNumber('1e18')).toFixed(3);
+      return formatBigNumber(rowData.sharePrice, 18, 3);
     },
     customSort: (a, b) => {
       return new BigNumber(a.sharePrice).isGreaterThan(new BigNumber(b.sharePrice))
@@ -75,7 +75,7 @@ const columns = [
     title: 'Number of shares',
     type: 'numeric',
     render: rowData => {
-      return formatBigNumber(rowData.totalSupply);
+      return formatBigNumber(rowData.totalSupply, 18, 3);
     },
     customSort: (a, b) => {
       return new BigNumber(a.totalSupply).isGreaterThan(new BigNumber(b.totalSupply))
