@@ -1,3 +1,4 @@
+import * as R from 'ramda';
 import { useQuery } from '@apollo/react-hooks';
 import { useRef, useEffect } from 'react';
 import { DocumentNode } from 'graphql';
@@ -5,6 +6,26 @@ import { DocumentNode } from 'graphql';
 type QueryPair = [DocumentNode, DocumentNode];
 
 type ProceedOrNotFn = (result: any, expected: number) => boolean;
+
+const deepMerge = (a, b) => {
+  if (Array.isArray(a) && Array.isArray(b)) {
+    return [...a, ...b];
+  }
+
+  if (R.is(Object, a) && R.is(Object, b)) {
+    return R.mergeWith(deepMerge, a, b);
+  }
+
+  return b;
+};
+
+export const proceedPaths = (paths: string[]) => (current: any, expected: number) => {
+  return (
+    typeof paths.find(path => {
+      return R.path([...path, 'length'], current) === expected;
+    }) !== undefined
+  );
+};
 
 export function useScrapingQuery([query, more]: QueryPair, proceed: ProceedOrNotFn, props?: any) {
   const limit = (props.variables && props.variables.limit) || 100;
@@ -14,14 +35,19 @@ export function useScrapingQuery([query, more]: QueryPair, proceed: ProceedOrNot
     variables: {
       ...(props && props.variables),
       limit,
-      skip,
+      skip: skip.current,
     },
   });
 
+  const loading = useRef(result.loading);
+
   useEffect(() => {
     if (!!result.loading || !!result.error || !proceed(result.data, skip.current + limit)) {
+      loading.current = false;
       return;
     }
+
+    loading.current = true;
 
     result.fetchMore({
       query: more,
@@ -31,20 +57,13 @@ export function useScrapingQuery([query, more]: QueryPair, proceed: ProceedOrNot
       },
       updateQuery: (previous, options) => {
         skip.current = skip.current + limit;
-
-        const moreResult = options.fetchMoreResult;
-        const output = Object.keys(moreResult).reduce(
-          (carry, current) => ({
-            ...carry,
-            [current]: carry[current].concat(moreResult[current] || []),
-          }),
-          previous,
-        );
-
-        return output;
+        return deepMerge(previous, options.fetchMoreResult);
       },
     });
   }, [result, skip.current]);
 
-  return result;
+  return {
+    ...result,
+    loading: loading.current,
+  };
 }

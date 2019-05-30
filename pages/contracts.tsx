@@ -1,10 +1,8 @@
 import React from 'react';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Paper } from '@material-ui/core';
-import { ContractsQuery, ContractsScrapingQuery } from '~/queries/ContractsQuery';
-
+import { ContractsQuery } from '~/queries/ContractsQuery';
 import { Graph } from 'react-d3-graph';
-
-import { useScrapingQuery } from '~/utils/useScrapingQuery';
+import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import Layout from '~/components/Layout';
 
 const styles: StyleRulesCallback = theme => ({
@@ -16,17 +14,11 @@ const styles: StyleRulesCallback = theme => ({
 type ContractsProps = WithStyles<typeof styles>;
 
 const Contracts: React.FunctionComponent<ContractsProps> = props => {
-  const proceedContracts = (current: any, expected: number) => {
-    if (current.contracts && current.contracts.length === expected) {
-      return true;
-    }
-
-    return false;
-  };
-  const contractResult = useScrapingQuery([ContractsQuery, ContractsScrapingQuery], proceedContracts, { ssr: false });
+  const contractResult = useScrapingQuery([ContractsQuery, ContractsQuery], proceedPaths(['contracts']), {
+    ssr: false,
+  });
 
   const contracts = (contractResult.data && contractResult.data.contracts) || [];
-
   const graphData = { nodes: [] as any, links: [] as any[] };
   contracts.map(item => {
     if (item.parent && item.parent.id) {
