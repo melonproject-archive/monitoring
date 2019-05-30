@@ -34,7 +34,7 @@
     "graphql-tag": "^2.10.0",
     "hoist-non-react-statics": "^3.3.0",
     "isomorphic-ws": "^4.0.1",
-    "material-table": "^1.36.4",
+    "material-table": "^1.39.0",
     "moment": "^2.24.0",
     "next-with-apollo": "^3.3.2",
     "ramda": "^0.26.0",
