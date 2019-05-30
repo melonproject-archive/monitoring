@@ -1,20 +1,7 @@
 import gql from 'graphql-tag';
 
 export const FundOverviewQuery = gql`
-  query FundOverviewQuery($limit: Int!) {
-    funds(orderBy: name, first: $limit) {
-      id
-      name
-      gav
-      sharePrice
-      totalSupply
-      isShutdown
-      creationTime
-      investments {
-        id
-      }
-    }
-
+  query FundOverviewQuery {
     fundCounts(orderBy: timestamp) {
       active
       nonActive
@@ -28,15 +15,19 @@ export const FundOverviewQuery = gql`
   }
 `;
 
-export const FundOverviewScrapingQuery = gql`
-  query FundOverviewScrapingQuery($limit: Int!, $skip: Int!) {
+export const FundListQuery = gql`
+  query FundListQuery($limit: Int!, $skip: Int!) {
     funds(orderBy: name, first: $limit, skip: $skip) {
       id
       name
       gav
       sharePrice
+      totalSupply
       isShutdown
       creationTime
+      investments {
+        id
+      }
     }
   }
 `;

@@ -12,6 +12,7 @@ import {
   IconButton,
   Hidden,
   Drawer,
+  NoSsr,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import Link from 'next/link';
@@ -128,13 +129,6 @@ class Layout extends React.Component<LayoutProps> {
       </div>
     );
 
-    // return (
-    //   <Grid container={true} spacing={2}>
-    //     <Navigation />
-    //     {this.props.children}
-    //   </Grid>
-    // );
-
     return (
       <>
         {/* <Head>
@@ -185,12 +179,19 @@ class Layout extends React.Component<LayoutProps> {
           </nav>
           <main className={classes.content}>
             <div className={classes.toolbar} />
-            <Grid container={true}>
-              <p />
-              <Grid container={true} item={true} xs={12} spacing={2}>
-                {this.props.children}
+            <NoSsr>
+              <Grid container={true}>
+                <Grid
+                  container={true}
+                  item={true}
+                  xs={12}
+                  spacing={2}
+                  style={{ paddingLeft: '16px', paddingTop: '16px' }}
+                >
+                  {this.props.children}
+                </Grid>
               </Grid>
-            </Grid>
+            </NoSsr>
           </main>
         </div>
       </>

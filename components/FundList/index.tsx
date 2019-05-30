@@ -1,14 +1,16 @@
 import React from 'react';
-import { Fund } from '~/types';
 import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
 
 import BigNumber from 'bignumber.js';
 import { withStyles } from '@material-ui/styles';
 import { StyleRulesCallback } from '@material-ui/core';
+import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
+import { FundListQuery } from '~/queries/FundOverviewQuery';
+import { formatBigNumber } from '~/utils/formatBigNumber';
 
 export interface FundListProps {
-  funds: Fund[];
+  data?: any;
 }
 
 const styles: StyleRulesCallback = theme => ({
@@ -73,7 +75,7 @@ const columns = [
     title: 'Number of shares',
     type: 'numeric',
     render: rowData => {
-      return new BigNumber(rowData.totalSupply).div(new BigNumber('1e18')).toFixed(3);
+      return formatBigNumber(rowData.totalSupply);
     },
     customSort: (a, b) => {
       return new BigNumber(a.totalSupply).isGreaterThan(new BigNumber(b.totalSupply))
@@ -95,10 +97,20 @@ const columns = [
 ];
 
 const FundList: React.FunctionComponent<FundListProps> = props => {
+  const result = useScrapingQuery([FundListQuery, FundListQuery], proceedPaths(['funds']), {
+    ssr: false,
+  });
+
+  const data = result.data || {};
+
+  const funds = (data.funds || []).sort((a, b) => {
+    return b.sharePrice - a.sharePrice;
+  });
+
   return (
     <MaterialTable
       columns={columns as any}
-      data={props.funds}
+      data={funds}
       title="Funds"
       options={{
         paging: false,

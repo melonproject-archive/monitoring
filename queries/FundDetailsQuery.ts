@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export default gql`
+export const FundDetailsQuery = gql`
   query FundDetailsQuery($fund: ID!) {
     fund(id: $fund) {
       id
