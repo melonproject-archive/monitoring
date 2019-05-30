@@ -2,7 +2,6 @@ import React from 'react';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
-
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import moment from 'moment';
 import AssetDetailsQuery from '~/queries/AssetDetailsQuery';
@@ -21,8 +20,9 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
   const router = useRouter();
   const result = useQuery(AssetDetailsQuery, {
     ssr: false,
+    skip: !(router && router.query.address),
     variables: {
-      asset: router.query.address,
+      asset: router && router.query.address,
     },
   });
 
@@ -30,9 +30,9 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
 
   const token = asset && createToken(asset.symbol, undefined, asset.decimals);
 
-  const priceUpdates =
+  const priceHistory =
     asset &&
-    asset.priceUpdates.map(item => {
+    asset.priceHistory.map(item => {
       return {
         timestamp: item.timestamp,
         price: toFixed(createQuantity(token, item.price)),
@@ -58,7 +58,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
           <Typography variant="h5">Asset price</Typography>
 
           <ResponsiveContainer height={200} width="100%">
-            <LineChart width={400} height={400} data={priceUpdates}>
+            <LineChart width={400} height={400} data={priceHistory}>
               <XAxis
                 dataKey="timestamp"
                 type="number"

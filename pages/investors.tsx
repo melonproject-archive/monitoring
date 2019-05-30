@@ -1,11 +1,12 @@
 import React from 'react';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Link, Typography, Paper } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import InvestorsQuery from '~/queries/InvestorsQuery';
 
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import Layout from '~/components/Layout';
 import { formatDate } from '~/utils/formatDate';
+import Link from 'next/link';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {

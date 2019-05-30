@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
 import { FundOverviewQuery, FundOverviewScrapingQuery } from '~/queries/FundOverviewQuery';
 import { LineChart, AreaChart, Area, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import FundList from '~/components/FundList';
@@ -86,7 +86,9 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
         </Paper>
       </Grid>
       <Grid item={true} xs={12} sm={12} md={12}>
-        <FundList funds={funds} />
+        <NoSsr>
+          <FundList funds={funds} />
+        </NoSsr>
       </Grid>
     </Layout>
   );

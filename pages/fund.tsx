@@ -22,7 +22,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
   const router = useRouter();
   const result = useQuery(FundDetailsQuery, {
     ssr: false,
-    skip: !router,
+    skip: !(router && router.query.address),
     variables: {
       fund: router && router.query.address,
     },

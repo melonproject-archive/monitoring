@@ -3,9 +3,7 @@ import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper } f
 import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 import { createQuantity, createToken, toFixed } from '@melonproject/token-math';
-
 import InvestorDetailsQuery from '~/queries/InvestorDetailsQuery';
-
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { formatDate } from '~/utils/formatDate';
 import Layout from '~/components/Layout';
@@ -24,8 +22,9 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
   const router = useRouter();
   const result = useQuery(InvestorDetailsQuery, {
     ssr: false,
+    skip: !(router && router.query.address),
     variables: {
-      investor: router.query.address,
+      investor: router && router.query.address,
     },
   });
 

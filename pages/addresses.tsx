@@ -1,12 +1,13 @@
 import React from 'react';
 import * as R from 'ramda';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, Link } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper } from '@material-ui/core';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import moment from 'moment';
 import { useQuery } from '@apollo/react-hooks';
 import { AssetsQuery } from '~/queries/AssetsQuery';
 import { createToken, toFixed, createQuantity } from '@melonproject/token-math';
 import Layout from '~/components/Layout';
+import Link from 'next/link';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {

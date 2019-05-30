@@ -5,7 +5,8 @@ export default gql`
     asset(id: $asset) {
       id
       symbol
-      priceUpdates(orderBy: timestamp) {
+      decimals
+      priceHistory(orderBy: timestamp) {
         price
         timestamp
       }
