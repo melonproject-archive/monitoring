@@ -37,21 +37,23 @@ const Fund: React.FunctionComponent<FundProps> = props => {
   const assets = R.pathOr([], ['data', 'assets'], result);
 
   const normalizedNumbers =
-    fund &&
-    fund.calculationsHistory.map((item, index, array) => {
-      return {
-        ...item,
-        sharePrice: item.sharePrice ? formatBigNumber(item.sharePrice) : 0,
-        gav: item.gav ? formatBigNumber(item.gav) : 0,
-        nav: item.nav ? formatBigNumber(item.nav) : 0,
-        totalSupply: item.totalSupply ? formatBigNumber(item.totalSupply) : 0,
-        change: index > 0 ? (item.sharePrice / array[index - 1].sharePrice - 1) * 100 : 0,
-        logReturn: index > 0 ? Math.log(item.sharePrice / array[index - 1].sharePrice) : 0,
-      };
-    });
+    (fund &&
+      fund.calculationsHistory.map((item, index, array) => {
+        return {
+          ...item,
+          sharePrice: item.sharePrice ? formatBigNumber(item.sharePrice) : 0,
+          gav: item.gav ? formatBigNumber(item.gav) : 0,
+          nav: item.nav ? formatBigNumber(item.nav) : 0,
+          totalSupply: item.totalSupply ? formatBigNumber(item.totalSupply) : 0,
+          change: index > 0 ? (item.sharePrice / array[index - 1].sharePrice - 1) * 100 : 0,
+          logReturn: index > 0 ? Math.log(item.sharePrice / array[index - 1].sharePrice) : 0,
+        };
+      })) ||
+    [];
 
   const returnSinceInception =
     normalizedNumbers &&
+    normalizedNumbers.length > 0 &&
     (normalizedNumbers[normalizedNumbers.length - 1].sharePrice / normalizedNumbers[0].sharePrice - 1) * 100;
   const annualizedReturn =
     returnSinceInception &&
@@ -120,6 +122,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           <div>Manager: {fund && fund.manager.id}</div>
           <div># shares: {shares}</div>
           <div>&nbsp;</div>
+          <div>Share price: {fund && fund.sharePrice}</div>
           <div>Return since inception: {returnSinceInception && returnSinceInception.toFixed(2)}%</div>
           <div>Annualized return: {annualizedReturn && annualizedReturn.toFixed(2)}%</div>
           <div>Volatility: {volatility && volatility.toFixed(2)}%</div>
