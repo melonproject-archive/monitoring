@@ -25,6 +25,7 @@ export default gql`
         action
         shares
         sharePrice
+        amount
         timestamp
         fund {
           id

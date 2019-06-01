@@ -39,14 +39,18 @@ const Fund: React.FunctionComponent<FundProps> = props => {
   const normalizedNumbers =
     (fund &&
       fund.calculationsHistory.map((item, index, array) => {
+        const timeSpan = index > 0 ? item.timestamp - array[index - 1].timestamp : 0;
+        const returnSinceLastPriceUpdate = index > 0 ? item.sharePrice / array[index - 1].sharePrice - 1 : 0;
+        const dailyReturn = index > 0 ? Math.pow(1 + returnSinceLastPriceUpdate, (24 * 60 * 60) / timeSpan) - 1 : 0;
         return {
           ...item,
           sharePrice: item.sharePrice ? formatBigNumber(item.sharePrice) : 0,
           gav: item.gav ? formatBigNumber(item.gav) : 0,
           nav: item.nav ? formatBigNumber(item.nav) : 0,
           totalSupply: item.totalSupply ? formatBigNumber(item.totalSupply) : 0,
-          change: index > 0 ? (item.sharePrice / array[index - 1].sharePrice - 1) * 100 : 0,
-          logReturn: index > 0 ? Math.log(item.sharePrice / array[index - 1].sharePrice) : 0,
+          dailyReturn: index > 0 ? dailyReturn : 0,
+          logReturn: index > 0 ? Math.log(1 + dailyReturn) : 0,
+          feesInDenominationAsset: item.feesInDenominationAsset ? formatBigNumber(item.feesInDenominationAsset) : 0,
         };
       })) ||
     [];
@@ -78,6 +82,8 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         time: formatDate(item.timestamp),
         shares: item.shares ? formatBigNumber(item.shares) : 0,
         sharePrice: item.sharePrice ? formatBigNumber(item.sharePrice) : 0,
+        amount: item.amount ? formatBigNumber(item.amount) : 0,
+        amountInDenominationAsset: item.amountInDenominationAsset ? formatBigNumber(item.amountInDenominationAsset) : 0,
       };
     });
 
@@ -113,6 +119,8 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       };
     });
 
+  const feesPaidOut = R.pathOr([], ['feeManager', 'feeRewardHistory'], fund);
+
   return (
     <Layout title="Fund">
       <Grid item={true} xs={12} sm={12} md={12}>
@@ -122,7 +130,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           <div>Manager: {fund && fund.manager.id}</div>
           <div># shares: {shares}</div>
           <div>&nbsp;</div>
-          <div>Share price: {fund && fund.sharePrice}</div>
+          <div>Share price: {fund && formatBigNumber(fund.sharePrice, 18, 3)}</div>
           <div>Return since inception: {returnSinceInception && returnSinceInception.toFixed(2)}%</div>
           <div>Annualized return: {annualizedReturn && annualizedReturn.toFixed(2)}%</div>
           <div>Volatility: {volatility && volatility.toFixed(2)}%</div>
@@ -137,7 +145,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">NAV</Typography>
-          <TimeSeriesChart data={normalizedNumbers} dataKeys={['nav']} />
+          <TimeSeriesChart data={normalizedNumbers} dataKeys={['gav', 'nav']} />
         </Paper>
       </Grid>
 
@@ -152,7 +160,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Daily change (%)</Typography>
 
-          <TimeSeriesChart data={normalizedNumbers} dataKeys={['change']} referenceLine={true} />
+          <TimeSeriesChart data={normalizedNumbers} dataKeys={['dailyReturn']} referenceLine={true} />
         </Paper>
       </Grid>
       <Grid item={true} xs={12} sm={6} md={6}>
@@ -162,32 +170,12 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         </Paper>
       </Grid>
       <Grid item={true} xs={12} sm={6} md={6}>
-        <NoSsr>
-          <MaterialTable
-            columns={[
-              {
-                title: 'Investor',
-                field: 'owner.id',
-              },
-              {
-                title: 'Shares',
-                field: 'shares',
-                type: 'numeric',
-              },
-            ]}
-            data={investments}
-            title="Investors"
-            options={{
-              paging: false,
-              search: false,
-            }}
-            onRowClick={(_, rowData) => {
-              const url = '/investor?address=' + rowData.owner.id;
-              window.open(url, '_self');
-            }}
-          />
-        </NoSsr>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">Fees in denomination asset</Typography>
+          <TimeSeriesChart data={normalizedNumbers} dataKeys={['feesInDenominationAsset']} />
+        </Paper>
       </Grid>
+
       <Grid item={true} xs={12} sm={12} md={12}>
         <NoSsr>
           <MaterialTable
@@ -217,6 +205,11 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 field: 'sharePrice',
                 type: 'numeric',
               },
+              {
+                title: 'Amount in ETH',
+                field: 'amountInDenominationAsset',
+                type: 'numeric',
+              },
             ]}
             data={investmentHistory}
             title="Investment History"
@@ -227,6 +220,60 @@ const Fund: React.FunctionComponent<FundProps> = props => {
             onRowClick={(_, rowData) => {
               const url = '/investor?address=' + rowData.owner.id;
               window.open(url, '_self');
+            }}
+          />
+        </NoSsr>
+      </Grid>
+      <Grid item={true} xs={12} sm={6} md={6}>
+        <NoSsr>
+          <MaterialTable
+            columns={[
+              {
+                title: 'Investor',
+                field: 'owner.id',
+              },
+              {
+                title: 'Shares',
+                field: 'shares',
+                type: 'numeric',
+              },
+            ]}
+            data={investments}
+            title="Investors"
+            options={{
+              paging: false,
+              search: false,
+            }}
+            onRowClick={(_, rowData) => {
+              const url = '/investor?address=' + rowData.owner.id;
+              window.open(url, '_self');
+            }}
+          />
+        </NoSsr>
+      </Grid>
+      <Grid item={true} xs={12} sm={6} md={6}>
+        <NoSsr>
+          <MaterialTable
+            columns={[
+              {
+                title: 'Time',
+                field: 'timestamp',
+                render: rowData => {
+                  return formatDate(rowData.timestamp);
+                },
+              },
+              {
+                title: 'Shares',
+                render: rowData => {
+                  return formatBigNumber(rowData.shares);
+                },
+              },
+            ]}
+            data={feesPaidOut}
+            title="Fees paid out"
+            options={{
+              paging: false,
+              search: false,
             }}
           />
         </NoSsr>

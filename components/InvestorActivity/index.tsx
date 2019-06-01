@@ -49,6 +49,13 @@ const columns: Column[] = [
       return rowData.sharePrice ? formatBigNumber(rowData.sharePrice) : '';
     },
   },
+  {
+    title: 'Amount',
+    type: 'numeric',
+    render: rowData => {
+      return rowData.amount ? formatBigNumber(rowData.amount) : '';
+    },
+  },
 ];
 
 const InvestorActivity: React.FunctionComponent<InvestorActivityProps> = props => {

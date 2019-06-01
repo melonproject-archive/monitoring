@@ -16,6 +16,7 @@ export const InvestorListQuery = gql`
       investments {
         id
         gav
+        nav
       }
     }
   }

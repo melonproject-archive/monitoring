@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import {
   Grid,
+  Paper,
   withStyles,
   Typography,
   Divider,
@@ -41,6 +42,9 @@ const drawerWidth = 200;
 const styles = theme => ({
   root: {
     display: 'flex',
+  },
+  paper: {
+    padding: theme.spacing(2),
   },
   drawer: {
     [theme.breakpoints.up('sm')]: {
@@ -188,6 +192,28 @@ class Layout extends React.Component<LayoutProps> {
                   spacing={2}
                   style={{ paddingLeft: '16px', paddingTop: '16px' }}
                 >
+                  <Grid item={true} xs={12} sm={12} md={12}>
+                    <Paper className={classes.paper}>
+                      <Typography variant="h5">Important notice</Typography>
+                      <Typography variant="body2">
+                        This is work in progress, and may contain incomplete and incorrect data. The current Melon
+                        Monitoring Tool can still be found at:{' '}
+                        <a href="http://monitoring.melon.network/" className={classes.aStyle}>
+                          http://monitoring.melon.network/
+                        </a>
+                      </Typography>
+                      <Typography variant="body2">
+                        To set up a fund on the melon network, please download the latest Melon manager interface from
+                        <a
+                          href="https://github.com/melonproject/melon-lab/releases/tag/v1.0.1"
+                          className={classes.aStyle}
+                        >
+                          https://github.com/melonproject/melon-lab/releases/tag/v1.0.1
+                        </a>{' '}
+                      </Typography>
+                    </Paper>
+                  </Grid>
+
                   {this.props.children}
                 </Grid>
               </Grid>

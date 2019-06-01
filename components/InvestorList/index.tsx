@@ -32,7 +32,7 @@ const columns = [
   {
     title: 'AUM [ETH] (incorrect numbers!)',
     type: 'numeric',
-    field: 'aum',
+    field: 'netAum',
   },
 ];
 
@@ -51,6 +51,11 @@ const InvestorList: React.FunctionComponent<InvestorListProps> = props => {
         aum: formatBigNumber(
           investor.investments.reduce((carry, item) => {
             return new BigNumber(carry).plus(new BigNumber(item.gav));
+          }, new BigNumber(0)),
+        ),
+        netAum: formatBigNumber(
+          investor.investments.reduce((carry, item) => {
+            return new BigNumber(carry).plus(new BigNumber(item.nav));
           }, new BigNumber(0)),
         ),
       };

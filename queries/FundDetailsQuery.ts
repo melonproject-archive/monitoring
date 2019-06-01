@@ -16,6 +16,7 @@ export const FundDetailsQuery = gql`
         gav
         nav
         totalSupply
+        feesInDenominationAsset
         sharePrice
         timestamp
       }
@@ -24,8 +25,14 @@ export const FundDetailsQuery = gql`
         timestamp
         shares
         sharePrice
+        amount
+        amountInDenominationAsset
         owner {
           id
+        }
+        asset {
+          id
+          symbol
         }
       }
       holdingsHistory(orderBy: timestamp) {
@@ -40,6 +47,12 @@ export const FundDetailsQuery = gql`
         shares
         owner {
           id
+        }
+      }
+      feeManager {
+        feeRewardHistory {
+          timestamp
+          shares
         }
       }
     }
