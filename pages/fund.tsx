@@ -257,7 +257,6 @@ const Fund: React.FunctionComponent<FundProps> = props => {
             columns={[
               {
                 title: 'Time',
-                field: 'timestamp',
                 render: rowData => {
                   return formatDate(rowData.timestamp);
                 },

@@ -19,6 +19,12 @@ export default gql`
           nav
           timestamp
         }
+        history {
+          id
+          action
+          amountInDenominationAsset
+          timestamp
+        }
       }
       investmentHistory(orderBy: timestamp) {
         id

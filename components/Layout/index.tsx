@@ -203,7 +203,8 @@ class Layout extends React.Component<LayoutProps> {
                         </a>
                       </Typography>
                       <Typography variant="body2">
-                        To set up a fund on the melon network, please download the latest Melon manager interface from
+                        To set up a fund on the melon network, please download the latest <b>Melon manager interface</b>
+                        from{' '}
                         <a
                           href="https://github.com/melonproject/melon-lab/releases/tag/v1.0.1"
                           className={classes.aStyle}

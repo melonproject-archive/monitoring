@@ -9,6 +9,7 @@ import TimeSeriesChart from '~/components/TimeSeriesChart';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import InvestmentList from '~/components/InvestmentList';
 import InvestorActivity from '~/components/InvestorActivity';
+import BigNumber from 'bignumber.js';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -39,6 +40,20 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
           gav: vals.gav ? formatBigNumber(vals.gav) : 0,
         };
       }),
+      investedAmount: inv.history.reduce((carry, item) => {
+        if (item.action === 'Investment') {
+          return new BigNumber(carry).plus(new BigNumber(item.amountInDenominationAsset));
+        } else {
+          return new BigNumber(carry);
+        }
+      }, new BigNumber(0)),
+      redeemedAmount: inv.history.reduce((carry, item) => {
+        if (item.action === 'Redemption') {
+          return new BigNumber(carry).plus(new BigNumber(item.amountInDenominationAsset));
+        } else {
+          return new BigNumber(carry);
+        }
+      }, new BigNumber(0)),
     };
   });
 

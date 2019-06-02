@@ -16,7 +16,7 @@ export const AssetsQuery = gql`
 
 export const SingleAssetPriceHistoryQuery = gql`
   query SingleAssetPriceHistoryQuery($id: String!, $limit: Int!, $skip: Int!) {
-    priceHistory(first: $limit, skip: $skip, orderBy: timestamp, where: { asset: $id }) {
+    assetPriceHistories(first: $limit, skip: $skip, orderBy: timestamp, where: { asset: $id }) {
       price
       timestamp
     }

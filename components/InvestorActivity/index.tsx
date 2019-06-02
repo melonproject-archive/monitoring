@@ -25,15 +25,15 @@ const columns: Column[] = [
     defaultSort: 'asc',
   },
   {
+    title: 'Fund',
+    field: 'fund.name',
+    defaultSort: 'asc',
+  },
+  {
     title: 'Activity',
     render: rowData => {
       return rowData.action.charAt(0).toUpperCase() + rowData.action.slice(1);
     },
-  },
-  {
-    title: 'Fund',
-    field: 'fund.name',
-    defaultSort: 'asc',
   },
   {
     title: 'Shares',
@@ -50,7 +50,7 @@ const columns: Column[] = [
     },
   },
   {
-    title: 'Amount',
+    title: 'Amount [ETH]',
     type: 'numeric',
     render: rowData => {
       return rowData.amount ? formatBigNumber(rowData.amount) : '';

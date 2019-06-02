@@ -17,7 +17,7 @@ const styles: StyleRulesCallback = theme => ({
 
 const columns: Column[] = [
   {
-    title: 'Find',
+    title: 'Fund',
     field: 'fund.name',
     defaultSort: 'asc',
   },
@@ -29,17 +29,17 @@ const columns: Column[] = [
     },
   },
   {
-    title: 'Invested amount',
+    title: 'Invested amount [ETH]',
     type: 'numeric',
     render: rowData => {
-      return '(todo)';
+      return formatBigNumber(rowData.investedAmount, 18, 3);
     },
   },
   {
-    title: 'Redeemed amount',
+    title: 'Redeemed amount [ETH]',
     type: 'numeric',
     render: rowData => {
-      return '(todo)';
+      return formatBigNumber(rowData.redeemedAmount, 18, 3);
     },
   },
   {

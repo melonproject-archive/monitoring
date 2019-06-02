@@ -1,12 +1,13 @@
 import React from 'react';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
 import { AmguPaymentsQuery, EngineQuery } from '~/queries/EngineQuery';
 
-import { useScrapingQuery } from '~/utils/useScrapingQuery';
+import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import Layout from '~/components/Layout';
 import { formatDate } from '~/utils/formatDate';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import TimeSeriesChart from '~/components/TimeSeriesChart';
+import MaterialTable from 'material-table';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -17,14 +18,9 @@ const styles: StyleRulesCallback = theme => ({
 type EngineProps = WithStyles<typeof styles>;
 
 const Engine: React.FunctionComponent<EngineProps> = props => {
-  const proceed = (current: any, expected: number) => {
-    if (current.amguPayments && current.amguPayments.length === expected) {
-      return true;
-    }
-
-    return false;
-  };
-  const result = useScrapingQuery([EngineQuery, AmguPaymentsQuery], proceed, { ssr: false });
+  const result = useScrapingQuery([EngineQuery, AmguPaymentsQuery], proceedPaths(['amguPayments']), {
+    ssr: false,
+  });
 
   const amguPayments = (result.data && result.data.amguPayments) || [];
 
@@ -59,6 +55,43 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
           <Typography variant="h5">Cumulative amgu paid</Typography>
           <TimeSeriesChart data={amguCumulative} dataKeys={['cumulativeAmount']} />
         </Paper>
+      </Grid>
+      <Grid item={true} xs={12} sm={6} md={6}>
+        <NoSsr>
+          <MaterialTable
+            columns={[
+              {
+                title: 'Time',
+                render: rowData => {
+                  return formatDate(rowData.timestamp);
+                },
+              },
+              {
+                title: 'Event',
+                field: 'event',
+              },
+              {
+                title: 'Amount',
+                render: rowData => {
+                  return formatBigNumber(rowData.amount);
+                },
+                type: 'numeric',
+              },
+              {
+                title: 'Asset',
+                render: rowData => {
+                  return rowData.event === 'Thaw' ? 'ETH' : 'MLN';
+                },
+              },
+            ]}
+            data={engineQuantities && engineQuantities.etherEvents}
+            title="Engine events"
+            options={{
+              paging: false,
+              search: false,
+            }}
+          />
+        </NoSsr>
       </Grid>
     </Layout>
   );

@@ -16,6 +16,11 @@ export const EngineQuery = gql`
         totalMlnBurned
         premiumPercent
         lastUpdate
+        etherEvents(orderBy: timestamp) {
+          timestamp
+          event
+          amount
+        }
       }
     }
 
