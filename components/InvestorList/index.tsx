@@ -30,7 +30,7 @@ const columns = [
     type: 'numeric',
   },
   {
-    title: 'AUM [ETH] (incorrect numbers!)',
+    title: 'AUM [ETH]',
     type: 'numeric',
     field: 'netAum',
   },
