@@ -130,6 +130,25 @@ class Layout extends React.Component<LayoutProps> {
             </Link>
           ))}
         </List>
+
+        <Paper className={classes.paper}>
+          <Typography variant="h6">Important notice</Typography>
+          <Typography variant="caption">
+            This is work in progress, and may contain incomplete and incorrect data. The current Melon Monitoring Tool
+            can be found at:{' '}
+            <a href="http://monitoring.melon.network/" className={classes.aStyle}>
+              http://monitoring.melon.network/
+            </a>
+          </Typography>
+          <p>&nbsp;</p>
+          <Typography variant="caption">
+            To set up a fund on the melon network, please download the latest <b>Melon manager interface</b>
+            from{' '}
+            <a href="https://github.com/melonproject/melon-lab/releases/tag/v1.0.1" className={classes.aStyle}>
+              https://github.com/melonproject/melon-lab/releases/tag/v1.0.1
+            </a>{' '}
+          </Typography>
+        </Paper>
       </div>
     );
 
@@ -192,29 +211,6 @@ class Layout extends React.Component<LayoutProps> {
                   spacing={2}
                   style={{ paddingLeft: '16px', paddingTop: '16px' }}
                 >
-                  <Grid item={true} xs={12} sm={12} md={12}>
-                    <Paper className={classes.paper}>
-                      <Typography variant="h5">Important notice</Typography>
-                      <Typography variant="body2">
-                        This is work in progress, and may contain incomplete and incorrect data. The current Melon
-                        Monitoring Tool can still be found at:{' '}
-                        <a href="http://monitoring.melon.network/" className={classes.aStyle}>
-                          http://monitoring.melon.network/
-                        </a>
-                      </Typography>
-                      <Typography variant="body2">
-                        To set up a fund on the melon network, please download the latest <b>Melon manager interface</b>
-                        from{' '}
-                        <a
-                          href="https://github.com/melonproject/melon-lab/releases/tag/v1.0.1"
-                          className={classes.aStyle}
-                        >
-                          https://github.com/melonproject/melon-lab/releases/tag/v1.0.1
-                        </a>{' '}
-                      </Typography>
-                    </Paper>
-                  </Grid>
-
                   {this.props.children}
                 </Grid>
               </Grid>

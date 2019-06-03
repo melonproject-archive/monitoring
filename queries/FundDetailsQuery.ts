@@ -43,6 +43,15 @@ export const FundDetailsQuery = gql`
           symbol
         }
       }
+      currentHoldings: holdingsHistory(orderBy: timestamp, orderDirection: desc, first: 12) {
+        timestamp
+        holding
+        assetGav
+        asset {
+          id
+          symbol
+        }
+      }
       investments {
         shares
         owner {

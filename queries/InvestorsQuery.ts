@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const InvestorCountQuery = gql`
-  query InvestorCountQuery {
-    investorCounts(orderBy: timestamp) {
+  query InvestorCountQuery($limit: Int!, $skip: Int!) {
+    investorCounts(orderBy: timestamp, first: $limit, skip: $skip) {
       numberOfInvestors
       timestamp
     }

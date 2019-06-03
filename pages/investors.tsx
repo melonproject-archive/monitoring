@@ -1,11 +1,11 @@
 import React from 'react';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper } from '@material-ui/core';
-import { useQuery } from '@apollo/react-hooks';
 import { InvestorCountQuery } from '~/queries/InvestorsQuery';
 
 import Layout from '~/components/Layout';
 import TimeSeriesChart from '~/components/TimeSeriesChart';
 import InvestorList from '~/components/InvestorList';
+import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -16,7 +16,7 @@ const styles: StyleRulesCallback = theme => ({
 type InvestorsProps = WithStyles<typeof styles>;
 
 const Investors: React.FunctionComponent<InvestorsProps> = props => {
-  const result = useQuery(InvestorCountQuery, {
+  const result = useScrapingQuery([InvestorCountQuery, InvestorCountQuery], proceedPaths(['investorCounts']), {
     ssr: false,
   });
 

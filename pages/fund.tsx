@@ -10,6 +10,7 @@ import { formatDate } from '../utils/formatDate';
 import Layout from '~/components/Layout';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import TimeSeriesChart from '~/components/TimeSeriesChart';
+import BigNumber from 'bignumber.js';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -90,6 +91,12 @@ const Fund: React.FunctionComponent<FundProps> = props => {
   const holdingsHistory = fund && fund.holdingsHistory;
   const holdingsLength = holdingsHistory && holdingsHistory.length;
 
+  const currentHoldings =
+    fund &&
+    fund.currentHoldings.filter(
+      (holding, index, array) => holding.timestamp === array[0].timestamp && !new BigNumber(holding.holding).isZero(),
+    );
+
   const groupedHoldingsLog: any[] = [];
   let ts = 0;
   for (let k = 0; k < holdingsLength; k++) {
@@ -123,7 +130,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
 
   return (
     <Layout title="Fund">
-      <Grid item={true} xs={12} sm={12} md={12}>
+      <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">{fund && fund.name}</Typography>
           <div>Address: {fund && fund.id}</div>
@@ -135,6 +142,38 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           <div>Annualized return: {annualizedReturn && annualizedReturn.toFixed(2)}%</div>
           <div>Volatility: {volatility && volatility.toFixed(2)}%</div>
         </Paper>
+      </Grid>
+      <Grid item={true} xs={12} sm={6} md={6}>
+        <NoSsr>
+          <MaterialTable
+            columns={[
+              {
+                title: 'Asset',
+                field: 'asset.symbol',
+              },
+              {
+                title: 'Amount',
+                type: 'numeric',
+                render: rowData => {
+                  return formatBigNumber(rowData.holding, 18, 3);
+                },
+              },
+              {
+                title: 'Value [ETH]',
+                type: 'numeric',
+                render: rowData => {
+                  return formatBigNumber(rowData.assetGav, 18, 3);
+                },
+              },
+            ]}
+            data={currentHoldings}
+            title="Assets currently held"
+            options={{
+              paging: false,
+              search: false,
+            }}
+          />
+        </NoSsr>
       </Grid>
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
