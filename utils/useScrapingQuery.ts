@@ -8,23 +8,22 @@ type QueryPair = [DocumentNode, DocumentNode];
 type ProceedOrNotFn = (result: any, expected: number) => boolean;
 
 const deepMerge = (a, b) => {
-  if (Array.isArray(a) && Array.isArray(b)) {
-    return [...a, ...b];
-  }
+  // if (Array.isArray(a) && Array.isArray(b)) {
+  //   const r = [...a, ...b];
+  //   console.log('Array');
+  //   console.log(a, b);
+  //   return r;
+  // }
 
   if (R.is(Object, a) && R.is(Object, b)) {
-    return R.mergeWith(deepMerge, a, b);
+    return R.mergeDeepWith(R.concat, a, b);
   }
 
   return b;
 };
 
 export const proceedPaths = (paths: string[]) => (current: any, expected: number) => {
-  return (
-    typeof paths.find(path => {
-      return R.path([...path, 'length'], current) === expected;
-    }) !== undefined
-  );
+  return R.path([...paths, 'length'], current) === expected;
 };
 
 export function useScrapingQuery([query, more]: QueryPair, proceed: ProceedOrNotFn, props?: any) {

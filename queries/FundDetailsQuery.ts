@@ -37,7 +37,8 @@ export const FundDetailsQuery = gql`
       }
       holdingsHistory(orderBy: timestamp) {
         timestamp
-        holding
+        amount
+        assetGav
         asset {
           id
           symbol
@@ -45,7 +46,7 @@ export const FundDetailsQuery = gql`
       }
       currentHoldings: holdingsHistory(orderBy: timestamp, orderDirection: desc, first: 12) {
         timestamp
-        holding
+        amount
         assetGav
         asset {
           id
@@ -59,10 +60,53 @@ export const FundDetailsQuery = gql`
         }
       }
       feeManager {
+        id
+        managementFee {
+          managementFeeRate
+        }
+        performanceFee {
+          performanceFeeRate
+          performanceFeePeriod
+        }
         feeRewardHistory {
           timestamp
           shares
         }
+      }
+      policyManager {
+        id
+        policies {
+          identifier
+          position
+          identifier
+          assetWhiteList {
+            symbol
+          }
+          assetBlackList {
+            symbol
+          }
+          maxConcentration
+          maxPositions
+          priceTolerance
+        }
+      }
+      accounting {
+        id
+        denominationAsset {
+          symbol
+        }
+      }
+      participation {
+        id
+      }
+      share {
+        id
+      }
+      trading {
+        id
+      }
+      vault {
+        id
       }
     }
 

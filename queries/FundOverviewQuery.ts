@@ -8,7 +8,7 @@ export const FundOverviewQuery = gql`
       timestamp
     }
 
-    networkValues(orderBy: timestamp) {
+    melonNetworkHistories(orderBy: timestamp) {
       timestamp
       gav
     }
@@ -27,6 +27,14 @@ export const FundListQuery = gql`
       creationTime
       investments {
         id
+      }
+      version {
+        name
+      }
+      accounting {
+        denominationAsset {
+          symbol
+        }
       }
     }
   }

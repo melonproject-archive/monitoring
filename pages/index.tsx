@@ -34,7 +34,7 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
   const loading = result.loading;
   const fundCounts = data.fundCounts || [];
 
-  const networkValues = R.pathOr([], ['data', 'networkValues'], result).map(item => {
+  const melonNetworkHistories = R.pathOr([], ['data', 'melonNetworkHistories'], result).map(item => {
     return {
       ...item,
       gav: formatBigNumber(item.gav, 18, 3),
@@ -53,10 +53,11 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
               <>
                 <br />
                 <Typography variant="body1">
-                  {parseInt(fundCounts[fundCounts.length - 1].active, 10) +
-                    parseInt(fundCounts[fundCounts.length - 1].nonActive, 10)}{' '}
+                  {fundCounts &&
+                    parseInt(fundCounts[fundCounts.length - 1].active, 10) +
+                      parseInt(fundCounts[fundCounts.length - 1].nonActive, 10)}{' '}
                   funds ({fundCounts[fundCounts.length - 1].active} active,{' '}
-                  {fundCounts[fundCounts.length - 1].nonActive} not active)
+                  {fundCounts && fundCounts[fundCounts.length - 1].nonActive} not active)
                 </Typography>
                 <ResponsiveContainer height={200} width="100%">
                   <AreaChart data={fundCounts}>
@@ -68,8 +69,8 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
                       stroke="#dddddd"
                     />
                     <YAxis domain={[0, 80]} orientation="right" stroke="#dddddd" />
-                    <Area type="monotone" dataKey="active" stroke="#aaaaaa" fill="#aaaaaa" />
-                    <Area type="monotone" dataKey="nonActive" stroke="#eeeeee" fill="#eeeeee" />
+                    <Area type="monotone" dataKey="nonActive" stackId="1" stroke="#eeeeee" fill="#eeeeee" />
+                    <Area type="monotone" dataKey="active" stackId="1" stroke="#aaaaaa" fill="#aaaaaa" />
                     <Tooltip
                       labelFormatter={value => `Date: ${formatDate(value)}`}
                       contentStyle={{ backgroundColor: '#4A4A4A' }}
@@ -90,9 +91,11 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
             {(loading && <CircularProgress />) || (
               <>
                 <br />
-                <Typography variant="body1">{networkValues[networkValues.length - 1].gav} ETH</Typography>
+                <Typography variant="body1">
+                  {melonNetworkHistories[melonNetworkHistories.length - 1].gav} ETH
+                </Typography>
                 <ResponsiveContainer height={200} width="100%">
-                  <AreaChart data={networkValues}>
+                  <AreaChart data={melonNetworkHistories}>
                     <XAxis
                       dataKey="timestamp"
                       type="number"

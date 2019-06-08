@@ -34,7 +34,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
     asset.priceHistory.map(item => {
       return {
         timestamp: item.timestamp,
-        price: toFixed(createQuantity(token, item.price)),
+        price: item.price > 0 ? toFixed(createQuantity(token, item.price)) : undefined,
       };
     });
 
@@ -42,12 +42,12 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
     <Layout title="Assets">
       <Grid item={true} xs={12}>
         <Paper className={props.classes.paper}>
-          <Typography variant="h5">Asset</Typography>
+          <Typography variant="h5">{asset && asset.symbol}</Typography>
 
           {asset && (
             <>
-              <div>Address: {asset.id}</div>
-              <div>Symbol: {asset.symbol}</div>
+              <div>Address: {asset && asset.id}</div>
+              <div>Decimals: {asset && asset.decimals}</div>
             </>
           )}
         </Paper>
@@ -56,6 +56,24 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Asset price</Typography>
           <TimeSeriesChart data={priceHistory} dataKeys={['price']} />
+        </Paper>
+      </Grid>
+      <Grid item={true} xs={12}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">Asset price change</Typography>
+          <Typography variant="body2">(todo - chart)</Typography>
+        </Paper>
+      </Grid>
+      <Grid item={true} xs={12}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">Aggregate value of {asset && asset.symbol} within Melon network</Typography>
+          <Typography variant="body2">(todo - chart)</Typography>
+        </Paper>
+      </Grid>
+      <Grid item={true} xs={12}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">Funds with {asset && asset.symbol} in their portfolio</Typography>
+          <Typography variant="body2">(todo - table)</Typography>
         </Paper>
       </Grid>
     </Layout>

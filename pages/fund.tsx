@@ -74,19 +74,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
   const volatility =
     normalizedNumbers && standardDeviation(normalizedNumbers.map(item => item.logReturn)) * 100 * Math.sqrt(365.25);
 
-  const shares = fund && fund.totalSupply && formatBigNumber(fund.totalSupply);
-  const investmentHistory =
-    fund &&
-    fund.investmentHistory.map(item => {
-      return {
-        ...item,
-        time: formatDate(item.timestamp),
-        shares: item.shares ? formatBigNumber(item.shares) : 0,
-        sharePrice: item.sharePrice ? formatBigNumber(item.sharePrice) : 0,
-        amount: item.amount ? formatBigNumber(item.amount) : 0,
-        amountInDenominationAsset: item.amountInDenominationAsset ? formatBigNumber(item.amountInDenominationAsset) : 0,
-      };
-    });
+  const investmentHistory = fund && fund.investmentHistory;
 
   const holdingsHistory = fund && fund.holdingsHistory;
   const holdingsLength = holdingsHistory && holdingsHistory.length;
@@ -94,7 +82,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
   const currentHoldings =
     fund &&
     fund.currentHoldings.filter(
-      (holding, index, array) => holding.timestamp === array[0].timestamp && !new BigNumber(holding.holding).isZero(),
+      (holding, index, array) => holding.timestamp === array[0].timestamp && !new BigNumber(holding.amount).isZero(),
     );
 
   const groupedHoldingsLog: any[] = [];
@@ -104,29 +92,40 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       groupedHoldingsLog.push({
         timestamp: holdingsHistory[k].timestamp,
         [holdingsHistory[k].asset.symbol]: formatBigNumber(
-          holdingsHistory[k].holding,
+          holdingsHistory[k].assetGav,
           holdingsHistory[k].asset.decimals,
         ),
       });
       ts = holdingsHistory[k].timestamp;
     } else {
       groupedHoldingsLog[groupedHoldingsLog.length - 1][holdingsHistory[k].asset.symbol] = formatBigNumber(
-        holdingsHistory[k].holding,
+        holdingsHistory[k].assetGav,
         holdingsHistory[k].asset.decimals,
       );
     }
   }
 
-  const investments =
-    fund &&
-    fund.investments.map(item => {
-      return {
-        ...item,
-        shares: formatBigNumber(item.shares),
-      };
-    });
+  const investments = fund && fund.investments;
 
   const feesPaidOut = R.pathOr([], ['feeManager', 'feeRewardHistory'], fund);
+
+  const policies = fund && fund.policyManager && fund.policyManager.policies;
+
+  const contractNames = [
+    { name: 'Accounting', field: 'accounting' },
+    { name: 'FeeManager', field: 'feeManager' },
+    { name: 'Participation', field: 'participation' },
+    { name: 'PolicyManager', field: 'policyManager' },
+    { name: 'Shares', field: 'share' },
+    { name: 'Trading', field: 'trading' },
+    { name: 'Vault', field: 'vault' },
+  ];
+
+  const contractAddresses =
+    fund &&
+    contractNames.map(contract => {
+      return { ...contract, address: fund[contract.field] && fund[contract.field].id };
+    });
 
   return (
     <Layout title="Fund">
@@ -135,9 +134,20 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           <Typography variant="h5">{fund && fund.name}</Typography>
           <div>Address: {fund && fund.id}</div>
           <div>Manager: {fund && fund.manager.id}</div>
-          <div># shares: {shares}</div>
           <div>&nbsp;</div>
+          <div># shares: {fund && formatBigNumber(fund.totalSupply, 18, 3)}</div>
           <div>Share price: {fund && formatBigNumber(fund.sharePrice, 18, 3)}</div>
+          <div>&nbsp;</div>
+          <div>
+            Management fee: {fund && formatBigNumber(fund.feeManager.managementFee.managementFeeRate + '00', 18, 2)}%
+          </div>
+          <div>
+            Performance fee: {fund && formatBigNumber(fund.feeManager.performanceFee.performanceFeeRate + '00', 18, 2)}%
+          </div>
+          <div>
+            Performance fee period: {fund && fund.feeManager.performanceFee.performanceFeePeriod / (60 * 60 * 24)} days
+          </div>
+          <div>&nbsp;</div>
           <div>Return since inception: {returnSinceInception && returnSinceInception.toFixed(2)}%</div>
           <div>Annualized return: {annualizedReturn && annualizedReturn.toFixed(2)}%</div>
           <div>Volatility: {volatility && volatility.toFixed(2)}%</div>
@@ -155,7 +165,18 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 title: 'Amount',
                 type: 'numeric',
                 render: rowData => {
-                  return formatBigNumber(rowData.holding, 18, 3);
+                  return formatBigNumber(rowData.amount, 18, 3);
+                },
+              },
+              {
+                title: 'Price',
+                type: 'numeric',
+                render: rowData => {
+                  const price = new BigNumber(rowData.assetGav)
+                    .times(new BigNumber('1e18'))
+                    .div(new BigNumber(rowData.amount))
+                    .toString();
+                  return formatBigNumber(price, 18, 3);
                 },
               },
               {
@@ -164,13 +185,25 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 render: rowData => {
                   return formatBigNumber(rowData.assetGav, 18, 3);
                 },
+                defaultSort: 'desc',
+                customSort: (a, b) => {
+                  return new BigNumber(a.assetGav).isGreaterThan(new BigNumber(b.assetGav))
+                    ? 1
+                    : new BigNumber(b.assetGav).isGreaterThan(new BigNumber(a.assetGav))
+                    ? -1
+                    : 0;
+                },
               },
             ]}
             data={currentHoldings}
-            title="Assets currently held"
+            title="Assets in portfolio"
             options={{
               paging: false,
               search: false,
+            }}
+            onRowClick={(_, rowData) => {
+              const url = '/asset?address=' + rowData.asset.id;
+              window.open(url, '_self');
             }}
           />
         </NoSsr>
@@ -181,6 +214,15 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           <TimeSeriesChart data={normalizedNumbers} dataKeys={['sharePrice']} />
         </Paper>
       </Grid>
+
+      <Grid item={true} xs={12} sm={6} md={6}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">Daily share price change (%)</Typography>
+
+          <TimeSeriesChart data={normalizedNumbers} dataKeys={['dailyReturn']} referenceLine={true} />
+        </Paper>
+      </Grid>
+
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">NAV</Typography>
@@ -195,13 +237,6 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         </Paper>
       </Grid>
 
-      <Grid item={true} xs={12} sm={6} md={6}>
-        <Paper className={props.classes.paper}>
-          <Typography variant="h5">Daily change (%)</Typography>
-
-          <TimeSeriesChart data={normalizedNumbers} dataKeys={['dailyReturn']} referenceLine={true} />
-        </Paper>
-      </Grid>
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Fund holdings</Typography>
@@ -236,17 +271,23 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               },
               {
                 title: 'Shares',
-                field: 'shares',
+                render: rowData => {
+                  return formatBigNumber(rowData.shares, 18, 3);
+                },
                 type: 'numeric',
               },
               {
                 title: 'Share Price',
-                field: 'sharePrice',
+                render: rowData => {
+                  return formatBigNumber(rowData.sharePrice, 18, 3);
+                },
                 type: 'numeric',
               },
               {
                 title: 'Amount in ETH',
-                field: 'amountInDenominationAsset',
+                render: rowData => {
+                  return formatBigNumber(rowData.amountInDenominationAsset, 18, 3);
+                },
                 type: 'numeric',
               },
             ]}
@@ -273,7 +314,9 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               },
               {
                 title: 'Shares',
-                field: 'shares',
+                render: rowData => {
+                  return formatBigNumber(rowData.shares, 18, 3);
+                },
                 type: 'numeric',
               },
             ]}
@@ -302,13 +345,73 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               },
               {
                 title: 'Shares',
+                type: 'numeric',
                 render: rowData => {
-                  return formatBigNumber(rowData.shares);
+                  return formatBigNumber(rowData.shares, 18, 3);
                 },
               },
             ]}
             data={feesPaidOut}
             title="Fees paid out"
+            options={{
+              paging: false,
+              search: false,
+            }}
+          />
+        </NoSsr>
+      </Grid>
+      <Grid item={true} xs={12} sm={6} md={6}>
+        <NoSsr>
+          <MaterialTable
+            columns={[
+              {
+                title: 'Policy',
+                field: 'identifier',
+              },
+              {
+                title: 'Parameters',
+                type: 'numeric',
+                render: rowData => {
+                  switch (rowData.identifier) {
+                    case 'Max concentration':
+                      return formatBigNumber(rowData.maxConcentration + '00', 18, 0) + '%';
+                    case 'Price tolerance':
+                      return formatBigNumber(rowData.priceTolerance + '00', 18, 0) + '%';
+                    case 'Max positions':
+                      return rowData.maxPositions;
+                    case 'Asset whitelist':
+                      return rowData.assetWhiteList
+                        .map(asset => asset.symbol)
+                        .sort()
+                        .join(', ');
+                  }
+                },
+              },
+            ]}
+            data={policies}
+            title="Risk management &amp; compliance policies"
+            options={{
+              paging: false,
+              search: false,
+            }}
+          />
+        </NoSsr>
+      </Grid>
+      <Grid item={true} xs={12} sm={6} md={6}>
+        <NoSsr>
+          <MaterialTable
+            columns={[
+              {
+                title: 'Contract',
+                field: 'name',
+              },
+              {
+                title: 'Address',
+                field: 'address',
+              },
+            ]}
+            data={contractAddresses}
+            title="Contract addresses"
             options={{
               paging: false,
               search: false,

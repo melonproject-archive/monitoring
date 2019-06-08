@@ -39,21 +39,21 @@ const columns: Column[] = [
     title: 'Shares',
     type: 'numeric',
     render: rowData => {
-      return formatBigNumber(rowData.shares);
+      return formatBigNumber(rowData.shares, 18, 3);
     },
   },
   {
     title: 'Share Price',
     type: 'numeric',
     render: rowData => {
-      return rowData.sharePrice ? formatBigNumber(rowData.sharePrice) : '';
+      return rowData.sharePrice ? formatBigNumber(rowData.sharePrice, 18, 3) : '';
     },
   },
   {
     title: 'Amount [ETH]',
     type: 'numeric',
     render: rowData => {
-      return rowData.amount ? formatBigNumber(rowData.amount) : '';
+      return rowData.amount ? formatBigNumber(rowData.amount, 18, 3) : '';
     },
   },
 ];

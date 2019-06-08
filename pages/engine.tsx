@@ -36,7 +36,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
     <Layout title="Engine">
       <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
-          <Typography variant="h5">Melon Engine Parameters</Typography>
+          <Typography variant="h5">Melon Engine</Typography>
           <div>Amgu Price: {engineQuantities && formatBigNumber(engineQuantities.amguPrice, 18, 7)} MLN</div>
           <div>Thawing Delay: {engineQuantities && engineQuantities.thawingDelay / (24 * 3600)} days</div>
           <div>&nbsp;</div>
@@ -47,6 +47,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
           <div>Total Amgu consumed: {engineQuantities && engineQuantities.totalAmguConsumed}</div>
           <div>Total MLN burned: {engineQuantities && formatBigNumber(engineQuantities.totalMlnBurned, 18, 3)}</div>
           <div>Premium percent: {engineQuantities && engineQuantities.premiumPercent}%</div>
+          <div>&nbsp;</div>
           <div>Last update: {engineQuantities && formatDate(engineQuantities.lastUpdate)}</div>
         </Paper>
       </Grid>
@@ -73,7 +74,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
               {
                 title: 'Amount',
                 render: rowData => {
-                  return formatBigNumber(rowData.amount);
+                  return formatBigNumber(rowData.amount, 18, 3);
                 },
                 type: 'numeric',
               },

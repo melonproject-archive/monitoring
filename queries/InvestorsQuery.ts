@@ -6,12 +6,15 @@ export const InvestorCountQuery = gql`
       numberOfInvestors
       timestamp
     }
+    # state(id: "0x") {
+    #   id
+    # }
   }
 `;
 
 export const InvestorListQuery = gql`
-  query InvestorListQuery($limit: Int!, $skip: Int!) {
-    investors(orderBy: id, first: $limit, skip: $skip) {
+  query InvestorListQuery {
+    investors(orderBy: id) {
       id
       investments {
         id

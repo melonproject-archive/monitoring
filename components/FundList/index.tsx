@@ -8,6 +8,7 @@ import { StyleRulesCallback } from '@material-ui/core';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import { FundListQuery } from '~/queries/FundOverviewQuery';
 import { formatBigNumber } from '~/utils/formatBigNumber';
+import { hexToString } from '~/utils/hexToString';
 
 export interface FundListProps {
   data?: any;
@@ -36,6 +37,10 @@ const columns = [
         ? -1
         : 0;
     },
+  },
+  {
+    title: 'Denomination',
+    field: 'accounting.denominationAsset.symbol',
   },
   {
     title: 'Investments',
@@ -83,6 +88,13 @@ const columns = [
         : new BigNumber(b.totalSupply).isGreaterThan(new BigNumber(a.totalSupply))
         ? -1
         : 0;
+    },
+  },
+  {
+    title: 'Protocol version',
+    type: 'numeric',
+    render: rowData => {
+      return hexToString(rowData.version.name);
     },
   },
   {

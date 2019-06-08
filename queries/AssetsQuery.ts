@@ -14,6 +14,21 @@ export const AssetsQuery = gql`
   }
 `;
 
+export const AssetListQuery = gql`
+  query AssetListQuery {
+    assets(orderBy: symbol) {
+      id
+      symbol
+      name
+      url
+      decimals
+      lastPrice
+      lastPriceUpdate
+      lastPriceValid
+    }
+  }
+`;
+
 export const SingleAssetPriceHistoryQuery = gql`
   query SingleAssetPriceHistoryQuery($id: String!, $limit: Int!, $skip: Int!) {
     assetPriceHistories(first: $limit, skip: $skip, orderBy: timestamp, where: { asset: $id }) {

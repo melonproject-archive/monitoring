@@ -144,8 +144,8 @@ class Layout extends React.Component<LayoutProps> {
           <Typography variant="caption">
             To set up a fund on the melon network, please download the latest <b>Melon manager interface</b>
             from{' '}
-            <a href="https://github.com/melonproject/melon-lab/releases/tag/v1.0.1" className={classes.aStyle}>
-              https://github.com/melonproject/melon-lab/releases/tag/v1.0.1
+            <a href="https://github.com/melonproject/melon-lab/releases" className={classes.aStyle}>
+              https://github.com/melonproject/melon-lab/releases
             </a>{' '}
           </Typography>
         </Paper>
