@@ -4,11 +4,11 @@ import { formatDate } from '~/utils/formatDate';
 
 import { withStyles } from '@material-ui/styles';
 import { StyleRulesCallback } from '@material-ui/core';
-import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import { FundListQuery } from '~/queries/FundOverviewQuery';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { hexToString } from '~/utils/hexToString';
 import { sortBigNumber } from '~/utils/sortBigNumber';
+import { useQuery } from '@apollo/react-hooks';
 
 export interface FundListProps {
   data?: any;
@@ -82,8 +82,12 @@ const columns = [
 ];
 
 const FundList: React.FunctionComponent<FundListProps> = props => {
-  const result = useScrapingQuery([FundListQuery, FundListQuery], proceedPaths(['funds']), {
+  const result = useQuery(FundListQuery, {
     ssr: false,
+    variables: {
+      skip: 0,
+      limit: 100,
+    },
   });
 
   const data = result.data || {};

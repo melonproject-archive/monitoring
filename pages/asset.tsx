@@ -54,6 +54,8 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
       };
     });
 
+  const maxValue = networkValues && Math.max(...networkValues.map(item => item.amount, 0));
+
   const funds =
     asset &&
     asset.fundAccountings
@@ -102,7 +104,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Aggregate value of {asset && asset.symbol} within Melon network</Typography>
-          <TimeSeriesChart data={networkValues} dataKeys={['amount']} />
+          <TimeSeriesChart data={networkValues} dataKeys={['amount']} yMax={maxValue} />
         </Paper>
       </Grid>
 

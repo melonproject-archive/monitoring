@@ -34,12 +34,16 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
   const loading = result.loading;
   const fundCounts = data.fundCounts || [];
 
+  const maxFunds = Math.max(...fundCounts.map(item => parseInt(item.active, 10) + parseInt(item.nonActive, 10), 0));
+
   const melonNetworkHistories = R.pathOr([], ['data', 'melonNetworkHistories'], result).map(item => {
     return {
       ...item,
       gav: formatBigNumber(item.gav, 18, 3),
     };
   });
+
+  const maxGav = Math.max(...melonNetworkHistories.map(item => item.gav), 0);
 
   return (
     <Layout title="Funds">
@@ -68,7 +72,7 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
                       tickFormatter={timeStr => formatDate(timeStr)}
                       stroke="#dddddd"
                     />
-                    <YAxis domain={[0, 80]} orientation="right" stroke="#dddddd" />
+                    <YAxis domain={[0, maxFunds]} orientation="right" stroke="#dddddd" />
                     <Area type="monotone" dataKey="nonActive" stackId="1" stroke="#eeeeee" fill="#eeeeee" />
                     <Area type="monotone" dataKey="active" stackId="1" stroke="#aaaaaa" fill="#aaaaaa" />
                     <Tooltip
@@ -103,7 +107,7 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
                       tickFormatter={timeStr => formatDate(timeStr)}
                       stroke="#dddddd"
                     />
-                    <YAxis domain={[0, 200]} orientation="right" stroke="#dddddd" />
+                    <YAxis domain={[0, maxGav]} orientation="right" stroke="#dddddd" />
                     <Area type="monotone" dataKey="gav" stroke="#aaaaaa" fill="#aaaaaa" dot={false} />
                     <Tooltip
                       labelFormatter={value => `Date: ${formatDate(value)}`}
