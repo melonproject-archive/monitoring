@@ -2,13 +2,13 @@ import React from 'react';
 import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
 
-import BigNumber from 'bignumber.js';
 import { withStyles } from '@material-ui/styles';
 import { StyleRulesCallback } from '@material-ui/core';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import { FundListQuery } from '~/queries/FundOverviewQuery';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { hexToString } from '~/utils/hexToString';
+import { sortBigNumber } from '~/utils/sortBigNumber';
 
 export interface FundListProps {
   data?: any;
@@ -28,15 +28,9 @@ const columns = [
   {
     title: 'Creation date',
     render: rowData => {
-      return formatDate(rowData.creationTime);
+      return formatDate(rowData.createdAt);
     },
-    customSort: (a, b) => {
-      return new BigNumber(a.creationTime).isGreaterThan(new BigNumber(b.creationTime))
-        ? 1
-        : new BigNumber(b.creationTime).isGreaterThan(new BigNumber(a.creationTime))
-        ? -1
-        : 0;
-    },
+    customSort: (a, b) => sortBigNumber(a, b, 'createdAt'),
   },
   {
     title: 'Denomination',
@@ -53,13 +47,7 @@ const columns = [
     render: rowData => {
       return formatBigNumber(rowData.gav, 18, 3);
     },
-    customSort: (a, b) => {
-      return new BigNumber(a.gav).isGreaterThan(new BigNumber(b.gav))
-        ? 1
-        : new BigNumber(b.gav).isGreaterThan(new BigNumber(a.gav))
-        ? -1
-        : 0;
-    },
+    customSort: (a, b) => sortBigNumber(a, b, 'gav'),
   },
   {
     title: 'Share price',
@@ -67,13 +55,7 @@ const columns = [
     render: rowData => {
       return formatBigNumber(rowData.sharePrice, 18, 3);
     },
-    customSort: (a, b) => {
-      return new BigNumber(a.sharePrice).isGreaterThan(new BigNumber(b.sharePrice))
-        ? 1
-        : new BigNumber(b.sharePrice).isGreaterThan(new BigNumber(a.sharePrice))
-        ? -1
-        : 0;
-    },
+    customSort: (a, b) => sortBigNumber(a, b, 'sharePrice'),
     defaultSort: 'desc',
   },
   {
@@ -82,20 +64,11 @@ const columns = [
     render: rowData => {
       return formatBigNumber(rowData.totalSupply, 18, 3);
     },
-    customSort: (a, b) => {
-      return new BigNumber(a.totalSupply).isGreaterThan(new BigNumber(b.totalSupply))
-        ? 1
-        : new BigNumber(b.totalSupply).isGreaterThan(new BigNumber(a.totalSupply))
-        ? -1
-        : 0;
-    },
+    customSort: (a, b) => sortBigNumber(a, b, 'totalSupply'),
   },
   {
     title: 'Protocol version',
-    type: 'numeric',
-    render: rowData => {
-      return hexToString(rowData.version.name);
-    },
+    field: 'versionName',
   },
   {
     title: 'Status',
@@ -115,8 +88,11 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
 
   const data = result.data || {};
 
-  const funds = (data.funds || []).sort((a, b) => {
-    return b.sharePrice - a.sharePrice;
+  const funds = (data.funds || []).map(fund => {
+    return {
+      ...fund,
+      versionName: hexToString(fund.version.name),
+    };
   });
 
   return (
@@ -127,6 +103,7 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
       options={{
         paging: false,
       }}
+      isLoading={result.loading}
       onRowClick={(_, rowData) => {
         const url = '/fund?address=' + rowData.id;
         window.open(url, '_self');

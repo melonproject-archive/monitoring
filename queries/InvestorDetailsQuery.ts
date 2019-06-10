@@ -4,6 +4,7 @@ export default gql`
   query InvestorDetailsQuery($investor: ID!) {
     investor(id: $investor) {
       id
+      createdAt
       investments {
         id
         shares
@@ -41,6 +42,7 @@ export default gql`
       valuationHistory(orderBy: timestamp) {
         timestamp
         gav
+        nav
       }
     }
   }

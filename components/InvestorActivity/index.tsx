@@ -5,9 +5,11 @@ import { withStyles } from '@material-ui/styles';
 import { StyleRulesCallback } from '@material-ui/core';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { formatDate } from '~/utils/formatDate';
+import { sortBigNumber } from '~/utils/sortBigNumber';
 
 export interface InvestorActivityProps {
   activity: any;
+  loading: any;
 }
 
 const styles: StyleRulesCallback = theme => ({
@@ -31,9 +33,7 @@ const columns: Column[] = [
   },
   {
     title: 'Activity',
-    render: rowData => {
-      return rowData.action.charAt(0).toUpperCase() + rowData.action.slice(1);
-    },
+    field: 'action',
   },
   {
     title: 'Shares',
@@ -41,20 +41,23 @@ const columns: Column[] = [
     render: rowData => {
       return formatBigNumber(rowData.shares, 18, 3);
     },
+    customSort: (a, b) => sortBigNumber(a, b, 'shares'),
   },
   {
     title: 'Share Price',
     type: 'numeric',
     render: rowData => {
-      return rowData.sharePrice ? formatBigNumber(rowData.sharePrice, 18, 3) : '';
+      return formatBigNumber(rowData.sharePrice, 18, 3);
     },
+    customSort: (a, b) => sortBigNumber(a, b, 'sharePrice'),
   },
   {
     title: 'Amount [ETH]',
     type: 'numeric',
     render: rowData => {
-      return rowData.amount ? formatBigNumber(rowData.amount, 18, 3) : '';
+      return formatBigNumber(rowData.amount, 18, 3);
     },
+    customSort: (a, b) => sortBigNumber(a, b, 'amount'),
   },
 ];
 
@@ -68,6 +71,7 @@ const InvestorActivity: React.FunctionComponent<InvestorActivityProps> = props =
         paging: false,
         search: false,
       }}
+      isLoading={props.loading}
       onRowClick={(_, rowData) => {
         const url = '/fund?address=' + rowData.fund.id;
         window.open(url, '_self');

@@ -20,11 +20,21 @@ export const AssetListQuery = gql`
       id
       symbol
       name
-      url
       decimals
       lastPrice
       lastPriceUpdate
       lastPriceValid
+      fundAccountings {
+        id
+        fund {
+          id
+        }
+      }
+      melonNetworkAssetHistory(orderBy: timestamp, orderDirection: desc, first: 1) {
+        timestamp
+        assetGav
+        amount
+      }
     }
   }
 `;

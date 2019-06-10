@@ -1479,6 +1479,11 @@
     "@webassemblyjs/wast-parser" "1.8.5"
     "@xtuc/long" "4.2.2"
 
+"@webcarrot/xirr@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@webcarrot/xirr/-/xirr-1.0.3.tgz#59d79cbb75a0de4d320a0e23de4f36adf359f57c"
+  integrity sha512-UkdWEQrxVsFR/6ynUZgFTnPtb9jLmT4gEZeR2qFRsOoz6AbigAx2Fs4CzrJ0YlomGMw7ph0cLou4qpHl3uGntg==
+
 "@wry/context@^0.4.0":
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@wry/context/-/context-0.4.0.tgz#8a8718408e4dd0514a0f8f4231bb4b87130b34e3"

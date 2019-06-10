@@ -1,12 +1,12 @@
 import React from 'react';
 import MaterialTable from 'material-table';
 
-import BigNumber from 'bignumber.js';
 import { withStyles } from '@material-ui/styles';
 import { StyleRulesCallback } from '@material-ui/core';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { useQuery } from '@apollo/react-hooks';
 import { AssetListQuery } from '~/queries/AssetsQuery';
+import { sortBigNumber } from '~/utils/sortBigNumber';
 
 export interface AssetListProps {
   data?: any;
@@ -28,36 +28,34 @@ const columns = [
     field: 'name',
   },
   {
-    title: 'URL',
-    field: 'url',
-  },
-  {
     title: 'Last price',
     render: rowData => {
       return formatBigNumber(rowData.lastPrice, 18, 6);
     },
     type: 'numeric',
-    customSort: (a, b) => {
-      return new BigNumber(a.lastPrice).isGreaterThan(new BigNumber(b.lastPrice))
-        ? 1
-        : new BigNumber(b.lastPrice).isGreaterThan(new BigNumber(a.lastPrice))
-        ? -1
-        : 0;
+    customSort: (a, b) => sortBigNumber(a, b, 'lastPrice'),
+  },
+  {
+    title: '# funds',
+    field: 'numberOfFunds.length',
+    type: 'numeric',
+  },
+  {
+    title: 'Aggregate amount',
+    type: 'numeric',
+    render: rowData => {
+      return formatBigNumber(rowData.aggregateAmount, 18, 3);
     },
+    customSort: (a, b) => sortBigNumber(a, b, 'aggregateAmount'),
   },
   {
-    title: 'Funds',
-    field: 'investments.length',
-    type: 'numeric',
-  },
-  {
-    title: 'Aggregate holdings',
-    type: 'numeric',
-  },
-  {
-    title: 'Aggregate holdings in ETH',
+    title: 'Aggregate amount in ETH',
     type: 'numeric',
     defaultSort: 'desc',
+    render: rowData => {
+      return formatBigNumber(rowData.aggregateAmountInEth, 18, 3);
+    },
+    customSort: (a, b) => sortBigNumber(a, b, 'aggregateAmountInEth'),
   },
 ];
 
@@ -68,7 +66,14 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
 
   const data = result.data || {};
 
-  const assets = data && data.assets;
+  const assets = ((data && data.assets) || []).map(asset => {
+    return {
+      ...asset,
+      numberOfFunds: asset.fundAccountings.filter(fA => fA.fund),
+      aggregateAmount: asset.melonNetworkAssetHistory && asset.melonNetworkAssetHistory[0].amount,
+      aggregateAmountInEth: asset.melonNetworkAssetHistory && asset.melonNetworkAssetHistory[0].assetGav,
+    };
+  });
 
   return (
     <MaterialTable
@@ -78,6 +83,7 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
       options={{
         paging: false,
       }}
+      isLoading={result.loading}
       onRowClick={(_, rowData) => {
         const url = '/asset?address=' + rowData.id;
         window.open(url, '_self');

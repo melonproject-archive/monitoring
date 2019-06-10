@@ -5,8 +5,14 @@ export const FundDetailsQuery = gql`
     fund(id: $fund) {
       id
       name
+      createdAt
+      isShutdown
+      shutdownAt
       manager {
         id
+      }
+      version {
+        name
       }
       gav
       nav

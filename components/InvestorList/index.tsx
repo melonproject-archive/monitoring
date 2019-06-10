@@ -8,6 +8,8 @@ import { StyleRulesCallback } from '@material-ui/core';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { InvestorListQuery } from '~/queries/InvestorsQuery';
 import { useQuery } from '@apollo/react-hooks';
+import { formatDate } from '~/utils/formatDate';
+import { sortBigNumber } from '~/utils/sortBigNumber';
 
 export interface InvestorListProps {
   data?: any;
@@ -25,6 +27,13 @@ const columns = [
     field: 'id',
   },
   {
+    title: 'Investor since',
+    render: rowData => {
+      return formatDate(rowData.createdAt);
+    },
+    customSort: (a, b) => sortBigNumber(a, b, 'createdAt'),
+  },
+  {
     title: 'Investments',
     field: 'investments.length',
     type: 'numeric',
@@ -32,7 +41,11 @@ const columns = [
   {
     title: 'AUM [ETH]',
     type: 'numeric',
-    field: 'netAum',
+    render: rowData => {
+      return formatBigNumber(rowData.netAum, 18, 3);
+    },
+    customSort: (a, b) => sortBigNumber(a, b, 'netAum'),
+    defaultSort: 'desc',
   },
 ];
 
@@ -48,20 +61,9 @@ const InvestorList: React.FunctionComponent<InvestorListProps> = props => {
     investors.map(investor => {
       return {
         ...investor,
-        aum: formatBigNumber(
-          investor.investments.reduce((carry, item) => {
-            return new BigNumber(carry).plus(new BigNumber(item.gav));
-          }, new BigNumber(0)),
-          18,
-          3,
-        ),
-        netAum: formatBigNumber(
-          investor.investments.reduce((carry, item) => {
-            return new BigNumber(carry).plus(new BigNumber(item.nav));
-          }, new BigNumber(0)),
-          18,
-          3,
-        ),
+        netAum: investor.investments.reduce((carry, item) => {
+          return new BigNumber(carry).plus(new BigNumber(item.nav));
+        }, new BigNumber(0)),
       };
     });
 
@@ -73,6 +75,7 @@ const InvestorList: React.FunctionComponent<InvestorListProps> = props => {
       options={{
         paging: false,
       }}
+      isLoading={result.loading}
       onRowClick={(_, rowData) => {
         const url = '/investor?address=' + rowData.id;
         window.open(url, '_self');

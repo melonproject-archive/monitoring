@@ -31,9 +31,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
         </Paper>
       </Grid>
       <Grid item={true} xs={12}>
-        <Paper className={props.classes.paper}>
-          <InvestorList />
-        </Paper>
+        <InvestorList />
       </Grid>
     </Layout>
   );

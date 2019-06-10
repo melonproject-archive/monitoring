@@ -10,6 +10,7 @@ import { formatBigNumber } from '~/utils/formatBigNumber';
 import InvestmentList from '~/components/InvestmentList';
 import InvestorActivity from '~/components/InvestorActivity';
 import BigNumber from 'bignumber.js';
+import { robustIRR } from '~/utils/robustIRR';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -28,6 +29,28 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
       investor: router && router.query.address,
     },
   });
+
+  const prepareCashFlows = (history, currentValue: string) => {
+    const investmentCashFlows = history.map(item => {
+      let pre = '';
+      if (item.action === 'Investment') {
+        pre = '-';
+      }
+      const amount = new BigNumber(pre + item.amountInDenominationAsset);
+      return {
+        amount: parseFloat(formatBigNumber(amount.toString())),
+        date: new Date(item.timestamp * 1000),
+      };
+    });
+    const cashflows = [
+      ...investmentCashFlows,
+      {
+        amount: parseFloat(formatBigNumber(currentValue.toString(), 18, 3)),
+        date: new Date(),
+      },
+    ];
+    return cashflows;
+  };
 
   const investor = R.pathOr(undefined, ['data', 'investor'], result);
   const investments = R.pathOr([], ['data', 'investor', 'investments'], result).map(inv => {
@@ -54,6 +77,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
           return new BigNumber(carry);
         }
       }, new BigNumber(0)),
+      xirr: robustIRR(prepareCashFlows(inv.history, inv.nav)),
     };
   });
 
@@ -84,13 +108,13 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
       </Grid>
 
       <Grid item={true} xs={12} sm={12} md={12}>
-        <InvestmentList investments={investments} />
+        <InvestmentList investments={investments} loading={result.loading} />
       </Grid>
 
       <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">All assets</Typography>
-          <TimeSeriesChart data={valuationHistory} dataKeys={['gav']} />
+          <TimeSeriesChart data={valuationHistory} dataKeys={['nav']} />
         </Paper>
       </Grid>
 
@@ -98,15 +122,15 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
         investments.map(item => (
           <Grid item={true} xs={12} sm={6} md={6} key={item.id}>
             <Paper className={props.classes.paper}>
-              <Typography variant="h6">{item.fund.name}</Typography>
-              <TimeSeriesChart data={item.valuationHistory} dataKeys={['gav']} />
+              <Typography variant="h6">{item.fund && item.fund.name}</Typography>
+              <TimeSeriesChart data={item.valuationHistory} dataKeys={['nav']} />
             </Paper>
           </Grid>
         ))}
 
       <Grid item={true} xs={12}>
         <Paper className={props.classes.paper}>
-          <InvestorActivity activity={investmentHistory} />
+          <InvestorActivity activity={investmentHistory} loading={result.loading} />
         </Paper>
       </Grid>
     </Layout>

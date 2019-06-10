@@ -16,6 +16,7 @@ export const InvestorListQuery = gql`
   query InvestorListQuery {
     investors(orderBy: id) {
       id
+      createdAt
       investments {
         id
         gav

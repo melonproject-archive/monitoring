@@ -24,7 +24,7 @@ export const FundListQuery = gql`
       sharePrice
       totalSupply
       isShutdown
-      creationTime
+      createdAt
       investments {
         id
       }

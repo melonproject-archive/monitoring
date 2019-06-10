@@ -92,7 +92,7 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
               <>
                 <br />
                 <Typography variant="body1">
-                  {melonNetworkHistories[melonNetworkHistories.length - 1].gav} ETH
+                  {melonNetworkHistories && melonNetworkHistories[melonNetworkHistories.length - 1].gav} ETH
                 </Typography>
                 <ResponsiveContainer height={200} width="100%">
                   <AreaChart data={melonNetworkHistories}>

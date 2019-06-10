@@ -5,7 +5,7 @@ export const ContractsQuery = gql`
     contracts(first: $limit, skip: $skip, where: { name_in: ["Registry", "Engine", "Version", "Fund", "Asset"] }) {
       id
       name
-      creationTime
+      createdAt
       parent {
         id
       }

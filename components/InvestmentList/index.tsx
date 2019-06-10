@@ -4,9 +4,11 @@ import MaterialTable, { Column } from 'material-table';
 import { withStyles } from '@material-ui/styles';
 import { StyleRulesCallback } from '@material-ui/core';
 import { formatBigNumber } from '~/utils/formatBigNumber';
+import { sortBigNumber } from '~/utils/sortBigNumber';
 
 export interface InvestmentListProps {
   investments: any;
+  loading: any;
 }
 
 const styles: StyleRulesCallback = theme => ({
@@ -27,6 +29,7 @@ const columns: Column[] = [
     render: rowData => {
       return formatBigNumber(rowData.shares, 18, 3);
     },
+    customSort: (a, b) => sortBigNumber(a, b, 'shares'),
   },
   {
     title: 'Invested amount [ETH]',
@@ -34,6 +37,7 @@ const columns: Column[] = [
     render: rowData => {
       return formatBigNumber(rowData.investedAmount, 18, 3);
     },
+    customSort: (a, b) => sortBigNumber(a, b, 'investedAmount'),
   },
   {
     title: 'Redeemed amount [ETH]',
@@ -41,6 +45,7 @@ const columns: Column[] = [
     render: rowData => {
       return formatBigNumber(rowData.redeemedAmount, 18, 3);
     },
+    customSort: (a, b) => sortBigNumber(a, b, 'redeemedAmount'),
   },
   {
     title: 'Current Value [ETH]',
@@ -48,13 +53,12 @@ const columns: Column[] = [
     render: rowData => {
       return formatBigNumber(rowData.nav, 18, 3);
     },
+    customSort: (a, b) => sortBigNumber(a, b, 'nav'),
   },
   {
-    title: 'Return [%]',
+    title: 'Annualized return [%]',
     type: 'numeric',
-    render: rowData => {
-      return '(todo)';
-    },
+    field: 'xirr',
   },
 ];
 
@@ -68,6 +72,7 @@ const InvestmentList: React.FunctionComponent<InvestmentListProps> = props => {
         paging: false,
         search: false,
       }}
+      isLoading={props.loading}
       onRowClick={(_, rowData) => {
         const url = '/fund?address=' + rowData.fund.id;
         window.open(url, '_self');

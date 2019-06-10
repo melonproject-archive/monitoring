@@ -11,6 +11,8 @@ import Layout from '~/components/Layout';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import TimeSeriesChart from '~/components/TimeSeriesChart';
 import BigNumber from 'bignumber.js';
+import { hexToString } from '~/utils/hexToString';
+import { sortBigNumber } from '~/utils/sortBigNumber';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -132,8 +134,13 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">{fund && fund.name}</Typography>
+          <div>Protocol version: {fund && hexToString(fund.version.name)}</div>
           <div>Address: {fund && fund.id}</div>
           <div>Manager: {fund && fund.manager.id}</div>
+          <div>&nbsp;</div>
+          <div>Creation date: {fund && formatDate(fund.createdAt)}</div>
+          <div>Active: {fund && fund.isShutdown ? 'No' : 'Yes'}</div>
+          <div>Deactivation date: {fund && fund.shutdownAt && formatDate(fund.shutdownAt)}</div>
           <div>&nbsp;</div>
           <div># shares: {fund && formatBigNumber(fund.totalSupply, 18, 3)}</div>
           <div>Share price: {fund && formatBigNumber(fund.sharePrice, 18, 3)}</div>
@@ -186,13 +193,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                   return formatBigNumber(rowData.assetGav, 18, 3);
                 },
                 defaultSort: 'desc',
-                customSort: (a, b) => {
-                  return new BigNumber(a.assetGav).isGreaterThan(new BigNumber(b.assetGav))
-                    ? 1
-                    : new BigNumber(b.assetGav).isGreaterThan(new BigNumber(a.assetGav))
-                    ? -1
-                    : 0;
-                },
+                customSort: (a, b) => sortBigNumber(a, b, 'assetGav'),
               },
             ]}
             data={currentHoldings}
@@ -201,6 +202,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               paging: false,
               search: false,
             }}
+            isLoading={result.loading}
             onRowClick={(_, rowData) => {
               const url = '/asset?address=' + rowData.asset.id;
               window.open(url, '_self');
@@ -297,6 +299,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               paging: false,
               search: false,
             }}
+            isLoading={result.loading}
             onRowClick={(_, rowData) => {
               const url = '/investor?address=' + rowData.owner.id;
               window.open(url, '_self');
@@ -326,6 +329,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               paging: false,
               search: false,
             }}
+            isLoading={result.loading}
             onRowClick={(_, rowData) => {
               const url = '/investor?address=' + rowData.owner.id;
               window.open(url, '_self');
@@ -353,6 +357,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
             ]}
             data={feesPaidOut}
             title="Fees paid out"
+            isLoading={result.loading}
             options={{
               paging: false,
               search: false,
@@ -390,6 +395,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
             ]}
             data={policies}
             title="Risk management &amp; compliance policies"
+            isLoading={result.loading}
             options={{
               paging: false,
               search: false,
@@ -412,6 +418,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
             ]}
             data={contractAddresses}
             title="Contract addresses"
+            isLoading={result.loading}
             options={{
               paging: false,
               search: false,

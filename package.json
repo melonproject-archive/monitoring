@@ -18,6 +18,7 @@
     "@material-ui/styles": "^4.0.1",
     "@material-ui/system": "^4.0.1",
     "@melonproject/token-math": "^0.1.6",
+    "@webcarrot/xirr": "^1.0.3",
     "apollo-cache-inmemory": "^1.1.12",
     "apollo-client": "^2.3.1",
     "apollo-link": "^1.2.1",

@@ -8,15 +8,12 @@ type QueryPair = [DocumentNode, DocumentNode];
 type ProceedOrNotFn = (result: any, expected: number) => boolean;
 
 const deepMerge = (a, b) => {
-  // if (Array.isArray(a) && Array.isArray(b)) {
-  //   const r = [...a, ...b];
-  //   console.log('Array');
-  //   console.log(a, b);
-  //   return r;
-  // }
+  if (Array.isArray(a) && Array.isArray(b)) {
+    return [...a, ...b];
+  }
 
   if (R.is(Object, a) && R.is(Object, b)) {
-    return R.mergeDeepWith(R.concat, a, b);
+    return R.mergeDeepWith(deepMerge, a, b);
   }
 
   return b;
