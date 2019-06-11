@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const FundOverviewQuery = gql`
-  query FundOverviewQuery {
-    fundCounts(orderBy: timestamp) {
+  query FundOverviewQuery($limit: Int!, $skip: Int!) {
+    fundCounts(orderBy: timestamp, first: $limit, skip: $skip) {
       active
       nonActive
       timestamp

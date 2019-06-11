@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 import { withStyles } from '@material-ui/styles';
 import { StyleRulesCallback } from '@material-ui/core';
 import { formatBigNumber } from '~/utils/formatBigNumber';
-import { InvestorListQuery } from '~/queries/InvestorsQuery';
+import { InvestorListQuery } from '~/queries/InvestorListQuery';
 import { useQuery } from '@apollo/react-hooks';
 import { formatDate } from '~/utils/formatDate';
 import { sortBigNumber } from '~/utils/sortBigNumber';

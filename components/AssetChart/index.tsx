@@ -4,7 +4,7 @@ import * as R from 'ramda';
 import { withStyles } from '@material-ui/styles';
 import { StyleRulesCallback } from '@material-ui/core';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
-import { SingleAssetPriceHistoryQuery } from '~/queries/AssetsQuery';
+import { SingleAssetPriceHistoryQuery } from '~/queries/AssetListQuery';
 import TimeSeriesChart from '../TimeSeriesChart';
 
 export interface AssetChartProps {

@@ -4,7 +4,7 @@ import { formatDate } from '~/utils/formatDate';
 
 import { withStyles } from '@material-ui/styles';
 import { StyleRulesCallback } from '@material-ui/core';
-import { FundListQuery } from '~/queries/FundOverviewQuery';
+import { FundListQuery } from '~/queries/FundListQuery';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { hexToString } from '~/utils/hexToString';
 import { sortBigNumber } from '~/utils/sortBigNumber';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper } from '@material-ui/core';
-import { InvestorCountQuery } from '~/queries/InvestorsQuery';
+import { InvestorCountQuery } from '~/queries/InvestorListQuery';
 
 import Layout from '~/components/Layout';
 import TimeSeriesChart from '~/components/TimeSeriesChart';

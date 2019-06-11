@@ -110,6 +110,22 @@ export const FundDetailsQuery = gql`
       }
       trading {
         id
+        calls(orderBy: timestamp, orderDirection: "desc") {
+          timestamp
+          exchange {
+            name
+          }
+          orderAddress2 {
+            symbol
+          }
+          orderAddress3 {
+            symbol
+          }
+          orderValue0
+          orderValue1
+          orderValue6
+          methodSignature
+        }
       }
       vault {
         id
@@ -117,8 +133,8 @@ export const FundDetailsQuery = gql`
     }
 
     assets {
-      symbol
       id
+      symbol
     }
   }
 `;

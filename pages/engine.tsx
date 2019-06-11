@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
-import { AmguPaymentsQuery, EngineQuery } from '~/queries/EngineQuery';
+import { AmguPaymentsQuery, EngineQuery } from '~/queries/EngineDetailsQuery';
 
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import Layout from '~/components/Layout';

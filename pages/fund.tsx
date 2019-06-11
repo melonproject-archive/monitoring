@@ -13,6 +13,7 @@ import TimeSeriesChart from '~/components/TimeSeriesChart';
 import BigNumber from 'bignumber.js';
 import { hexToString } from '~/utils/hexToString';
 import { sortBigNumber } from '~/utils/sortBigNumber';
+import { methodSigToName } from '~/utils/methodSigToName';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -133,7 +134,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
     <Layout title="Fund">
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
-          <Typography variant="h5">{fund && fund.name}</Typography>
+          <Typography variant="h5">{fund && fund.name}&nbsp;</Typography>
           <div>Protocol version: {fund && hexToString(fund.version.name)}</div>
           <div>Address: {fund && fund.id}</div>
           <div>Manager: {fund && fund.manager.id}</div>
@@ -242,7 +243,11 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Fund holdings</Typography>
-          <TimeSeriesChart data={groupedHoldingsLog} dataKeys={assets.map(item => item.symbol)} />
+          <TimeSeriesChart
+            data={groupedHoldingsLog}
+            dataKeys={assets.map(item => item.symbol)}
+            yMax={fund && fund.gav}
+          />
         </Paper>
       </Grid>
       <Grid item={true} xs={12} sm={6} md={6}>
@@ -418,6 +423,63 @@ const Fund: React.FunctionComponent<FundProps> = props => {
             ]}
             data={contractAddresses}
             title="Contract addresses"
+            isLoading={result.loading}
+            options={{
+              paging: false,
+              search: false,
+            }}
+          />
+        </NoSsr>
+      </Grid>
+      <Grid item={true} xs={12} sm={12} md={12}>
+        <NoSsr>
+          <MaterialTable
+            columns={[
+              {
+                title: 'Date',
+                render: rowData => {
+                  return formatDate(rowData.timestamp, true);
+                },
+              },
+              {
+                title: 'Maker asset',
+                field: 'orderAddress2.symbol',
+              },
+              {
+                title: 'Taker asset',
+                field: 'orderAddress3.symbol',
+              },
+              {
+                title: 'Exchange',
+                field: 'exchange.name',
+              },
+              {
+                title: 'Maker asset qty',
+                render: rowData => {
+                  return formatBigNumber(rowData.orderValue0, 18, 3);
+                },
+              },
+              {
+                title: 'Taker asset qty',
+                render: rowData => {
+                  return formatBigNumber(rowData.orderValue1, 18, 3);
+                },
+              },
+              {
+                title: 'Taker asset qty transacted',
+                render: rowData => {
+                  return formatBigNumber(rowData.orderValue6, 18, 3);
+                },
+              },
+              {
+                title: 'Method signature',
+                render: rowData => {
+                  return methodSigToName(rowData.methodSignature);
+                },
+              },
+            ]}
+            data={fund && fund.trading.calls}
+            title="Trades"
             isLoading={result.loading}
             options={{
               paging: false,

@@ -29,10 +29,12 @@ export interface LayoutProps {
 
 const menuItems = [
   { title: 'Funds', link: '/' },
-  { title: 'Engine', link: 'engine' },
+  { title: 'Managers', link: 'managers' },
   { title: 'Investors', link: 'investors' },
   { title: 'Asset Universe', link: 'assets' },
+  { title: 'Exchanges', link: 'exchanges' },
   { title: 'Contracts', link: 'contracts' },
+  { title: 'Engine', link: 'engine' },
   // { title: 'Addresses', link: 'addresses' },
   // { title: 'Glossary', link: 'glossary' },
 ];

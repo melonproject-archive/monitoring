@@ -13,9 +13,9 @@ const styles: StyleRulesCallback = theme => ({
   },
 });
 
-type AssetProps = WithStyles<typeof styles>;
+type AssetsProps = WithStyles<typeof styles>;
 
-const Assets: React.FunctionComponent<AssetProps> = props => {
+const Assets: React.FunctionComponent<AssetsProps> = props => {
   // const result = useQuery(AssetsQuery, {
   //   ssr: false,
   // });

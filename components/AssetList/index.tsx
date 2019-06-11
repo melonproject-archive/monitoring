@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/styles';
 import { StyleRulesCallback } from '@material-ui/core';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { useQuery } from '@apollo/react-hooks';
-import { AssetListQuery } from '~/queries/AssetsQuery';
+import { AssetListQuery } from '~/queries/AssetListQuery';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 
 export interface AssetListProps {

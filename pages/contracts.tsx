@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Paper } from '@material-ui/core';
-import { ContractsQuery } from '~/queries/ContractsQuery';
+import { ContractsQuery } from '~/queries/ContractList';
 import { Graph } from 'react-d3-graph';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import Layout from '~/components/Layout';

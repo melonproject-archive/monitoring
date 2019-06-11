@@ -3,7 +3,6 @@ import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, No
 import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 import AssetDetailsQuery from '~/queries/AssetDetailsQuery';
-import { createToken, toFixed, createQuantity } from '@melonproject/token-math';
 import Layout from '~/components/Layout';
 import TimeSeriesChart from '~/components/TimeSeriesChart';
 import MaterialTable from 'material-table';
@@ -30,8 +29,6 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
 
   const asset = result.data && result.data.asset;
 
-  const token = asset && createToken(asset.symbol, undefined, asset.decimals);
-
   const priceHistory =
     asset &&
     asset.priceHistory.map((item, index, array) => {
@@ -40,7 +37,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
       const dailyReturn = index > 0 ? Math.pow(1 + returnSinceLastPriceUpdate, (24 * 60 * 60) / timeSpan) - 1 : 0;
       return {
         timestamp: item.timestamp,
-        price: item.price > 0 ? toFixed(createQuantity(token, item.price)) : undefined,
+        price: item.price > 0 ? formatBigNumber(item.price) : undefined,
         dailyReturn: index > 0 ? dailyReturn : 0,
       };
     });
@@ -50,7 +47,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
     asset.melonNetworkAssetHistory.map(item => {
       return {
         timestamp: item.timestamp,
-        amount: item.amount > 0 ? toFixed(createQuantity(token, item.amount)) : undefined,
+        amount: item.amount > 0 ? formatBigNumber(item.amount) : undefined,
       };
     });
 

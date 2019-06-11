@@ -11,13 +11,13 @@ import {
   CardContent,
   CircularProgress,
 } from '@material-ui/core';
-import { FundOverviewQuery } from '~/queries/FundOverviewQuery';
+import { FundOverviewQuery } from '~/queries/FundListQuery';
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import FundList from '~/components/FundList';
 import Layout from '~/components/Layout';
 import { formatDate } from '~/utils/formatDate';
 import { formatBigNumber } from '~/utils/formatBigNumber';
-import { useQuery } from '@apollo/react-hooks';
+import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -26,7 +26,7 @@ const styles: StyleRulesCallback = theme => ({
 });
 
 const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
-  const result = useQuery(FundOverviewQuery, {
+  const result = useScrapingQuery([FundOverviewQuery, FundOverviewQuery], proceedPaths(['melonNetworkHistories']), {
     ssr: false,
   });
 
