@@ -113,6 +113,7 @@ export const FundDetailsQuery = gql`
         calls(orderBy: timestamp, orderDirection: "desc") {
           timestamp
           exchange {
+            id
             name
           }
           orderAddress2 {
@@ -135,6 +136,20 @@ export const FundDetailsQuery = gql`
     assets {
       id
       symbol
+    }
+  }
+`;
+
+export const FundHoldingsHistoryQuery = gql`
+  query FundHoldingsHistoryQuery($id: ID!, $limit: Int!, $skip: Int!) {
+    fundHoldingsHistories(where: { fund: $id }, orderBy: timestamp, first: $limit, skip: $skip) {
+      timestamp
+      amount
+      assetGav
+      asset {
+        id
+        symbol
+      }
     }
   }
 `;

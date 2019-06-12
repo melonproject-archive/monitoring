@@ -8,7 +8,7 @@ import { FundListQuery } from '~/queries/FundListQuery';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { hexToString } from '~/utils/hexToString';
 import { sortBigNumber } from '~/utils/sortBigNumber';
-import { useQuery } from '@apollo/react-hooks';
+import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 
 export interface FundListProps {
   data?: any;
@@ -82,12 +82,8 @@ const columns = [
 ];
 
 const FundList: React.FunctionComponent<FundListProps> = props => {
-  const result = useQuery(FundListQuery, {
+  const result = useScrapingQuery([FundListQuery, FundListQuery], proceedPaths(['funds']), {
     ssr: false,
-    variables: {
-      skip: 0,
-      limit: 100,
-    },
   });
 
   const data = result.data || {};

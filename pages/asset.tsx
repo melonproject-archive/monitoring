@@ -68,7 +68,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
           }) || { amount: 0 },
         };
       })
-      .filter(fund => fund.assetValue.amount > 0);
+      .filter(fund => fund.assetValue.amount);
 
   return (
     <Layout title="Assets">

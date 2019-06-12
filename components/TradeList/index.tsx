@@ -1,4 +1,5 @@
 import React from 'react';
+import * as R from 'ramda';
 import MaterialTable from 'material-table';
 
 import { withStyles } from '@material-ui/styles';
@@ -10,9 +11,12 @@ import { methodSigToName } from '~/utils/methodSigToName';
 
 export interface TradeListProps {
   data: any;
+  hideFund?: boolean;
   hideExchange?: boolean;
   loading?: boolean;
   paging?: boolean;
+  linkFile?: string;
+  linkPath?: string[];
 }
 
 const styles: StyleRulesCallback = theme => ({
@@ -34,6 +38,7 @@ const TradeList: React.FunctionComponent<TradeListProps> = props => {
     {
       title: 'Fund',
       field: 'trading.fund.name',
+      hidden: props.hideFund,
     },
     {
       title: 'Maker asset',
@@ -48,18 +53,21 @@ const TradeList: React.FunctionComponent<TradeListProps> = props => {
       render: rowData => {
         return formatBigNumber(rowData.orderValue0, 18, 3);
       },
+      customSort: (a, b) => sortBigNumber(a, b, 'orderValue0'),
     },
     {
       title: 'Taker asset qty',
       render: rowData => {
         return formatBigNumber(rowData.orderValue1, 18, 3);
       },
+      customSort: (a, b) => sortBigNumber(a, b, 'orderValue1'),
     },
     {
       title: 'Taker asset qty traded',
       render: rowData => {
         return formatBigNumber(rowData.orderValue6, 18, 3);
       },
+      customSort: (a, b) => sortBigNumber(a, b, 'orderValue6'),
     },
     {
       title: 'Method Signature',
@@ -74,6 +82,8 @@ const TradeList: React.FunctionComponent<TradeListProps> = props => {
     },
   ];
 
+  const linkFile = props.linkFile || 'fund';
+
   return (
     <MaterialTable
       columns={columns as any}
@@ -86,7 +96,8 @@ const TradeList: React.FunctionComponent<TradeListProps> = props => {
       }}
       isLoading={props.loading}
       onRowClick={(_, rowData) => {
-        const url = '/fund?address=' + rowData.trading.fund.id;
+        const url =
+          '/' + linkFile + '?address=' + (props.linkPath ? R.path(props.linkPath, rowData) : rowData.trading.fund.id);
         window.open(url, '_self');
       }}
     />

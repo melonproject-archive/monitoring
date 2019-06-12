@@ -29,12 +29,14 @@ const Exchanges: React.FunctionComponent<ExchangesProps> = props => {
 
   const data = result.data || {};
 
-  const exchanges = ((data && data.exchanges) || []).map(exchange => {
-    return {
-      ...exchange,
-      tradings: exchange.tradings.filter(t => t.fund),
-    };
-  });
+  const exchanges = ((data && data.exchanges) || [])
+    .map(exchange => {
+      return {
+        ...exchange,
+        tradings: exchange.tradings.filter(t => t.fund),
+      };
+    })
+    .filter(exchange => exchange.tradings.length);
 
   const trading = (data && data.exchangeMethodCalls) || [];
 

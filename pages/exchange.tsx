@@ -27,7 +27,7 @@ const Exchange: React.FunctionComponent<ExchangeProps> = props => {
 
   const exchange = result.data && result.data.exchange;
 
-  const tradings = exchange && exchange.tradings;
+  const tradings = exchange && exchange.tradings.filter(trading => trading.fund && trading.fund.id);
 
   const calls = exchange && exchange.calls;
 
@@ -35,10 +35,10 @@ const Exchange: React.FunctionComponent<ExchangeProps> = props => {
     <Layout title="Exchange">
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
-          <Typography variant="h5">{exchange && exchange.name}</Typography>
+          <Typography variant="h5">{exchange && exchange.name}&nbsp;</Typography>
           <div>Address: {exchange && exchange.id}</div>
           <div>Adapter: {exchange && exchange.adapter.id}</div>
-          <div>Takes custody: {exchange && exchange.adapter.takesCustody ? 'Yes' : 'No'}</div>
+          <div>Takes custody: {exchange && (exchange.adapter.takesCustody ? 'Yes' : 'No')}</div>
 
           <div>&nbsp;</div>
         </Paper>
@@ -67,7 +67,7 @@ const Exchange: React.FunctionComponent<ExchangeProps> = props => {
             }}
             isLoading={result.loading}
             onRowClick={(_, rowData) => {
-              const url = '/fund?address=' + rowData.id;
+              const url = '/fund?address=' + rowData.fund.id;
               window.open(url, '_self');
             }}
           />

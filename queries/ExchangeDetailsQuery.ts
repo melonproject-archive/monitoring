@@ -11,6 +11,7 @@ export default gql`
       }
       tradings {
         fund {
+          id
           name
         }
         calls {

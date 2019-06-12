@@ -13,7 +13,8 @@ import TimeSeriesChart from '~/components/TimeSeriesChart';
 import BigNumber from 'bignumber.js';
 import { hexToString } from '~/utils/hexToString';
 import { sortBigNumber } from '~/utils/sortBigNumber';
-import { methodSigToName } from '~/utils/methodSigToName';
+import FundHoldingsChart from '~/components/FundHoldingsChart';
+import TradeList from '~/components/TradeList';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -49,15 +50,19 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         return {
           ...item,
           sharePrice: item.sharePrice ? formatBigNumber(item.sharePrice) : 0,
-          gav: item.gav ? formatBigNumber(item.gav) : 0,
-          nav: item.nav ? formatBigNumber(item.nav) : 0,
-          totalSupply: item.totalSupply ? formatBigNumber(item.totalSupply) : 0,
+          gav: item.gav ? formatBigNumber(item.gav, 18, 3) : 0,
+          nav: item.nav ? formatBigNumber(item.nav, 18, 3) : 0,
+          totalSupply: item.totalSupply ? formatBigNumber(item.totalSupply, 18, 3) : 0,
           dailyReturn: index > 0 ? dailyReturn : 0,
           logReturn: index > 0 ? Math.log(1 + dailyReturn) : 0,
           feesInDenominationAsset: item.feesInDenominationAsset ? formatBigNumber(item.feesInDenominationAsset) : 0,
         };
       })) ||
     [];
+
+  const maxNav = Math.max(...normalizedNumbers.map(item => item.nav), 0);
+  const maxGav = Math.max(...normalizedNumbers.map(item => item.gav), 0);
+  const maxSupply = Math.max(...normalizedNumbers.map(item => item.totalSupply), 0);
 
   const returnSinceInception =
     normalizedNumbers &&
@@ -79,34 +84,11 @@ const Fund: React.FunctionComponent<FundProps> = props => {
 
   const investmentHistory = fund && fund.investmentHistory;
 
-  const holdingsHistory = fund && fund.holdingsHistory;
-  const holdingsLength = holdingsHistory && holdingsHistory.length;
-
   const currentHoldings =
     fund &&
     fund.currentHoldings.filter(
       (holding, index, array) => holding.timestamp === array[0].timestamp && !new BigNumber(holding.amount).isZero(),
     );
-
-  const groupedHoldingsLog: any[] = [];
-  let ts = 0;
-  for (let k = 0; k < holdingsLength; k++) {
-    if (ts !== holdingsHistory[k].timestamp) {
-      groupedHoldingsLog.push({
-        timestamp: holdingsHistory[k].timestamp,
-        [holdingsHistory[k].asset.symbol]: formatBigNumber(
-          holdingsHistory[k].assetGav,
-          holdingsHistory[k].asset.decimals,
-        ),
-      });
-      ts = holdingsHistory[k].timestamp;
-    } else {
-      groupedHoldingsLog[groupedHoldingsLog.length - 1][holdingsHistory[k].asset.symbol] = formatBigNumber(
-        holdingsHistory[k].assetGav,
-        holdingsHistory[k].asset.decimals,
-      );
-    }
-  }
 
   const investments = fund && fund.investments;
 
@@ -139,9 +121,11 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           <div>Address: {fund && fund.id}</div>
           <div>Manager: {fund && fund.manager.id}</div>
           <div>&nbsp;</div>
-          <div>Creation date: {fund && formatDate(fund.createdAt)}</div>
-          <div>Active: {fund && fund.isShutdown ? 'No' : 'Yes'}</div>
-          <div>Deactivation date: {fund && fund.shutdownAt && formatDate(fund.shutdownAt)}</div>
+          <div>Created: {fund && formatDate(fund.createdAt)}</div>
+          <div>
+            Active: {fund && fund.isShutdown ? 'No' : 'Yes'}
+            {fund && fund.isShutdown && <> (deactivated: {fund.shutdownAt && formatDate(fund.shutdownAt)})</>}
+          </div>
           <div>&nbsp;</div>
           <div># shares: {fund && formatBigNumber(fund.totalSupply, 18, 3)}</div>
           <div>Share price: {fund && formatBigNumber(fund.sharePrice, 18, 3)}</div>
@@ -214,7 +198,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Share Price</Typography>
-          <TimeSeriesChart data={normalizedNumbers} dataKeys={['sharePrice']} />
+          <TimeSeriesChart data={normalizedNumbers} dataKeys={['sharePrice']} loading={result.loading} />
         </Paper>
       </Grid>
 
@@ -222,38 +206,48 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Daily share price change (%)</Typography>
 
-          <TimeSeriesChart data={normalizedNumbers} dataKeys={['dailyReturn']} referenceLine={true} />
+          <TimeSeriesChart
+            data={normalizedNumbers}
+            dataKeys={['dailyReturn']}
+            referenceLine={true}
+            loading={result.loading}
+          />
         </Paper>
       </Grid>
 
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">NAV</Typography>
-          <TimeSeriesChart data={normalizedNumbers} dataKeys={['gav', 'nav']} />
+          <TimeSeriesChart data={normalizedNumbers} dataKeys={['gav', 'nav']} yMax={maxNav} loading={result.loading} />
         </Paper>
       </Grid>
 
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5"># Shares</Typography>
-          <TimeSeriesChart data={normalizedNumbers} dataKeys={['totalSupply']} />
+          <TimeSeriesChart
+            data={normalizedNumbers}
+            dataKeys={['totalSupply']}
+            yMax={maxSupply}
+            loading={result.loading}
+          />
         </Paper>
       </Grid>
 
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Fund holdings</Typography>
-          <TimeSeriesChart
-            data={groupedHoldingsLog}
-            dataKeys={assets.map(item => item.symbol)}
-            yMax={fund && fund.gav}
+          <FundHoldingsChart
+            fundAddres={router && router.query.address}
+            assets={assets.map(item => item.symbol)}
+            yMax={fund && maxGav}
           />
         </Paper>
       </Grid>
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Fees in denomination asset</Typography>
-          <TimeSeriesChart data={normalizedNumbers} dataKeys={['feesInDenominationAsset']} />
+          <TimeSeriesChart data={normalizedNumbers} dataKeys={['feesInDenominationAsset']} loading={result.loading} />
         </Paper>
       </Grid>
 
@@ -433,58 +427,13 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       </Grid>
       <Grid item={true} xs={12} sm={12} md={12}>
         <NoSsr>
-          <MaterialTable
-            columns={[
-              {
-                title: 'Date',
-                render: rowData => {
-                  return formatDate(rowData.timestamp, true);
-                },
-              },
-              {
-                title: 'Maker asset',
-                field: 'orderAddress2.symbol',
-              },
-              {
-                title: 'Taker asset',
-                field: 'orderAddress3.symbol',
-              },
-              {
-                title: 'Exchange',
-                field: 'exchange.name',
-              },
-              {
-                title: 'Maker asset qty',
-                render: rowData => {
-                  return formatBigNumber(rowData.orderValue0, 18, 3);
-                },
-              },
-              {
-                title: 'Taker asset qty',
-                render: rowData => {
-                  return formatBigNumber(rowData.orderValue1, 18, 3);
-                },
-              },
-              {
-                title: 'Taker asset qty transacted',
-                render: rowData => {
-                  return formatBigNumber(rowData.orderValue6, 18, 3);
-                },
-              },
-              {
-                title: 'Method signature',
-                render: rowData => {
-                  return methodSigToName(rowData.methodSignature);
-                },
-              },
-            ]}
+          <TradeList
             data={fund && fund.trading.calls}
-            title="Trades"
-            isLoading={result.loading}
-            options={{
-              paging: false,
-              search: false,
-            }}
+            loading={result.loading}
+            hideFund={true}
+            hideExchange={false}
+            linkFile="exchange"
+            linkPath={['exchange', 'id']}
           />
         </NoSsr>
       </Grid>
