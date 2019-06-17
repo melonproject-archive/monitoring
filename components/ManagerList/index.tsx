@@ -35,6 +35,7 @@ const columns = [
   {
     title: '# funds',
     field: 'funds.length',
+    type: 'numeric',
   },
 ];
 

@@ -36,6 +36,7 @@ const FundHoldingsChart: React.FunctionComponent<FundHoldingsChartProps> = props
         [holdingsHistory[k].asset.symbol]: formatBigNumber(
           holdingsHistory[k].assetGav,
           holdingsHistory[k].asset.decimals,
+          3,
         ),
       });
       ts = holdingsHistory[k].timestamp;

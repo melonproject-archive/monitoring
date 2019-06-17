@@ -55,7 +55,9 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           totalSupply: item.totalSupply ? formatBigNumber(item.totalSupply, 18, 3) : 0,
           dailyReturn: index > 0 ? dailyReturn : 0,
           logReturn: index > 0 ? Math.log(1 + dailyReturn) : 0,
-          feesInDenominationAsset: item.feesInDenominationAsset ? formatBigNumber(item.feesInDenominationAsset) : 0,
+          feesInDenominationAsset: item.feesInDenominationAsset
+            ? formatBigNumber(item.feesInDenominationAsset, 18, 6)
+            : 0,
         };
       })) ||
     [];
@@ -350,7 +352,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 title: 'Shares',
                 type: 'numeric',
                 render: rowData => {
-                  return formatBigNumber(rowData.shares, 18, 3);
+                  return formatBigNumber(rowData.shares, 18, 6);
                 },
               },
             ]}

@@ -2,8 +2,8 @@ import React from 'react';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Paper } from '@material-ui/core';
 import { ContractsQuery } from '~/queries/ContractList';
 import { Graph } from 'react-d3-graph';
-import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import Layout from '~/components/Layout';
+import { useQuery } from '@apollo/react-hooks';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -14,7 +14,7 @@ const styles: StyleRulesCallback = theme => ({
 type ContractsProps = WithStyles<typeof styles>;
 
 const Contracts: React.FunctionComponent<ContractsProps> = props => {
-  const contractResult = useScrapingQuery([ContractsQuery, ContractsQuery], proceedPaths(['contracts']), {
+  const contractResult = useQuery(ContractsQuery, {
     ssr: false,
   });
 

@@ -3,7 +3,6 @@ import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, No
 import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 import Layout from '~/components/Layout';
-import MaterialTable from 'material-table';
 import ExchangeDetailsQuery from '~/queries/ExchangeDetailsQuery';
 import TradeList from '~/components/TradeList';
 
@@ -27,7 +26,7 @@ const Exchange: React.FunctionComponent<ExchangeProps> = props => {
 
   const exchange = result.data && result.data.exchange;
 
-  const tradings = exchange && exchange.tradings.filter(trading => trading.fund && trading.fund.id);
+  // const tradings = exchange && exchange.tradings.filter(trading => trading.fund && trading.fund.id);
 
   const calls = exchange && exchange.calls;
 
@@ -49,7 +48,7 @@ const Exchange: React.FunctionComponent<ExchangeProps> = props => {
           <TradeList data={calls} loading={result.loading} hideExchange={true} />
         </NoSsr>
       </Grid>
-      <Grid item={true} xs={12} sm={12} md={12}>
+      {/* <Grid item={true} xs={12} sm={12} md={12}>
         <NoSsr>
           <MaterialTable
             columns={[
@@ -72,7 +71,7 @@ const Exchange: React.FunctionComponent<ExchangeProps> = props => {
             }}
           />
         </NoSsr>
-      </Grid>
+      </Grid> */}
     </Layout>
   );
 };

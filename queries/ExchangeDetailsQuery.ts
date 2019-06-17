@@ -9,15 +9,15 @@ export default gql`
         id
         takesCustody
       }
-      tradings {
-        fund {
-          id
-          name
-        }
-        calls {
-          id
-        }
-      }
+      # tradings {
+      #   fund {
+      #     id
+      #     name
+      #   }
+      #   calls {
+      #     id
+      #   }
+      # }
       calls {
         id
         timestamp

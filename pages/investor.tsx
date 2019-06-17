@@ -54,15 +54,17 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
 
   const investor = R.pathOr(undefined, ['data', 'investor'], result);
   const investments = R.pathOr([], ['data', 'investor', 'investments'], result).map(inv => {
+    const valuationHist = inv.valuationHistory.map(vals => {
+      return {
+        ...vals,
+        nav: vals.nav ? formatBigNumber(vals.nav, 18, 3) : 0,
+        gav: vals.gav ? formatBigNumber(vals.gav) : 0,
+      };
+    });
     return {
       ...inv,
-      valuationHistory: inv.valuationHistory.map(vals => {
-        return {
-          ...vals,
-          nav: vals.nav ? formatBigNumber(vals.nav) : 0,
-          gav: vals.gav ? formatBigNumber(vals.gav) : 0,
-        };
-      }),
+      valuationHistory: valuationHist,
+      maxValuation: Math.max(...valuationHist.map(item => item.nav), 0),
       investedAmount: inv.history.reduce((carry, item) => {
         if (item.action === 'Investment') {
           return new BigNumber(carry).plus(new BigNumber(item.amountInDenominationAsset));
@@ -87,10 +89,12 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
     result.data.investor.valuationHistory.map(valuation => {
       return {
         ...valuation,
-        nav: valuation.nav ? formatBigNumber(valuation.nav) : 0,
-        gav: valuation.gav ? formatBigNumber(valuation.gav) : 0,
+        nav: valuation.nav ? formatBigNumber(valuation.nav, 18, 3) : 0,
+        gav: valuation.gav ? formatBigNumber(valuation.gav, 18, 3) : 0,
       };
     });
+
+  const maxValuation = valuationHistory && Math.max(...valuationHistory.map(item => item.nav), 0);
 
   const investmentHistory = (investor && investor.investmentHistory) || [];
 
@@ -114,7 +118,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
       <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">All assets</Typography>
-          <TimeSeriesChart data={valuationHistory} dataKeys={['nav']} />
+          <TimeSeriesChart data={valuationHistory} dataKeys={['nav']} yMax={maxValuation} />
         </Paper>
       </Grid>
 
@@ -123,7 +127,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
           <Grid item={true} xs={12} sm={6} md={6} key={item.id}>
             <Paper className={props.classes.paper}>
               <Typography variant="h6">{item.fund && item.fund.name}</Typography>
-              <TimeSeriesChart data={item.valuationHistory} dataKeys={['nav']} />
+              <TimeSeriesChart data={item.valuationHistory} dataKeys={['nav']} yMax={item.maxValuation} />
             </Paper>
           </Grid>
         ))}

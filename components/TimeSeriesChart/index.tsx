@@ -17,11 +17,20 @@ export interface TimeSeriesChartProps {
 
 const styles: StyleRulesCallback = theme => ({});
 
+const lineColor = index => {
+  const lineColors = ['#00bfff', '#1e90ff', '#87cefa'];
+  const pick = index % lineColors.length;
+  return lineColors[pick];
+};
+
 const TimeSeriesChart: React.FunctionComponent<TimeSeriesChartProps> = props => {
   return (
     <ResponsiveContainer height={props.height || 200} width="100%">
       {(props.loading && <CircularProgress />) || (
         <LineChart data={props.data}>
+          {props.dataKeys.map((key, index) => (
+            <Line key={key} type="monotone" dataKey={key} dot={false} stroke={lineColor(index)} />
+          ))}
           <XAxis
             dataKey="timestamp"
             type="number"
@@ -31,9 +40,7 @@ const TimeSeriesChart: React.FunctionComponent<TimeSeriesChartProps> = props => 
           />
           <YAxis domain={[props.yMin || 0, props.yMax || 'auto']} stroke="#dddddd" />
           {props.referenceLine && <ReferenceLine y={0} stroke="gray" strokeDasharray="3 3" />}
-          {props.dataKeys.map(key => (
-            <Line key={key} type="monotone" dataKey={key} dot={false} stroke="#aaaaaa" />
-          ))}
+
           <Tooltip
             labelFormatter={value => 'Date: ' + formatDate(value)}
             contentStyle={{ backgroundColor: '#4A4A4A' }}

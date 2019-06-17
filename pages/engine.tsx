@@ -48,7 +48,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
           <div>Total MLN burned: {engineQuantities && formatBigNumber(engineQuantities.totalMlnBurned, 18, 3)}</div>
           <div>Premium percent: {engineQuantities && engineQuantities.premiumPercent}%</div>
           <div>&nbsp;</div>
-          <div>Last update: {engineQuantities && formatDate(engineQuantities.lastUpdate)}</div>
+          <div>Last update: {engineQuantities && formatDate(engineQuantities.lastUpdate, true)}</div>
         </Paper>
       </Grid>
       <Grid item={true} xs={12} sm={12} md={12}>

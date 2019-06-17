@@ -47,7 +47,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
     asset.melonNetworkAssetHistory.map(item => {
       return {
         timestamp: item.timestamp,
-        amount: item.amount > 0 ? formatBigNumber(item.amount) : undefined,
+        amount: item.amount > 0 ? formatBigNumber(item.amount, 18, 3) : undefined,
       };
     });
 
@@ -74,34 +74,32 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
     <Layout title="Assets">
       <Grid item={true} xs={12}>
         <Paper className={props.classes.paper}>
-          <Typography variant="h5">
-            {asset && asset.symbol} - {asset && asset.name}
-          </Typography>
-
-          {asset && (
-            <>
-              <div>Address: {asset && asset.id}</div>
-              <div>Decimals: {asset && asset.decimals}</div>
-            </>
-          )}
+          <Typography variant="h5">{asset && asset.symbol + ' - ' + asset.name}&nbsp;</Typography>
+          <div>Address: {asset && asset.id}</div>
+          <div>Decimals: {asset && asset.decimals}</div>
         </Paper>
       </Grid>
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
-          <Typography variant="h5">Asset price</Typography>
-          <TimeSeriesChart data={priceHistory} dataKeys={['price']} />
+          <Typography variant="h5">Price in ETH</Typography>
+          <TimeSeriesChart data={priceHistory} dataKeys={['price']} loading={result.loading} />
         </Paper>
       </Grid>
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
-          <Typography variant="h5">Asset price change</Typography>
-          <TimeSeriesChart data={priceHistory} dataKeys={['dailyReturn']} referenceLine={true} />{' '}
+          <Typography variant="h5">Daily price change [%]</Typography>
+          <TimeSeriesChart
+            data={priceHistory}
+            dataKeys={['dailyReturn']}
+            referenceLine={true}
+            loading={result.loading}
+          />{' '}
         </Paper>
       </Grid>
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Aggregate value of {asset && asset.symbol} within Melon network</Typography>
-          <TimeSeriesChart data={networkValues} dataKeys={['amount']} yMax={maxValue} />
+          <TimeSeriesChart data={networkValues} dataKeys={['amount']} yMax={maxValue} loading={result.loading} />
         </Paper>
       </Grid>
 
@@ -114,7 +112,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
                 field: 'name',
               },
               {
-                title: 'Asset value',
+                title: 'Amount',
                 type: 'numeric',
                 render: rowData => {
                   return formatBigNumber(rowData.assetValue.amount, 18, 3);
@@ -122,7 +120,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
                 customSort: (a, b) => sortBigNumber(a, b, ['assetValue', 'amount']),
               },
               {
-                title: 'Asset value in ETH',
+                title: 'Value in ETH',
                 type: 'numeric',
                 render: rowData => {
                   return formatBigNumber(rowData.assetValue.assetGav, 18, 3);
@@ -132,10 +130,11 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
               },
             ]}
             data={funds}
-            title={'Funds with ' + (asset && asset.symbol) + ' in their portfolio'}
+            title={asset && `Funds with ${asset.symbol} in their portfolio`}
             options={{
-              paging: false,
-              search: false,
+              paging: true,
+              pageSize: 10,
+              search: true,
             }}
             isLoading={result.loading}
             onRowClick={(_, rowData) => {
