@@ -46,7 +46,10 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       fund.calculationsHistory.map((item, index, array) => {
         const timeSpan = index > 0 ? item.timestamp - array[index - 1].timestamp : 0;
         const returnSinceLastPriceUpdate = index > 0 ? item.sharePrice / array[index - 1].sharePrice - 1 : 0;
-        const dailyReturn = index > 0 ? Math.pow(1 + returnSinceLastPriceUpdate, (24 * 60 * 60) / timeSpan) - 1 : 0;
+        let dailyReturn = index > 0 ? Math.pow(1 + returnSinceLastPriceUpdate, (24 * 60 * 60) / timeSpan) - 1 : 0;
+        if (dailyReturn > 100) {
+          dailyReturn = 0;
+        }
         return {
           ...item,
           sharePrice: item.sharePrice ? formatBigNumber(item.sharePrice) : 0,
@@ -220,7 +223,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">NAV</Typography>
-          <TimeSeriesChart data={normalizedNumbers} dataKeys={['gav', 'nav']} yMax={maxNav} loading={result.loading} />
+          <TimeSeriesChart data={normalizedNumbers} dataKeys={['nav', 'gav']} yMax={maxNav} loading={result.loading} />
         </Paper>
       </Grid>
 

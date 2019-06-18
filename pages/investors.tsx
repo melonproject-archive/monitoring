@@ -22,12 +22,19 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
 
   const investorCounts = (result.data && result.data.investorCounts) || [];
 
+  const maxNumberOfInvestors = Math.max(...investorCounts.map(item => item.numberOfInvestors), 0);
+
   return (
     <Layout title="Investors">
       <Grid item={true} xs={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Total number of investments into Melon funds</Typography>
-          <TimeSeriesChart data={investorCounts} dataKeys={['numberOfInvestors']} yMax={100} loading={result.loading} />
+          <TimeSeriesChart
+            data={investorCounts}
+            dataKeys={['numberOfInvestors']}
+            yMax={maxNumberOfInvestors}
+            loading={result.loading}
+          />
         </Paper>
       </Grid>
       <Grid item={true} xs={12}>

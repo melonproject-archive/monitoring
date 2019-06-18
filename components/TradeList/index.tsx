@@ -54,6 +54,7 @@ const TradeList: React.FunctionComponent<TradeListProps> = props => {
         return formatBigNumber(rowData.orderValue0, 18, 3);
       },
       customSort: (a, b) => sortBigNumber(a, b, 'orderValue0'),
+      type: 'numeric',
     },
     {
       title: 'Taker asset qty',
@@ -61,6 +62,7 @@ const TradeList: React.FunctionComponent<TradeListProps> = props => {
         return formatBigNumber(rowData.orderValue1, 18, 3);
       },
       customSort: (a, b) => sortBigNumber(a, b, 'orderValue1'),
+      type: 'numeric',
     },
     {
       title: 'Taker asset qty traded',
@@ -68,6 +70,7 @@ const TradeList: React.FunctionComponent<TradeListProps> = props => {
         return formatBigNumber(rowData.orderValue6, 18, 3);
       },
       customSort: (a, b) => sortBigNumber(a, b, 'orderValue6'),
+      type: 'numeric',
     },
     {
       title: 'Method Signature',
