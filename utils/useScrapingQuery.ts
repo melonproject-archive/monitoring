@@ -1,10 +1,9 @@
 import * as R from 'ramda';
 import { useQuery } from '@apollo/react-hooks';
-import { useRef, useEffect } from 'react';
 import { DocumentNode } from 'graphql';
+import { useState } from 'react';
 
 type QueryPair = [DocumentNode, DocumentNode];
-
 type ProceedOrNotFn = (result: any, expected: number) => boolean;
 
 const deepMerge = (a, b) => {
@@ -24,42 +23,50 @@ export const proceedPaths = (paths: string[]) => (current: any, expected: number
 };
 
 export function useScrapingQuery([query, more]: QueryPair, proceed: ProceedOrNotFn, props?: any) {
-  const limit = (props.variables && props.variables.limit) || 100;
-  const skip = useRef((props.variables && props.variables.skip) || 0);
+  const variables = {
+    ...(props && props.variables),
+    limit: (props.variables && props.variables.limit) || 100,
+    skip: (props.variables && props.variables.skip) || 0,
+  };
+
   const result = useQuery(query, {
     ...props,
-    variables: {
-      ...(props && props.variables),
-      limit,
-      skip: skip.current,
+    variables,
+    onCompleted: (data: any) => {
+      const fetchMore = (merged: any, skip: number) => {
+        if (!proceed(merged, skip)) {
+          return false;
+        }
+
+        result.fetchMore({
+          query: more,
+          variables: {
+            ...variables,
+            skip,
+          },
+          updateQuery: (previous, options) => {
+            const output = deepMerge(previous, options.fetchMoreResult);
+            if (!fetchMore(output, skip + variables.limit)) {
+              setLoading(false);
+            }
+
+            return output;
+          },
+        });
+
+        return true;
+      };
+
+      if (!fetchMore(data, variables.skip + variables.limit)) {
+        setLoading(false);
+      }
     },
   });
 
-  const loading = useRef(result.loading);
-
-  useEffect(() => {
-    if (!!result.loading || !!result.error || !proceed(result.data, skip.current + limit)) {
-      loading.current = false;
-      return;
-    }
-
-    loading.current = true;
-
-    result.fetchMore({
-      query: more,
-      variables: {
-        ...result.variables,
-        skip: skip.current + limit,
-      },
-      updateQuery: (previous, options) => {
-        skip.current = skip.current + limit;
-        return deepMerge(previous, options.fetchMoreResult);
-      },
-    });
-  }, [result, skip.current]);
+  const [loading, setLoading] = useState(result.loading);
 
   return {
     ...result,
-    loading: loading.current,
+    loading: result.error ? result.loading : loading,
   };
 }
