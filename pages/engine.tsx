@@ -1,4 +1,5 @@
 import React from 'react';
+import * as R from 'ramda';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
 import { AmguPaymentsQuery, EngineQuery } from '~/queries/EngineDetailsQuery';
 
@@ -31,7 +32,8 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
     return carry + parseInt(item.amount, 10);
   }, 0);
 
-  const engineQuantities = result.data && result.data.state && result.data.state.currentEngine;
+  const state = R.pathOr({}, ['data', 'state'], result);
+  const engineQuantities = R.pathOr({}, ['data', 'state', 'currentEngine'], result);
 
   return (
     <Layout title="Engine">
@@ -51,7 +53,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
           <div>Total MLN burned: {engineQuantities && formatBigNumber(engineQuantities.totalMlnBurned, 18, 3)}</div>
           <div>Premium percent: {engineQuantities && engineQuantities.premiumPercent}%</div>
           <div>&nbsp;</div>
-          <div>Last update: {engineQuantities && formatDate(engineQuantities.lastUpdate, true)}</div>
+          <div>Pricefeed last updated: {state && formatDate(state.lastPriceUpdate, true)}</div>
         </Paper>
       </Grid>
       <Grid item={true} xs={12} sm={12} md={12}>

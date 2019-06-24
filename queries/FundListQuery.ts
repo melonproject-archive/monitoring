@@ -1,14 +1,18 @@
 import gql from 'graphql-tag';
 
-export const FundOverviewQuery = gql`
-  query FundOverviewQuery($limit: Int!, $skip: Int!) {
+export const FundCountQuery = gql`
+  query FundCountQuery($limit: Int!, $skip: Int!) {
     fundCounts(orderBy: timestamp, first: $limit, skip: $skip) {
       active
       nonActive
       timestamp
     }
+  }
+`;
 
-    melonNetworkHistories(orderBy: timestamp) {
+export const MelonNetworkHistoryQuery = gql`
+  query MelonNetworkHistoryQuery($limit: Int!, $skip: Int!) {
+    melonNetworkHistories(orderBy: timestamp, first: $limit, skip: $skip) {
       timestamp
       gav
     }

@@ -11,7 +11,7 @@ import {
   CardContent,
   CircularProgress,
 } from '@material-ui/core';
-import { FundOverviewQuery } from '~/queries/FundListQuery';
+import { FundCountQuery, MelonNetworkHistoryQuery } from '~/queries/FundListQuery';
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import FundList from '~/components/FundList';
 import Layout from '~/components/Layout';
@@ -26,17 +26,24 @@ const styles: StyleRulesCallback = theme => ({
 });
 
 const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
-  const result = useScrapingQuery([FundOverviewQuery, FundOverviewQuery], proceedPaths(['melonNetworkHistories']), {
+  const result = useScrapingQuery([FundCountQuery, FundCountQuery], proceedPaths(['fundCounts']), {
     ssr: false,
   });
 
-  const data = result.data || {};
+  const fundCounts = (result.data && result.data.fundCounts) || [];
   const loading = result.loading;
-  const fundCounts = data.fundCounts || [];
 
   const maxFunds = Math.max(...fundCounts.map(item => parseInt(item.active, 10) + parseInt(item.nonActive, 10), 0));
 
-  const melonNetworkHistories = R.pathOr([], ['data', 'melonNetworkHistories'], result).map(item => {
+  const historyResult = useScrapingQuery(
+    [MelonNetworkHistoryQuery, MelonNetworkHistoryQuery],
+    proceedPaths(['melonNetworkHistories']),
+    {
+      ssr: false,
+    },
+  );
+
+  const melonNetworkHistories = R.pathOr([], ['data', 'melonNetworkHistories'], historyResult).map(item => {
     return {
       ...item,
       gav: formatBigNumber(item.gav, 18, 0),

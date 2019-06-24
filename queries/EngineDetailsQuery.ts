@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 export const EngineQuery = gql`
   query EngineQuery($limit: Int!) {
     state(id: "0x") {
+      lastPriceUpdate
       currentEngine {
         id
         amguPrice
