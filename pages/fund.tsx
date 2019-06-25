@@ -47,8 +47,8 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         const timeSpan = index > 0 ? item.timestamp - array[index - 1].timestamp : 0;
         const returnSinceLastPriceUpdate = index > 0 ? item.sharePrice / array[index - 1].sharePrice - 1 : 0;
         let dailyReturn = index > 0 ? Math.pow(1 + returnSinceLastPriceUpdate, (24 * 60 * 60) / timeSpan) - 1 : 0;
-        if (dailyReturn > 100) {
-          dailyReturn = 0;
+        if (dailyReturn > 100 || dailyReturn <= -1) {
+          dailyReturn = undefined;
         }
         return {
           ...item,

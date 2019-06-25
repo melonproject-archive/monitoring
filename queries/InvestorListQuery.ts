@@ -13,8 +13,8 @@ export const InvestorCountQuery = gql`
 `;
 
 export const InvestorListQuery = gql`
-  query InvestorListQuery {
-    investors(orderBy: id) {
+  query InvestorListQuery($limit: Int!, $skip: Int!) {
+    investors(orderBy: id, first: $limit, skip: $skip) {
       id
       createdAt
       investments {

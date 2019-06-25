@@ -3,8 +3,9 @@ import { Grid, withStyles, WithStyles, StyleRulesCallback, NoSsr } from '@materi
 import Layout from '~/components/Layout';
 import ExchangeList from '~/components/ExchangeList';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
-import { ExchangeListScrapingQuery, ExchangeListQuery } from '~/queries/ExchangeListQuery';
+import { ExchangeListQuery, ExchangeMethodCallListQuery } from '~/queries/ExchangeListQuery';
 import TradeList from '~/components/TradeList';
+import { useQuery } from '@apollo/react-hooks';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -19,13 +20,9 @@ const styles: StyleRulesCallback = theme => ({
 type ExchangesProps = WithStyles<typeof styles>;
 
 const Exchanges: React.FunctionComponent<ExchangesProps> = props => {
-  const result = useScrapingQuery(
-    [ExchangeListQuery, ExchangeListScrapingQuery],
-    proceedPaths(['exchangeMethodCalls']),
-    {
-      ssr: false,
-    },
-  );
+  const result = useQuery(ExchangeListQuery, {
+    ssr: false,
+  });
 
   const data = result.data || {};
 
@@ -38,7 +35,15 @@ const Exchanges: React.FunctionComponent<ExchangesProps> = props => {
     })
     .filter(exchange => exchange.tradings.length);
 
-  const trading = (data && data.exchangeMethodCalls) || [];
+  const exchangeMethodCallResult = useScrapingQuery(
+    [ExchangeMethodCallListQuery, ExchangeMethodCallListQuery],
+    proceedPaths(['exchangeMethodCalls']),
+    {
+      ssr: false,
+    },
+  );
+
+  const trading = (exchangeMethodCallResult.data && exchangeMethodCallResult.data.exchangeMethodCalls) || [];
 
   return (
     <Layout title="Exchanges">

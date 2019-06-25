@@ -7,9 +7,9 @@ import { withStyles } from '@material-ui/styles';
 import { StyleRulesCallback } from '@material-ui/core';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { InvestorListQuery } from '~/queries/InvestorListQuery';
-import { useQuery } from '@apollo/react-hooks';
 import { formatDate } from '~/utils/formatDate';
 import { sortBigNumber } from '~/utils/sortBigNumber';
+import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 
 export interface InvestorListProps {
   data?: any;
@@ -50,7 +50,7 @@ const columns = [
 ];
 
 const InvestorList: React.FunctionComponent<InvestorListProps> = props => {
-  const result = useQuery(InvestorListQuery, {
+  const result = useScrapingQuery([InvestorListQuery, InvestorListQuery], proceedPaths(['investors']), {
     ssr: false,
   });
 

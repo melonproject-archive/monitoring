@@ -34,7 +34,10 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
     asset.priceHistory.map((item, index, array) => {
       const timeSpan = index > 0 ? item.timestamp - array[index - 1].timestamp : 0;
       const returnSinceLastPriceUpdate = index > 0 ? item.price / array[index - 1].price - 1 : 0;
-      const dailyReturn = index > 0 ? Math.pow(1 + returnSinceLastPriceUpdate, (24 * 60 * 60) / timeSpan) - 1 : 0;
+      let dailyReturn = index > 0 ? Math.pow(1 + returnSinceLastPriceUpdate, (24 * 60 * 60) / timeSpan) - 1 : 0;
+      if (dailyReturn > 100 || dailyReturn <= -1) {
+        dailyReturn = undefined;
+      }
       return {
         timestamp: item.timestamp,
         price: item.price > 0 ? formatBigNumber(item.price) : undefined,
@@ -51,7 +54,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
       };
     });
 
-  const maxValue = networkValues && Math.max(...networkValues.map(item => item.amount, 0));
+  const maxValue = networkValues && Math.max(...networkValues.filter(item => item.amount).map(item => item.amount, 0));
 
   const funds =
     asset &&
