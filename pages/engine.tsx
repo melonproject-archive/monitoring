@@ -43,15 +43,17 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
           <div>Amgu Price: {engineQuantities && formatBigNumber(engineQuantities.amguPrice, 18, 7)} MLN</div>
           <div>Thawing Delay: {engineQuantities && engineQuantities.thawingDelay / (24 * 3600)} days</div>
           <div>&nbsp;</div>
-          <div>Frozen Ether: {engineQuantities && formatBigNumber(engineQuantities.frozenEther, 18, 3)} ETH</div>
-          <div>Liquid Ether: {engineQuantities && formatBigNumber(engineQuantities.liquidEther, 18, 3)} ETH</div>
-          <div>Last Thaw: {engineQuantities && formatDate(engineQuantities.lastThaw)}</div>
+          <div>Total Amgu consumed: {engineQuantities && formatThousands(engineQuantities.totalAmguConsumed)}</div>
           <div>
             Total Ether Consumed: {engineQuantities && formatBigNumber(engineQuantities.totalEtherConsumed, 18, 3)}
           </div>
-          <div>Total Amgu consumed: {engineQuantities && formatThousands(engineQuantities.totalAmguConsumed)}</div>
           <div>Total MLN burned: {engineQuantities && formatBigNumber(engineQuantities.totalMlnBurned, 18, 3)}</div>
-          <div>Premium percent: {engineQuantities && engineQuantities.premiumPercent}%</div>
+          <div>&nbsp;</div>
+          <div>Frozen Ether: {engineQuantities && formatBigNumber(engineQuantities.frozenEther, 18, 3)} ETH</div>
+          <div>Liquid Ether: {engineQuantities && formatBigNumber(engineQuantities.liquidEther, 18, 3)} ETH</div>
+          <div>Last Thaw: {engineQuantities && formatDate(engineQuantities.lastThaw)}</div>
+
+          <div>Current premium percent: {engineQuantities && engineQuantities.premiumPercent}%</div>
           <div>&nbsp;</div>
           <div>Pricefeed last updated: {state && formatDate(state.lastPriceUpdate, true)}</div>
         </Paper>

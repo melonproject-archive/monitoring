@@ -132,6 +132,8 @@ const Fund: React.FunctionComponent<FundProps> = props => {
             {fund && fund.isShutdown && <> (deactivated: {fund.shutdownAt && formatDate(fund.shutdownAt)})</>}
           </div>
           <div>&nbsp;</div>
+          <div>GAV: {fund && formatBigNumber(fund.gav, 18, 3)}</div>
+          <div>NAV: {fund && formatBigNumber(fund.nav, 18, 3)}</div>
           <div># shares: {fund && formatBigNumber(fund.totalSupply, 18, 3)}</div>
           <div>Share price: {fund && formatBigNumber(fund.sharePrice, 18, 3)}</div>
           <div>&nbsp;</div>

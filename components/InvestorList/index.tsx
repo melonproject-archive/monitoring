@@ -73,7 +73,8 @@ const InvestorList: React.FunctionComponent<InvestorListProps> = props => {
       data={investorsInclAum}
       title="Investors"
       options={{
-        paging: false,
+        paging: true,
+        pageSize: 10,
       }}
       isLoading={result.loading}
       onRowClick={(_, rowData) => {

@@ -6,9 +6,6 @@ export const InvestorCountQuery = gql`
       numberOfInvestors
       timestamp
     }
-    # state(id: "0x") {
-    #   id
-    # }
   }
 `;
 
@@ -22,6 +19,22 @@ export const InvestorListQuery = gql`
         gav
         nav
       }
+    }
+  }
+`;
+
+export const InvestmentHistoryQuery = gql`
+  query InvestmentHistoryQuery($limit: Int!) {
+    investmentHistories(orderBy: timestamp, orderDirection: desc, first: $limit) {
+      timestamp
+      fund {
+        name
+      }
+      owner {
+        id
+      }
+      action
+      amountInDenominationAsset
     }
   }
 `;

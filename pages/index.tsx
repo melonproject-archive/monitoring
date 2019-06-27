@@ -30,7 +30,8 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
     ssr: false,
   });
 
-  const fundCounts = (result.data && result.data.fundCounts) || [];
+  const fundCounts = R.pathOr([], ['data', 'fundCounts'], result);
+
   const loading = result.loading;
 
   const maxFunds = Math.max(...fundCounts.map(item => parseInt(item.active, 10) + parseInt(item.nonActive, 10), 0));
@@ -42,6 +43,8 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
       ssr: false,
     },
   );
+
+  const historyLoading = historyResult.loading;
 
   const melonNetworkHistories = R.pathOr([], ['data', 'melonNetworkHistories'], historyResult).map(item => {
     return {
@@ -99,7 +102,7 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
             <Typography variant="h5" component="h2">
               Total assets under management
             </Typography>
-            {(loading && <CircularProgress />) || (
+            {(historyLoading && <CircularProgress />) || (
               <>
                 <br />
                 <Typography variant="body1">
