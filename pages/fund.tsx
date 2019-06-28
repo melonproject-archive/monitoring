@@ -52,7 +52,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         }
         return {
           ...item,
-          sharePrice: item.sharePrice ? formatBigNumber(item.sharePrice) : 0,
+          sharePrice: item.sharePrice && formatBigNumber(item.sharePrice, 18, 3),
           gav: item.gav ? formatBigNumber(item.gav, 18, 3) : 0,
           nav: item.nav ? formatBigNumber(item.nav, 18, 3) : 0,
           totalSupply: item.totalSupply ? formatBigNumber(item.totalSupply, 18, 3) : 0,
@@ -64,6 +64,9 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         };
       })) ||
     [];
+
+  const maxSharePrice = Math.max(...normalizedNumbers.map(item => item.sharePrice));
+  const minSharePrice = Math.min(...normalizedNumbers.map(item => item.sharePrice));
 
   const maxNav = Math.max(...normalizedNumbers.map(item => item.nav), 0);
   const maxGav = Math.max(...normalizedNumbers.map(item => item.gav), 0);
@@ -205,7 +208,13 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Share Price</Typography>
-          <TimeSeriesChart data={normalizedNumbers} dataKeys={['sharePrice']} loading={result.loading} />
+          <TimeSeriesChart
+            data={normalizedNumbers}
+            dataKeys={['sharePrice']}
+            yMax={maxSharePrice}
+            yMin={minSharePrice}
+            loading={result.loading}
+          />
         </Paper>
       </Grid>
 
