@@ -151,6 +151,7 @@ export const FundDetailsQuery = gql`
       updateTimestamp
       asset {
         symbol
+        decimals
       }
     }
 
