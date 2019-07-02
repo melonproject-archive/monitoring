@@ -44,7 +44,7 @@ const columns = [
     title: 'Aggregate amount',
     type: 'numeric',
     render: rowData => {
-      return formatBigNumber(rowData.aggregateAmount, 18, 3);
+      return formatBigNumber(rowData.aggregateAmount, rowData.decimals, 3);
     },
     customSort: (a, b) => sortBigNumber(a, b, 'aggregateAmount'),
   },

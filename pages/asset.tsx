@@ -50,7 +50,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
     asset.melonNetworkAssetHistory.map(item => {
       return {
         timestamp: item.timestamp,
-        amount: item.amount > 0 ? formatBigNumber(item.amount, 18, 3) : undefined,
+        amount: item.amount > 0 ? formatBigNumber(item.amount, asset.decimals, 3) : undefined,
       };
     });
 
@@ -118,7 +118,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
                 title: 'Amount',
                 type: 'numeric',
                 render: rowData => {
-                  return formatBigNumber(rowData.assetValue.amount, 18, 3);
+                  return formatBigNumber(rowData.assetValue.amount, rowData.assetValue.asset.decimals, 3);
                 },
                 customSort: (a, b) => sortBigNumber(a, b, ['assetValue', 'amount']),
               },

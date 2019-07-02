@@ -57,6 +57,7 @@ export const FundDetailsQuery = gql`
         asset {
           id
           symbol
+          decimals
         }
       }
       investments {
@@ -118,9 +119,11 @@ export const FundDetailsQuery = gql`
           }
           orderAddress2 {
             symbol
+            decimals
           }
           orderAddress3 {
             symbol
+            decimals
           }
           orderValue0
           orderValue1

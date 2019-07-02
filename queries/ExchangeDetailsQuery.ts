@@ -33,10 +33,12 @@ export default gql`
         orderAddress2 {
           id
           symbol
+          decimals
         }
         orderAddress3 {
           id
           symbol
+          decimals
         }
         orderAddress4
         orderAddress5

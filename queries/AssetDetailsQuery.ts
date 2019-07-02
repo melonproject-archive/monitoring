@@ -27,6 +27,7 @@ export default gql`
             asset {
               id
               symbol
+              decimals
             }
           }
         }

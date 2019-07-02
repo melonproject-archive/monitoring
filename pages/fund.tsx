@@ -181,7 +181,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 title: 'Amount',
                 type: 'numeric',
                 render: rowData => {
-                  return formatBigNumber(rowData.amount, 18, 3);
+                  return formatBigNumber(rowData.amount, rowData.asset.decimals, 3);
                 },
               },
               {
