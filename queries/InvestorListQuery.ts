@@ -38,3 +38,24 @@ export const InvestmentHistoryQuery = gql`
     }
   }
 `;
+
+export const InvestmentRequestsQuery = gql`
+  query InvestmentRequestsQuery($limit: Int!) {
+    investmentRequests(where: { status: "PENDING" }, orderBy: requestTimestamp, orderDirection: desc, first: $limit) {
+      id
+      requestTimestamp
+      fund {
+        name
+      }
+      owner {
+        id
+      }
+      status
+      amount
+      shares
+      asset {
+        symbol
+      }
+    }
+  }
+`;

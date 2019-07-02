@@ -133,6 +133,24 @@ export const FundDetailsQuery = gql`
       }
     }
 
+    investmentRequests(where: { fund: $fund, status: "PENDING" }, orderBy: requestTimestamp) {
+      fund {
+        id
+        name
+      }
+      owner {
+        id
+      }
+      requestTimestamp
+      status
+      shares
+      amount
+      updateTimestamp
+      asset {
+        symbol
+      }
+    }
+
     assets {
       id
       symbol

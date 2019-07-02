@@ -27,6 +27,20 @@ export default gql`
           timestamp
         }
       }
+      investmentRequests(orderBy: requestTimestamp) {
+        fund {
+          id
+          name
+        }
+        requestTimestamp
+        status
+        shares
+        amount
+        updateTimestamp
+        asset {
+          symbol
+        }
+      }
       investmentHistory(orderBy: timestamp) {
         id
         action

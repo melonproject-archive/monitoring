@@ -1,6 +1,6 @@
 import React from 'react';
 import * as R from 'ramda';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 import InvestorDetailsQuery from '~/queries/InvestorDetailsQuery';
@@ -11,6 +11,8 @@ import InvestmentList from '~/components/InvestmentList';
 import InvestorActivity from '~/components/InvestorActivity';
 import BigNumber from 'bignumber.js';
 import { robustIRR } from '~/utils/robustIRR';
+import MaterialTable from 'material-table';
+import { formatDate } from '~/utils/formatDate';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -98,6 +100,22 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
 
   const investmentHistory = (investor && investor.investmentHistory) || [];
 
+  const investmentRequests = ((investor && investor.investmentRequests) || [])
+    .filter(item => item.status === 'PENDING')
+    .map(item => {
+      let expires = parseInt(item.requestTimestamp, 10) + 24 * 60 * 60;
+      let status = item.status;
+      if (new Date().getTime() > new Date(expires).getTime()) {
+        status = 'EXPIRED';
+        expires = undefined;
+      }
+      return {
+        ...item,
+        status,
+        expires,
+      };
+    });
+
   return (
     <Layout title="Investor">
       <Grid item={true} xs={12} sm={12} md={12}>
@@ -133,10 +151,67 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
         ))}
 
       <Grid item={true} xs={12}>
-        <Paper className={props.classes.paper}>
-          <InvestorActivity activity={investmentHistory} loading={result.loading} />
-        </Paper>
+        <InvestorActivity activity={investmentHistory} loading={result.loading} />
       </Grid>
+      {investmentRequests && (
+        <Grid item={true} xs={12}>
+          <NoSsr>
+            <MaterialTable
+              columns={[
+                {
+                  title: 'Date',
+                  render: rowData => {
+                    return formatDate(rowData.requestTimestamp, true);
+                  },
+                },
+                {
+                  title: 'Fund',
+                  field: 'fund.name',
+                },
+                {
+                  title: 'Shares',
+                  render: rowData => {
+                    return formatBigNumber(rowData.shares, 18, 3);
+                  },
+                  type: 'numeric',
+                },
+                {
+                  title: 'Amount',
+                  render: rowData => {
+                    return formatBigNumber(rowData.amount, 18, 3);
+                  },
+                  type: 'numeric',
+                },
+                {
+                  title: 'Asset',
+                  field: 'asset.symbol',
+                },
+                {
+                  title: 'Status',
+                  field: 'status',
+                },
+                {
+                  title: 'Expires',
+                  render: rowData => {
+                    return rowData.expires && formatDate(rowData.expires, true);
+                  },
+                },
+              ]}
+              data={investmentRequests}
+              title="Pending investments"
+              options={{
+                paging: false,
+                search: false,
+              }}
+              isLoading={result.loading}
+              onRowClick={(_, rowData) => {
+                const url = '/fund?address=' + rowData.fund.id;
+                window.open(url, '_self');
+              }}
+            />
+          </NoSsr>
+        </Grid>
+      )}
     </Layout>
   );
 };

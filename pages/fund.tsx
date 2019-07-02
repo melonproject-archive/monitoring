@@ -120,6 +120,20 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       return { ...contract, address: fund[contract.field] && fund[contract.field].id };
     });
 
+  const investmentRequests = R.pathOr([], ['data', 'investmentRequests'], result).map(item => {
+    let expires = parseInt(item.requestTimestamp, 10) + 24 * 60 * 60;
+    let status = item.status;
+    if (new Date().getTime() > new Date(expires).getTime()) {
+      status = 'EXPIRED';
+      expires = undefined;
+    }
+    return {
+      ...item,
+      status,
+      expires,
+    };
+  });
+
   return (
     <Layout title="Fund">
       <Grid item={true} xs={12} sm={6} md={6}>
@@ -453,6 +467,65 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           />
         </NoSsr>
       </Grid>
+      {investmentRequests && (
+        <Grid item={true} xs={12}>
+          <NoSsr>
+            <MaterialTable
+              columns={[
+                {
+                  title: 'Date',
+                  render: rowData => {
+                    return formatDate(rowData.requestTimestamp, true);
+                  },
+                },
+                {
+                  title: 'Investor',
+                  field: 'owner.id',
+                },
+                {
+                  title: 'Shares',
+                  render: rowData => {
+                    return formatBigNumber(rowData.shares, 18, 3);
+                  },
+                  type: 'numeric',
+                },
+                {
+                  title: 'Amount',
+                  render: rowData => {
+                    return formatBigNumber(rowData.amount, 18, 3);
+                  },
+                  type: 'numeric',
+                },
+                {
+                  title: 'Asset',
+                  field: 'asset.symbol',
+                },
+                {
+                  title: 'Status',
+                  field: 'status',
+                },
+                {
+                  title: 'Expires',
+                  render: rowData => {
+                    return rowData.expires && formatDate(rowData.expires, true);
+                  },
+                },
+              ]}
+              data={investmentRequests}
+              title="Pending investments"
+              options={{
+                paging: false,
+                search: false,
+              }}
+              isLoading={result.loading}
+              onRowClick={(_, rowData) => {
+                const url = '/fund?address=' + rowData.fund.id;
+                window.open(url, '_self');
+              }}
+            />
+          </NoSsr>
+        </Grid>
+      )}
     </Layout>
   );
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
-import { InvestorCountQuery, InvestmentHistoryQuery } from '~/queries/InvestorListQuery';
+import { InvestorCountQuery, InvestmentHistoryQuery, InvestmentRequestsQuery } from '~/queries/InvestorListQuery';
 
 import Layout from '~/components/Layout';
 import TimeSeriesChart from '~/components/TimeSeriesChart';
@@ -30,6 +30,29 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
   const investmentHistoryResult = useQuery(InvestmentHistoryQuery, { ssr: false, variables: { limit: 10 } });
 
   const investmentHistory = (investmentHistoryResult.data && investmentHistoryResult.data.investmentHistories) || [];
+
+  const investmentRequestsResult = useScrapingQuery(
+    [InvestmentRequestsQuery, InvestmentRequestsQuery],
+    proceedPaths(['investmentRequests']),
+    { ssr: false },
+  );
+
+  const investmentRequests = (
+    (investmentRequestsResult.data && investmentRequestsResult.data.investmentRequests) ||
+    []
+  ).map(item => {
+    let expires = parseInt(item.requestTimestamp, 10) + 24 * 60 * 60;
+    let status = item.status;
+    if (new Date().getTime() > new Date(expires).getTime()) {
+      status = 'EXPIRED';
+      expires = undefined;
+    }
+    return {
+      ...item,
+      status,
+      expires,
+    };
+  });
 
   return (
     <Layout title="Investors">
@@ -92,6 +115,69 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
           />
         </NoSsr>
       </Grid>
+      {investmentRequests && (
+        <Grid item={true} xs={12}>
+          <NoSsr>
+            <MaterialTable
+              columns={[
+                {
+                  title: 'Date',
+                  render: rowData => {
+                    return formatDate(rowData.requestTimestamp, true);
+                  },
+                },
+                {
+                  title: 'Fund',
+                  field: 'fund.name',
+                },
+                {
+                  title: 'Investor',
+                  field: 'owner.id',
+                },
+                {
+                  title: 'Shares',
+                  render: rowData => {
+                    return formatBigNumber(rowData.shares, 18, 3);
+                  },
+                  type: 'numeric',
+                },
+                {
+                  title: 'Amount',
+                  render: rowData => {
+                    return formatBigNumber(rowData.amount, 18, 3);
+                  },
+                  type: 'numeric',
+                },
+                {
+                  title: 'Asset',
+                  field: 'asset.symbol',
+                },
+                {
+                  title: 'Status',
+                  field: 'status',
+                },
+                {
+                  title: 'Expires',
+                  render: rowData => {
+                    return rowData.expires && formatDate(rowData.expires, true);
+                  },
+                },
+              ]}
+              data={investmentRequests}
+              title="Pending investments"
+              options={{
+                paging: false,
+                search: false,
+              }}
+              isLoading={result.loading}
+              onRowClick={(_, rowData) => {
+                const url = '/investor?address=' + rowData.owner.id;
+                window.open(url, '_self');
+              }}
+            />
+          </NoSsr>
+        </Grid>
+      )}
     </Layout>
   );
 };
