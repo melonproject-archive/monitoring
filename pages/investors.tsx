@@ -43,7 +43,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
   ).map(item => {
     let expires = parseInt(item.requestTimestamp, 10) + 24 * 60 * 60;
     let status = item.status;
-    if (new Date().getTime() > new Date(expires).getTime()) {
+    if (new Date().getTime() > new Date(expires * 1000).getTime()) {
       status = 'EXPIRED';
       expires = undefined;
     }
