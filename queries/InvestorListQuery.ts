@@ -55,6 +55,7 @@ export const InvestmentRequestsQuery = gql`
       shares
       asset {
         symbol
+        decimals
       }
     }
   }

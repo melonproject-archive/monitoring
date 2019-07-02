@@ -39,6 +39,7 @@ export default gql`
         updateTimestamp
         asset {
           symbol
+          decimals
         }
       }
       investmentHistory(orderBy: timestamp) {

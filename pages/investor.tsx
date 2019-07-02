@@ -178,7 +178,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
                 {
                   title: 'Amount',
                   render: rowData => {
-                    return formatBigNumber(rowData.amount, 18, 3);
+                    return formatBigNumber(rowData.amount, rowData.asset.decimals, 3);
                   },
                   type: 'numeric',
                 },
