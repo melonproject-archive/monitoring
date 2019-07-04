@@ -1,13 +1,19 @@
 import React from 'react';
+import * as R from 'ramda';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
-import AssetDetailsQuery from '~/queries/AssetDetailsQuery';
+import {
+  AssetDetailsQuery,
+  SingleAssetPriceHistoryQuery,
+  MelonNetworkAssetHistoryQuery,
+} from '~/queries/AssetDetailsQuery';
 import Layout from '~/components/Layout';
 import TimeSeriesChart from '~/components/TimeSeriesChart';
 import MaterialTable from 'material-table';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { sortBigNumber } from '~/utils/sortBigNumber';
+import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -27,32 +33,52 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
     },
   });
 
+  const priceResult = useScrapingQuery(
+    [SingleAssetPriceHistoryQuery, SingleAssetPriceHistoryQuery],
+    proceedPaths(['assetPriceHistories']),
+    {
+      ssr: false,
+      skip: !(router && router.query.address),
+      variables: {
+        asset: router && router.query.address,
+      },
+    },
+  );
+
+  const melonNetworkResult = useScrapingQuery(
+    [MelonNetworkAssetHistoryQuery, MelonNetworkAssetHistoryQuery],
+    proceedPaths(['melonNetworkAssetHistories']),
+    {
+      ssr: false,
+      skip: !(router && router.query.address),
+      variables: {
+        asset: router && router.query.address,
+      },
+    },
+  );
+
   const asset = result.data && result.data.asset;
 
-  const priceHistory =
-    asset &&
-    asset.priceHistory.map((item, index, array) => {
-      const timeSpan = index > 0 ? item.timestamp - array[index - 1].timestamp : 0;
-      const returnSinceLastPriceUpdate = index > 0 ? item.price / array[index - 1].price - 1 : 0;
-      let dailyReturn = index > 0 ? Math.pow(1 + returnSinceLastPriceUpdate, (24 * 60 * 60) / timeSpan) - 1 : 0;
-      if (dailyReturn > 100 || dailyReturn <= -1) {
-        dailyReturn = undefined;
-      }
-      return {
-        timestamp: item.timestamp,
-        price: item.price > 0 ? formatBigNumber(item.price) : undefined,
-        dailyReturn: index > 0 ? dailyReturn : 0,
-      };
-    });
+  const priceHistory = R.pathOr([], ['data', 'assetPriceHistories'], priceResult).map((item, index, array) => {
+    const timeSpan = index > 0 ? item.timestamp - array[index - 1].timestamp : 0;
+    const returnSinceLastPriceUpdate = index > 0 ? item.price / array[index - 1].price - 1 : 0;
+    let dailyReturn = index > 0 ? Math.pow(1 + returnSinceLastPriceUpdate, (24 * 60 * 60) / timeSpan) - 1 : 0;
+    if (dailyReturn > 100 || dailyReturn <= -1) {
+      dailyReturn = undefined;
+    }
+    return {
+      timestamp: item.timestamp,
+      price: item.price > 0 ? formatBigNumber(item.price) : undefined,
+      dailyReturn: index > 0 ? dailyReturn : 0,
+    };
+  });
 
-  const networkValues =
-    asset &&
-    asset.melonNetworkAssetHistory.map(item => {
-      return {
-        timestamp: item.timestamp,
-        amount: item.amount > 0 ? formatBigNumber(item.amount, asset.decimals, 3) : undefined,
-      };
-    });
+  const networkValues = R.pathOr([], ['data', 'melonNetworkAssetHistories'], melonNetworkResult).map(item => {
+    return {
+      timestamp: item.timestamp,
+      amount: item.amount > 0 ? formatBigNumber(item.amount, item.asset.decimals, 3) : undefined,
+    };
+  });
 
   const maxValue = networkValues && Math.max(...networkValues.filter(item => item.amount).map(item => item.amount, 0));
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import * as R from 'ramda';
 import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
 
@@ -86,9 +87,7 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
     ssr: false,
   });
 
-  const data = result.data || {};
-
-  const funds = (data.funds || []).map(fund => {
+  const funds = R.pathOr([], ['data', 'funds'], result).map(fund => {
     return {
       ...fund,
       versionName: hexToString(fund.version.name),

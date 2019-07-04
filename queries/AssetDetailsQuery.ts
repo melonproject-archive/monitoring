@@ -1,16 +1,12 @@
 import gql from 'graphql-tag';
 
-export default gql`
+export const AssetDetailsQuery = gql`
   query AssetDetailsQuery($asset: ID!) {
     asset(id: $asset) {
       id
       symbol
       name
       decimals
-      priceHistory(orderBy: timestamp) {
-        price
-        timestamp
-      }
       melonNetworkAssetHistory(orderBy: timestamp, orderDirection: asc) {
         timestamp
         assetGav
@@ -31,6 +27,28 @@ export default gql`
             }
           }
         }
+      }
+    }
+  }
+`;
+
+export const SingleAssetPriceHistoryQuery = gql`
+  query SingleAssetPriceHistoryQuery($asset: String!, $limit: Int!, $skip: Int!) {
+    assetPriceHistories(first: $limit, skip: $skip, orderBy: timestamp, where: { asset: $asset }) {
+      price
+      timestamp
+    }
+  }
+`;
+
+export const MelonNetworkAssetHistoryQuery = gql`
+  query MelonNetworkAssetHistoryQuery($asset: String!, $limit: Int!, $skip: Int!) {
+    melonNetworkAssetHistories(first: $limit, skip: $skip, orderBy: timestamp, where: { asset: $asset }) {
+      timestamp
+      assetGav
+      amount
+      asset {
+        decimals
       }
     }
   }
