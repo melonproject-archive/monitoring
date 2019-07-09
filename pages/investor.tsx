@@ -13,6 +13,7 @@ import BigNumber from 'bignumber.js';
 import { robustIRR } from '~/utils/robustIRR';
 import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
+import EtherscanLink from '~/components/EtherscanLink';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -123,7 +124,9 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
           <Typography variant="h5">Investor information</Typography>
           {investor && (
             <>
-              <div>Address: {investor.id}</div>
+              <div>
+                Address: <EtherscanLink address={investor.id} />
+              </div>
             </>
           )}
         </Paper>

@@ -29,7 +29,7 @@ const columns = [
   {
     title: 'Creation date',
     render: rowData => {
-      return formatDate(rowData.createdAt);
+      return formatDate(rowData.createdAt, true);
     },
     customSort: (a, b) => sortBigNumber(a, b, 'createdAt'),
   },

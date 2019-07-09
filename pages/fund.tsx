@@ -2,7 +2,7 @@ import React from 'react';
 import * as R from 'ramda';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
-import { FundDetailsQuery } from '~/queries/FundDetailsQuery';
+import { FundDetailsQuery, FundCalculationsHistoryQuery } from '~/queries/FundDetailsQuery';
 import { useRouter } from 'next/router';
 import MaterialTable from 'material-table';
 import { standardDeviation } from '../utils/finance';
@@ -15,6 +15,8 @@ import { hexToString } from '~/utils/hexToString';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import FundHoldingsChart from '~/components/FundHoldingsChart';
 import TradeList from '~/components/TradeList';
+import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
+import EtherscanLink from '~/components/EtherscanLink';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -41,29 +43,40 @@ const Fund: React.FunctionComponent<FundProps> = props => {
   const fund = R.pathOr(undefined, ['data', 'fund'], result);
   const assets = R.pathOr([], ['data', 'assets'], result);
 
-  const normalizedNumbers =
-    (fund &&
-      fund.calculationsHistory.map((item, index, array) => {
-        const timeSpan = index > 0 ? item.timestamp - array[index - 1].timestamp : 0;
-        const returnSinceLastPriceUpdate = index > 0 ? item.sharePrice / array[index - 1].sharePrice - 1 : 0;
-        let dailyReturn = index > 0 ? Math.pow(1 + returnSinceLastPriceUpdate, (24 * 60 * 60) / timeSpan) - 1 : 0;
-        if (dailyReturn > 100 || dailyReturn <= -1) {
-          dailyReturn = undefined;
-        }
-        return {
-          ...item,
-          sharePrice: item.sharePrice && formatBigNumber(item.sharePrice, 18, 3),
-          gav: item.gav ? formatBigNumber(item.gav, 18, 3) : 0,
-          nav: item.nav ? formatBigNumber(item.nav, 18, 3) : 0,
-          totalSupply: item.totalSupply ? formatBigNumber(item.totalSupply, 18, 3) : 0,
-          dailyReturn: index > 0 ? dailyReturn : 0,
-          logReturn: index > 0 ? Math.log(1 + dailyReturn) : 0,
-          feesInDenominationAsset: item.feesInDenominationAsset
-            ? formatBigNumber(item.feesInDenominationAsset, 18, 6)
-            : 0,
-        };
-      })) ||
-    [];
+  const calculationsResult = useScrapingQuery(
+    [FundCalculationsHistoryQuery, FundCalculationsHistoryQuery],
+    proceedPaths(['fundCalculationsHistories']),
+    {
+      ssr: false,
+      skip: !(router && router.query.address),
+      variables: {
+        fund: router && router.query.address,
+      },
+    },
+  );
+
+  const normalizedNumbers = R.pathOr([], ['data', 'fundCalculationsHistories'], calculationsResult).map(
+    (item, index, array) => {
+      const timeSpan = index > 0 ? item.timestamp - array[index - 1].timestamp : 0;
+      const returnSinceLastPriceUpdate = index > 0 ? item.sharePrice / array[index - 1].sharePrice - 1 : 0;
+      let dailyReturn = index > 0 ? Math.pow(1 + returnSinceLastPriceUpdate, (24 * 60 * 60) / timeSpan) - 1 : 0;
+      if (dailyReturn > 100 || dailyReturn <= -1) {
+        dailyReturn = undefined;
+      }
+      return {
+        ...item,
+        sharePrice: item.sharePrice && formatBigNumber(item.sharePrice, 18, 3),
+        gav: item.gav ? formatBigNumber(item.gav, 18, 3) : 0,
+        nav: item.nav ? formatBigNumber(item.nav, 18, 3) : 0,
+        totalSupply: item.totalSupply ? formatBigNumber(item.totalSupply, 18, 3) : 0,
+        dailyReturn: index > 0 ? dailyReturn : 0,
+        logReturn: index > 0 ? Math.log(1 + dailyReturn) : 0,
+        feesInDenominationAsset: item.feesInDenominationAsset
+          ? formatBigNumber(item.feesInDenominationAsset, 18, 6)
+          : 0,
+      };
+    },
+  );
 
   const maxSharePrice = Math.max(...normalizedNumbers.map(item => item.sharePrice));
   const minSharePrice = Math.min(...normalizedNumbers.map(item => item.sharePrice));
@@ -140,8 +153,12 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         <Paper className={props.classes.paper}>
           <Typography variant="h5">{fund && fund.name}&nbsp;</Typography>
           <div>Protocol version: {fund && hexToString(fund.version.name)}</div>
-          <div>Address: {fund && fund.id}</div>
-          <div>Manager: {fund && fund.manager.id}</div>
+          <div>
+            Address: <EtherscanLink address={fund && fund.id} />
+          </div>
+          <div>
+            Manager: <EtherscanLink address={fund && fund.manager.id} />
+          </div>
           <div>&nbsp;</div>
           <div>Created: {fund && formatDate(fund.createdAt)}</div>
           <div>
@@ -184,17 +201,18 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                   return formatBigNumber(rowData.amount, rowData.asset.decimals, 3);
                 },
               },
-              {
-                title: 'Price',
-                type: 'numeric',
-                render: rowData => {
-                  const price = new BigNumber(rowData.assetGav)
-                    .times(new BigNumber('1e18'))
-                    .div(new BigNumber(rowData.amount))
-                    .toString();
-                  return formatBigNumber(price, 18, 3);
-                },
-              },
+              // {
+              //   title: 'Price',
+              //   type: 'numeric',
+              //   render: rowData => {
+              //     console.log(rowData);
+              //     const price = new BigNumber(rowData.assetGav)
+              //       .times(new BigNumber('1e18'))
+              //       .div(new BigNumber(rowData.amount))
+              //       .toString();
+              //     return formatBigNumber(price, 18, 3);
+              //   },
+              // },
               {
                 title: 'Value [ETH]',
                 type: 'numeric',
@@ -443,6 +461,9 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               {
                 title: 'Address',
                 field: 'address',
+                render: rowData => {
+                  return <EtherscanLink address={rowData.address} />;
+                },
               },
             ]}
             data={contractAddresses}

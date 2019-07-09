@@ -14,6 +14,7 @@ import MaterialTable from 'material-table';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
+import EtherscanLink from '~/components/EtherscanLink';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -104,7 +105,9 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
       <Grid item={true} xs={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">{asset && asset.symbol + ' - ' + asset.name}&nbsp;</Typography>
-          <div>Address: {asset && asset.id}</div>
+          <div>
+            Address: <EtherscanLink address={asset && asset.id} />
+          </div>
           <div>Decimals: {asset && asset.decimals}</div>
         </Paper>
       </Grid>

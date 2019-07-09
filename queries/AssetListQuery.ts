@@ -38,12 +38,3 @@ export const AssetListQuery = gql`
     }
   }
 `;
-
-export const SingleAssetPriceHistoryQuery = gql`
-  query SingleAssetPriceHistoryQuery($id: String!, $limit: Int!, $skip: Int!) {
-    assetPriceHistories(first: $limit, skip: $skip, orderBy: timestamp, where: { asset: $id }) {
-      price
-      timestamp
-    }
-  }
-`;

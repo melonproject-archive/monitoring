@@ -18,14 +18,7 @@ export const FundDetailsQuery = gql`
       nav
       totalSupply
       sharePrice
-      calculationsHistory(orderBy: timestamp) {
-        gav
-        nav
-        totalSupply
-        feesInDenominationAsset
-        sharePrice
-        timestamp
-      }
+
       investmentHistory(orderBy: timestamp) {
         action
         timestamp
@@ -158,6 +151,19 @@ export const FundDetailsQuery = gql`
     assets {
       id
       symbol
+    }
+  }
+`;
+
+export const FundCalculationsHistoryQuery = gql`
+  query FundCalculationsHistoryQuery($fund: ID!, $limit: Int!, $skip: Int!) {
+    fundCalculationsHistories(where: { fund: $fund }, orderBy: timestamp, first: $limit, skip: $skip) {
+      gav
+      nav
+      totalSupply
+      feesInDenominationAsset
+      sharePrice
+      timestamp
     }
   }
 `;

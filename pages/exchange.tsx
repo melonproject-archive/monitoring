@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import Layout from '~/components/Layout';
 import ExchangeDetailsQuery from '~/queries/ExchangeDetailsQuery';
 import TradeList from '~/components/TradeList';
+import EtherscanLink from '~/components/EtherscanLink';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -35,8 +36,12 @@ const Exchange: React.FunctionComponent<ExchangeProps> = props => {
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">{exchange && exchange.name}&nbsp;</Typography>
-          <div>Address: {exchange && exchange.id}</div>
-          <div>Adapter: {exchange && exchange.adapter.id}</div>
+          <div>
+            Address: <EtherscanLink address={exchange && exchange.id} />
+          </div>
+          <div>
+            Adapter: <EtherscanLink address={exchange && exchange.adapter.id} />
+          </div>
           <div>Takes custody: {exchange && (exchange.adapter.takesCustody ? 'Yes' : 'No')}</div>
 
           <div>&nbsp;</div>
