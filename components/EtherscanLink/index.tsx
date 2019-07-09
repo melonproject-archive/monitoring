@@ -11,6 +11,8 @@ const styles = {
     borderBottom: 'dashed 1px white',
     textDecoration: 'none',
     color: 'white',
+    fontFamily: 'monospace',
+    fontSize: '110%',
   },
   middleEllipsis: {
     margin: '10px',
