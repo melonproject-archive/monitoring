@@ -42,7 +42,7 @@ const TSAreaChart: React.FunctionComponent<TSAreaChartProps> = props => {
 
   const options = {
     chart: {
-      type: 'areaspline',
+      type: 'line',
     },
     navigator: {
       adaptToUpdatedData: false,
@@ -57,17 +57,6 @@ const TSAreaChart: React.FunctionComponent<TSAreaChartProps> = props => {
       type: 'datetime',
       minTickInterval: 28 * 24 * 3600 * 1000,
       max: now(),
-    },
-    plotOptions: {
-      area: {
-        stacking: 'normal',
-        lineColor: '#666666',
-        lineWidth: 0.5,
-        marker: {
-          lineWidth: 1,
-          lineColor: '#666666',
-        },
-      },
     },
     colors: [
       '#00bfff',

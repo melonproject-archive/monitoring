@@ -45,8 +45,8 @@ const columns = [
     type: 'numeric',
     render: rowData => {
       return (
-        <Tooltip title={formatBigNumber(rowData.aggregateAmount, 18, 18)}>
-          <span>{formatBigNumber(rowData.aggregateAmount, 18, 4)}</span>
+        <Tooltip title={formatBigNumber(rowData.aggregateAmount, rowData.decimals, 18)}>
+          <span>{formatBigNumber(rowData.aggregateAmount, rowData.decimals, 4)}</span>
         </Tooltip>
       );
     },
