@@ -6,6 +6,7 @@ import { StyleRulesCallback } from '@material-ui/core';
 import Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
 import DarkUnica from 'highcharts/themes/dark-unica';
+import { now } from 'moment';
 
 if (typeof Highcharts === 'object') {
   DarkUnica(Highcharts);
@@ -43,9 +44,19 @@ const TSAreaChart: React.FunctionComponent<TSAreaChartProps> = props => {
     chart: {
       type: 'areaspline',
     },
+    navigator: {
+      adaptToUpdatedData: false,
+    },
+    scrollbar: {
+      liveRedraw: false,
+    },
+    rangeSelector: {
+      selected: 3,
+    },
     xAxis: {
       type: 'datetime',
       minTickInterval: 28 * 24 * 3600 * 1000,
+      max: now(),
     },
     plotOptions: {
       area: {

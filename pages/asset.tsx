@@ -14,7 +14,7 @@ import { formatBigNumber } from '~/utils/formatBigNumber';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import EtherscanLink from '~/components/EtherscanLink';
-import TSLineChart from '~/components/TSLineChart';
+import AssetCharts from '~/components/AssetCharts';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -81,8 +81,6 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
     };
   });
 
-  const maxValue = networkValues && Math.max(...networkValues.filter(item => item.amount).map(item => item.amount, 0));
-
   const funds =
     asset &&
     asset.fundAccountings
@@ -111,27 +109,9 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
           <div>Decimals: {asset && asset.decimals}</div>
         </Paper>
       </Grid>
-      <Grid item={true} xs={12} sm={6} md={6}>
+      <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
-          <Typography variant="h5">Price in ETH</Typography>
-          <TSLineChart data={priceHistory} dataKeys={['price']} loading={result.loading} />
-        </Paper>
-      </Grid>
-      <Grid item={true} xs={12} sm={6} md={6}>
-        <Paper className={props.classes.paper}>
-          <Typography variant="h5">Daily price change [%]</Typography>
-          <TSLineChart
-            data={priceHistory}
-            dataKeys={['dailyReturn']}
-            referenceLine={true}
-            loading={result.loading}
-          />{' '}
-        </Paper>
-      </Grid>
-      <Grid item={true} xs={12} sm={6} md={6}>
-        <Paper className={props.classes.paper}>
-          <Typography variant="h5">Aggregate value of {asset && asset.symbol} within Melon network</Typography>
-          <TSLineChart data={networkValues} dataKeys={['amount']} yMax={maxValue} loading={result.loading} />
+          <AssetCharts data={{ priceHistory, networkValues }} dataKeys={['price']} loading={result.loading} />
         </Paper>
       </Grid>
 
