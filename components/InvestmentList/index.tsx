@@ -3,8 +3,8 @@ import MaterialTable, { Column } from 'material-table';
 
 import { withStyles } from '@material-ui/styles';
 import { StyleRulesCallback } from '@material-ui/core';
-import { formatBigNumber } from '~/utils/formatBigNumber';
 import { sortBigNumber } from '~/utils/sortBigNumber';
+import TooltipNumber from '../TooltipNumber';
 
 export interface InvestmentListProps {
   investments: any;
@@ -27,7 +27,7 @@ const columns: Column[] = [
     title: 'Shares',
     type: 'numeric',
     render: rowData => {
-      return formatBigNumber(rowData.shares, 18, 3);
+      return <TooltipNumber number={rowData.shares} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'shares'),
   },
@@ -35,7 +35,7 @@ const columns: Column[] = [
     title: 'Invested amount [ETH]',
     type: 'numeric',
     render: rowData => {
-      return formatBigNumber(rowData.investedAmount, 18, 3);
+      return <TooltipNumber number={rowData.investedAmount} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'investedAmount'),
   },
@@ -43,7 +43,7 @@ const columns: Column[] = [
     title: 'Redeemed amount [ETH]',
     type: 'numeric',
     render: rowData => {
-      return formatBigNumber(rowData.redeemedAmount, 18, 3);
+      return <TooltipNumber number={rowData.redeemedAmount} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'redeemedAmount'),
   },
@@ -51,7 +51,7 @@ const columns: Column[] = [
     title: 'Current Value [ETH]',
     type: 'numeric',
     render: rowData => {
-      return formatBigNumber(rowData.nav, 18, 3);
+      return <TooltipNumber number={rowData.nav} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'nav'),
   },

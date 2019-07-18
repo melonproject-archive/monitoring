@@ -17,6 +17,7 @@ import TradeList from '~/components/TradeList';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import EtherscanLink from '~/components/EtherscanLink';
 import TSLineChart from '~/components/TSLineChart';
+import TooltipNumber from '~/components/TooltipNumber';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -190,25 +191,26 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               GAV
             </Grid>
             <Grid item={true} xs={8} sm={8} md={8}>
-              {fund && formatBigNumber(fund.gav, 18, 4)}
+              {fund && <TooltipNumber number={fund.gav} />}
             </Grid>
             <Grid item={true} xs={4} sm={4} md={4}>
               NAV
             </Grid>
             <Grid item={true} xs={8} sm={8} md={8}>
-              {fund && formatBigNumber(fund.nav, 18, 4)}
+              {fund && <TooltipNumber number={fund.nav} />}
             </Grid>
             <Grid item={true} xs={4} sm={4} md={4}>
               #&nbsp;shares
             </Grid>
             <Grid item={true} xs={8} sm={8} md={8}>
-              {fund && formatBigNumber(fund.totalSupply, 18, 4)}{' '}
+              {fund && <TooltipNumber number={fund.totalSupply} />}
             </Grid>
             <Grid item={true} xs={4} sm={4} md={4}>
               Share&nbsp;price
             </Grid>
             <Grid item={true} xs={8} sm={8} md={8}>
-              {fund && formatBigNumber(fund.sharePrice, 18, 4)} <div>&nbsp;</div>
+              {fund && <TooltipNumber number={fund.sharePrice} />}
+              <div>&nbsp;</div>
             </Grid>
             <Grid item={true} xs={4} sm={4} md={4}>
               Management&nbsp;fee

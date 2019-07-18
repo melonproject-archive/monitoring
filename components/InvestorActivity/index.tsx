@@ -3,9 +3,9 @@ import MaterialTable, { Column } from 'material-table';
 
 import { withStyles } from '@material-ui/styles';
 import { StyleRulesCallback } from '@material-ui/core';
-import { formatBigNumber } from '~/utils/formatBigNumber';
 import { formatDate } from '~/utils/formatDate';
 import { sortBigNumber } from '~/utils/sortBigNumber';
+import TooltipNumber from '../TooltipNumber';
 
 export interface InvestorActivityProps {
   activity: any;
@@ -39,7 +39,7 @@ const columns: Column[] = [
     title: 'Shares',
     type: 'numeric',
     render: rowData => {
-      return formatBigNumber(rowData.shares, 18, 3);
+      return <TooltipNumber number={rowData.shares} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'shares'),
   },
@@ -47,7 +47,7 @@ const columns: Column[] = [
     title: 'Share Price',
     type: 'numeric',
     render: rowData => {
-      return formatBigNumber(rowData.sharePrice, 18, 3);
+      return <TooltipNumber number={rowData.sharePrice} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'sharePrice'),
   },
@@ -55,7 +55,7 @@ const columns: Column[] = [
     title: 'Amount [ETH]',
     type: 'numeric',
     render: rowData => {
-      return formatBigNumber(rowData.amount, 18, 3);
+      return <TooltipNumber number={rowData.amount} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'amount'),
   },

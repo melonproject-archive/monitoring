@@ -5,7 +5,6 @@ import MaterialTable from 'material-table';
 import BigNumber from 'bignumber.js';
 import { withStyles } from '@material-ui/styles';
 import { StyleRulesCallback } from '@material-ui/core';
-import { formatBigNumber } from '~/utils/formatBigNumber';
 import { InvestorListQuery } from '~/queries/InvestorListQuery';
 import { formatDate } from '~/utils/formatDate';
 import { sortBigNumber } from '~/utils/sortBigNumber';
@@ -13,6 +12,7 @@ import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import { robustIRR } from '~/utils/robustIRR';
 import { prepareCashFlows } from '~/utils/prepareCashFlows';
 import { moneyMultiple } from '~/utils/moneyMultiple';
+import TooltipNumber from '../TooltipNumber';
 
 export interface InvestorListProps {
   data?: any;
@@ -45,7 +45,7 @@ const columns = [
     title: 'AUM [ETH]',
     type: 'numeric',
     render: rowData => {
-      return formatBigNumber(rowData.netAum, 18, 3);
+      return <TooltipNumber number={rowData.netAum} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'netAum'),
     defaultSort: 'desc',

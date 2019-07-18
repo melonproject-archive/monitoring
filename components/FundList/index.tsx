@@ -4,12 +4,12 @@ import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
 
 import { withStyles } from '@material-ui/styles';
-import { StyleRulesCallback, Tooltip } from '@material-ui/core';
+import { StyleRulesCallback } from '@material-ui/core';
 import { FundListQuery } from '~/queries/FundListQuery';
-import { formatBigNumber } from '~/utils/formatBigNumber';
 import { hexToString } from '~/utils/hexToString';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
+import TooltipNumber from '../TooltipNumber';
 
 export interface FundListProps {
   data?: any;
@@ -46,11 +46,7 @@ const columns = [
     title: 'AUM [ETH]',
     type: 'numeric',
     render: rowData => {
-      return (
-        <Tooltip title={formatBigNumber(rowData.gav, 18, 18)}>
-          <span>{formatBigNumber(rowData.gav, 18, 4)}</span>
-        </Tooltip>
-      );
+      return <TooltipNumber number={rowData.gav} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'gav'),
   },
@@ -58,11 +54,7 @@ const columns = [
     title: 'Share price',
     type: 'numeric',
     render: rowData => {
-      return (
-        <Tooltip title={formatBigNumber(rowData.sharePrice, 18, 18)}>
-          <span>{formatBigNumber(rowData.sharePrice, 18, 4)}</span>
-        </Tooltip>
-      );
+      return <TooltipNumber number={rowData.sharePrice} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'sharePrice'),
     defaultSort: 'desc',
@@ -71,11 +63,7 @@ const columns = [
     title: 'Number of shares',
     type: 'numeric',
     render: rowData => {
-      return (
-        <Tooltip title={formatBigNumber(rowData.totalSupply, 18, 18)}>
-          <span>{formatBigNumber(rowData.totalSupply, 18, 4)}</span>
-        </Tooltip>
-      );
+      return <TooltipNumber number={rowData.totalSupply} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'totalSupply'),
   },

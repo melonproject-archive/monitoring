@@ -2,11 +2,11 @@ import React from 'react';
 import MaterialTable from 'material-table';
 
 import { withStyles } from '@material-ui/styles';
-import { StyleRulesCallback, Tooltip } from '@material-ui/core';
-import { formatBigNumber } from '~/utils/formatBigNumber';
+import { StyleRulesCallback } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { AssetListQuery } from '~/queries/AssetListQuery';
 import { sortBigNumber } from '~/utils/sortBigNumber';
+import TooltipNumber from '../TooltipNumber';
 
 export interface AssetListProps {
   data?: any;
@@ -30,7 +30,7 @@ const columns = [
   {
     title: 'Last price',
     render: rowData => {
-      return formatBigNumber(rowData.lastPrice, 18, 6);
+      return <TooltipNumber number={rowData.lastPrice} />;
     },
     type: 'numeric',
     customSort: (a, b) => sortBigNumber(a, b, 'lastPrice'),
@@ -44,11 +44,7 @@ const columns = [
     title: 'Aggregate amount',
     type: 'numeric',
     render: rowData => {
-      return (
-        <Tooltip title={formatBigNumber(rowData.aggregateAmount, rowData.decimals, 18)}>
-          <span>{formatBigNumber(rowData.aggregateAmount, rowData.decimals, 4)}</span>
-        </Tooltip>
-      );
+      return <TooltipNumber number={rowData.aggregateAmount} decimals={rowData.decimals} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'aggregateAmount'),
   },
@@ -57,11 +53,7 @@ const columns = [
     type: 'numeric',
     defaultSort: 'desc',
     render: rowData => {
-      return (
-        <Tooltip title={formatBigNumber(rowData.aggregateAmountInEth, 18, 18)}>
-          <span>{formatBigNumber(rowData.aggregateAmountInEth, 18, 4)}</span>
-        </Tooltip>
-      );
+      return <TooltipNumber number={rowData.aggregateAmountInEth} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'aggregateAmountInEth'),
   },
