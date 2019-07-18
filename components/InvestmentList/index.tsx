@@ -56,6 +56,11 @@ const columns: Column[] = [
     customSort: (a, b) => sortBigNumber(a, b, 'nav'),
   },
   {
+    title: 'Money multiple',
+    type: 'numeric',
+    field: 'multiple',
+  },
+  {
     title: 'Annualized return [%]',
     type: 'numeric',
     field: 'xirr',

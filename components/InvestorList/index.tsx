@@ -10,6 +10,9 @@ import { InvestorListQuery } from '~/queries/InvestorListQuery';
 import { formatDate } from '~/utils/formatDate';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
+import { robustIRR } from '~/utils/robustIRR';
+import { prepareCashFlows } from '~/utils/prepareCashFlows';
+import { moneyMultiple } from '~/utils/moneyMultiple';
 
 export interface InvestorListProps {
   data?: any;
@@ -47,6 +50,16 @@ const columns = [
     customSort: (a, b) => sortBigNumber(a, b, 'netAum'),
     defaultSort: 'desc',
   },
+  {
+    title: 'Money multiple',
+    field: 'multiple',
+    type: 'numeric',
+  },
+  {
+    title: 'Annualized return [%]',
+    field: 'xirr',
+    type: 'numeric',
+  },
 ];
 
 const InvestorList: React.FunctionComponent<InvestorListProps> = props => {
@@ -59,11 +72,17 @@ const InvestorList: React.FunctionComponent<InvestorListProps> = props => {
   const investorsInclAum =
     investors &&
     investors.map(investor => {
+      const cashflows = prepareCashFlows(
+        investor.investmentHistory,
+        (investor.valuationHistory[0] && investor.valuationHistory[0].nav) || 0,
+      );
       return {
         ...investor,
         netAum: investor.investments.reduce((carry, item) => {
           return new BigNumber(carry).plus(new BigNumber(item.nav));
         }, new BigNumber(0)),
+        xirr: robustIRR(cashflows),
+        multiple: moneyMultiple(cashflows),
       };
     });
 

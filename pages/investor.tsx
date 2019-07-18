@@ -10,10 +10,12 @@ import InvestmentList from '~/components/InvestmentList';
 import InvestorActivity from '~/components/InvestorActivity';
 import BigNumber from 'bignumber.js';
 import { robustIRR } from '~/utils/robustIRR';
+import { prepareCashFlows } from '~/utils/prepareCashFlows';
 import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
 import EtherscanLink from '~/components/EtherscanLink';
 import TSLineChart from '~/components/TSLineChart';
+import { moneyMultiple } from '~/utils/moneyMultiple';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -33,28 +35,6 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
     },
   });
 
-  const prepareCashFlows = (history, currentValue: string) => {
-    const investmentCashFlows = history.map(item => {
-      let pre = '';
-      if (item.action === 'Investment') {
-        pre = '-';
-      }
-      const amount = new BigNumber(pre + item.amountInDenominationAsset);
-      return {
-        amount: parseFloat(formatBigNumber(amount.toString())),
-        date: new Date(item.timestamp * 1000),
-      };
-    });
-    const cashflows = [
-      ...investmentCashFlows,
-      {
-        amount: parseFloat(formatBigNumber(currentValue.toString(), 18, 3)),
-        date: new Date(),
-      },
-    ];
-    return cashflows;
-  };
-
   const investor = R.pathOr(undefined, ['data', 'investor'], result);
   const investments = R.pathOr([], ['data', 'investor', 'investments'], result).map(inv => {
     const valuationHist = inv.valuationHistory.map(vals => {
@@ -64,6 +44,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
         gav: vals.gav ? formatBigNumber(vals.gav) : 0,
       };
     });
+    const cashflows = prepareCashFlows(inv.history, inv.nav);
     return {
       ...inv,
       valuationHistory: valuationHist,
@@ -82,7 +63,8 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
           return new BigNumber(carry);
         }
       }, new BigNumber(0)),
-      xirr: robustIRR(prepareCashFlows(inv.history, inv.nav)),
+      xirr: robustIRR(cashflows),
+      multiple: moneyMultiple(cashflows),
     };
   });
 

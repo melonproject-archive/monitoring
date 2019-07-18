@@ -19,6 +19,16 @@ export const InvestorListQuery = gql`
         gav
         nav
       }
+      investmentHistory {
+        action
+        timestamp
+        amountInDenominationAsset
+      }
+      valuationHistory(first: 1, orderBy: timestamp, orderDirection: desc) {
+        timestamp
+        gav
+        nav
+      }
     }
   }
 `;
