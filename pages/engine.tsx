@@ -7,9 +7,9 @@ import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import Layout from '~/components/Layout';
 import { formatDate } from '~/utils/formatDate';
 import { formatBigNumber } from '~/utils/formatBigNumber';
-import TimeSeriesChart from '~/components/TimeSeriesChart';
 import MaterialTable from 'material-table';
 import { formatThousands } from '~/utils/formatThousands';
+import TSLineChart from '~/components/TSLineChart';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -40,28 +40,76 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
       <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Melon Engine</Typography>
-          <div>Amgu Price: {engineQuantities && formatBigNumber(engineQuantities.amguPrice, 18, 7)} MLN</div>
-          <div>Thawing Delay: {engineQuantities && engineQuantities.thawingDelay / (24 * 3600)} days</div>
-          <div>&nbsp;</div>
-          <div>Total Amgu consumed: {engineQuantities && formatThousands(engineQuantities.totalAmguConsumed)}</div>
-          <div>
-            Total Ether Consumed: {engineQuantities && formatBigNumber(engineQuantities.totalEtherConsumed, 18, 3)}
-          </div>
-          <div>Total MLN burned: {engineQuantities && formatBigNumber(engineQuantities.totalMlnBurned, 18, 3)}</div>
-          <div>&nbsp;</div>
-          <div>Frozen Ether: {engineQuantities && formatBigNumber(engineQuantities.frozenEther, 18, 3)} ETH</div>
-          <div>Liquid Ether: {engineQuantities && formatBigNumber(engineQuantities.liquidEther, 18, 3)} ETH</div>
-          <div>Last Thaw: {engineQuantities && formatDate(engineQuantities.lastThaw)}</div>
-
-          <div>Current premium percent: {engineQuantities && engineQuantities.premiumPercent}%</div>
-          <div>&nbsp;</div>
-          <div>Pricefeed last updated: {state && formatDate(state.lastPriceUpdate, true)}</div>
+          <br />
+          <Grid container={true}>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Amgu Price
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {engineQuantities && formatBigNumber(engineQuantities.amguPrice, 18, 7)} MLN{' '}
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Thawing Delay{' '}
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {engineQuantities && engineQuantities.thawingDelay / (24 * 3600)} days <div>&nbsp;</div>
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Total Amgu consumed{' '}
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {engineQuantities && formatThousands(engineQuantities.totalAmguConsumed)}{' '}
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Total Ether consumed{' '}
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {engineQuantities && formatBigNumber(engineQuantities.totalEtherConsumed, 18, 4)} ETH
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Total MLN burned{' '}
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {engineQuantities && formatBigNumber(engineQuantities.totalMlnBurned, 18, 4)} MLN
+              <div>&nbsp;</div>
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Frozen Ether{' '}
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {engineQuantities && formatBigNumber(engineQuantities.frozenEther, 18, 4)} ETH
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Liquid Ether{' '}
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {engineQuantities && formatBigNumber(engineQuantities.liquidEther, 18, 4)} ETH
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Last Thaw
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {engineQuantities && formatDate(engineQuantities.lastThaw, true)}{' '}
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Current premium percent
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {engineQuantities && engineQuantities.premiumPercent}% <div>&nbsp;</div>
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Pricefeed last updated
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {state && formatDate(state.lastPriceUpdate, true)}{' '}
+            </Grid>
+          </Grid>
         </Paper>
       </Grid>
       <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Cumulative amgu paid</Typography>
-          <TimeSeriesChart data={amguCumulative} dataKeys={['cumulativeAmount']} />
+          <TSLineChart data={amguCumulative} dataKeys={['cumulativeAmount']} />
         </Paper>
       </Grid>
       <Grid item={true} xs={12} sm={6} md={6}>

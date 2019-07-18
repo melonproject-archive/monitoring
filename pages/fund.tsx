@@ -1,6 +1,6 @@
 import React from 'react';
 import * as R from 'ramda';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr, Tooltip } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { FundDetailsQuery, FundCalculationsHistoryQuery } from '~/queries/FundDetailsQuery';
 import { useRouter } from 'next/router';
@@ -9,7 +9,6 @@ import { standardDeviation } from '../utils/finance';
 import { formatDate } from '../utils/formatDate';
 import Layout from '~/components/Layout';
 import { formatBigNumber } from '~/utils/formatBigNumber';
-import TimeSeriesChart from '~/components/TimeSeriesChart';
 import BigNumber from 'bignumber.js';
 import { hexToString } from '~/utils/hexToString';
 import { sortBigNumber } from '~/utils/sortBigNumber';
@@ -17,6 +16,7 @@ import FundHoldingsChart from '~/components/FundHoldingsChart';
 import TradeList from '~/components/TradeList';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import EtherscanLink from '~/components/EtherscanLink';
+import TSLineChart from '~/components/TSLineChart';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -65,11 +65,11 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       }
       return {
         ...item,
-        sharePrice: item.sharePrice && formatBigNumber(item.sharePrice, 18, 3),
-        gav: item.gav ? formatBigNumber(item.gav, 18, 3) : 0,
-        nav: item.nav ? formatBigNumber(item.nav, 18, 3) : 0,
+        sharePrice: item.sharePrice && formatBigNumber(item.sharePrice, 18, 6),
+        gav: item.gav ? formatBigNumber(item.gav, 18, 6) : 0,
+        nav: item.nav ? formatBigNumber(item.nav, 18, 6) : 0,
         totalSupply: item.totalSupply ? formatBigNumber(item.totalSupply, 18, 3) : 0,
-        dailyReturn: index > 0 ? dailyReturn : 0,
+        dailyReturn: index > 0 ? (dailyReturn * 100).toFixed(2) : 0,
         logReturn: index > 0 ? Math.log(1 + dailyReturn) : 0,
         feesInDenominationAsset: item.feesInDenominationAsset
           ? formatBigNumber(item.feesInDenominationAsset, 18, 6)
@@ -149,44 +149,107 @@ const Fund: React.FunctionComponent<FundProps> = props => {
 
   return (
     <Layout title="Fund">
-      <Grid item={true} xs={12} sm={6} md={6}>
+      <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">{fund && fund.name}&nbsp;</Typography>
-          <div>Protocol version: {fund && hexToString(fund.version.name)}</div>
-          <div>
-            Address: <EtherscanLink address={fund && fund.id} />
-          </div>
-          <div>
-            Manager: <EtherscanLink address={fund && fund.manager.id} />
-          </div>
-          <div>&nbsp;</div>
-          <div>Created: {fund && formatDate(fund.createdAt)}</div>
-          <div>
-            Active: {fund && fund.isShutdown ? 'No' : 'Yes'}
-            {fund && fund.isShutdown && <> (deactivated: {fund.shutdownAt && formatDate(fund.shutdownAt)})</>}
-          </div>
-          <div>&nbsp;</div>
-          <div>GAV: {fund && formatBigNumber(fund.gav, 18, 3)}</div>
-          <div>NAV: {fund && formatBigNumber(fund.nav, 18, 3)}</div>
-          <div># shares: {fund && formatBigNumber(fund.totalSupply, 18, 3)}</div>
-          <div>Share price: {fund && formatBigNumber(fund.sharePrice, 18, 3)}</div>
-          <div>&nbsp;</div>
-          <div>
-            Management fee: {fund && formatBigNumber(fund.feeManager.managementFee.managementFeeRate + '00', 18, 2)}%
-          </div>
-          <div>
-            Performance fee: {fund && formatBigNumber(fund.feeManager.performanceFee.performanceFeeRate + '00', 18, 2)}%
-          </div>
-          <div>
-            Performance fee period: {fund && fund.feeManager.performanceFee.performanceFeePeriod / (60 * 60 * 24)} days
-          </div>
-          <div>&nbsp;</div>
-          <div>Return since inception: {returnSinceInception && returnSinceInception.toFixed(2)}%</div>
-          <div>Annualized return: {annualizedReturn && annualizedReturn.toFixed(2)}%</div>
-          <div>Volatility: {volatility && volatility.toFixed(2)}%</div>
+          <br />
+          <Grid container={true}>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Protocol&nbsp;version
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {fund && hexToString(fund.version.name)}
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Address
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              <EtherscanLink address={fund && fund.id} />
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Manager
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              <EtherscanLink address={fund && fund.manager.id} />
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Created
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {fund && formatDate(fund.createdAt, true)}
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Active
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {fund && fund.isShutdown ? 'No' : 'Yes'}
+              {fund && fund.isShutdown && <> (deactivated: {fund.shutdownAt && formatDate(fund.shutdownAt)})</>}
+              <div>&nbsp;</div>
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              GAV
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {fund && formatBigNumber(fund.gav, 18, 4)}
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              NAV
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {fund && formatBigNumber(fund.nav, 18, 4)}
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              #&nbsp;shares
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {fund && formatBigNumber(fund.totalSupply, 18, 4)}{' '}
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Share&nbsp;price
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {fund && formatBigNumber(fund.sharePrice, 18, 4)} <div>&nbsp;</div>
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Management&nbsp;fee
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {fund && formatBigNumber(fund.feeManager.managementFee.managementFeeRate + '00', 18, 2)}%
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Performance&nbsp;fee
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {fund && formatBigNumber(fund.feeManager.performanceFee.performanceFeeRate + '00', 18, 2)}%{' '}
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Performance&nbsp;fee&nbsp;period
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {fund && fund.feeManager.performanceFee.performanceFeePeriod / (60 * 60 * 24)} days <div>&nbsp;</div>
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Return since inception
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {returnSinceInception && returnSinceInception.toFixed(2)}%{' '}
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Annualized return{' '}
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {annualizedReturn && annualizedReturn.toFixed(2)}%{' '}
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Volatility
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {volatility && volatility.toFixed(2)}%{' '}
+            </Grid>
+          </Grid>
         </Paper>
       </Grid>
-      <Grid item={true} xs={12} sm={6} md={6}>
+      <Grid item={true} xs={12} sm={12} md={6}>
         <NoSsr>
           <MaterialTable
             columns={[
@@ -198,7 +261,11 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 title: 'Amount',
                 type: 'numeric',
                 render: rowData => {
-                  return formatBigNumber(rowData.amount, rowData.asset.decimals, 3);
+                  return (
+                    <Tooltip title={formatBigNumber(rowData.amount, rowData.asset.decimals, 18)}>
+                      <span>{formatBigNumber(rowData.amount, rowData.asset.decimals, 4)}</span>
+                    </Tooltip>
+                  );
                 },
               },
               // {
@@ -217,7 +284,11 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 title: 'Value [ETH]',
                 type: 'numeric',
                 render: rowData => {
-                  return formatBigNumber(rowData.assetGav, 18, 3);
+                  return (
+                    <Tooltip title={formatBigNumber(rowData.assetGav, 18, 18)}>
+                      <span>{formatBigNumber(rowData.assetGav, 18, 4)}</span>
+                    </Tooltip>
+                  );
                 },
                 defaultSort: 'desc',
                 customSort: (a, b) => sortBigNumber(a, b, 'assetGav'),
@@ -240,7 +311,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Share Price</Typography>
-          <TimeSeriesChart
+          <TSLineChart
             data={normalizedNumbers}
             dataKeys={['sharePrice']}
             yMax={maxSharePrice}
@@ -254,7 +325,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Daily share price change (%)</Typography>
 
-          <TimeSeriesChart
+          <TSLineChart
             data={normalizedNumbers}
             dataKeys={['dailyReturn']}
             referenceLine={true}
@@ -266,19 +337,14 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">NAV</Typography>
-          <TimeSeriesChart data={normalizedNumbers} dataKeys={['nav', 'gav']} yMax={maxNav} loading={result.loading} />
+          <TSLineChart data={normalizedNumbers} dataKeys={['nav', 'gav']} yMax={maxNav} loading={result.loading} />
         </Paper>
       </Grid>
 
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5"># Shares</Typography>
-          <TimeSeriesChart
-            data={normalizedNumbers}
-            dataKeys={['totalSupply']}
-            yMax={maxSupply}
-            loading={result.loading}
-          />
+          <TSLineChart data={normalizedNumbers} dataKeys={['totalSupply']} yMax={maxSupply} loading={result.loading} />
         </Paper>
       </Grid>
 
@@ -295,7 +361,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Fees in denomination asset</Typography>
-          <TimeSeriesChart data={normalizedNumbers} dataKeys={['feesInDenominationAsset']} loading={result.loading} />
+          <TSLineChart data={normalizedNumbers} dataKeys={['feesInDenominationAsset']} loading={result.loading} />
         </Paper>
       </Grid>
 

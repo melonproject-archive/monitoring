@@ -12,12 +12,11 @@ import {
   CircularProgress,
 } from '@material-ui/core';
 import { FundCountQuery, MelonNetworkHistoryQuery } from '~/queries/FundListQuery';
-import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import FundList from '~/components/FundList';
 import Layout from '~/components/Layout';
-import { formatDate } from '~/utils/formatDate';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
+import TSAreaChart from '~/components/TSAreaChart';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -33,8 +32,6 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
   const fundCounts = R.pathOr([], ['data', 'fundCounts'], result);
 
   const loading = result.loading;
-
-  const maxFunds = Math.max(...fundCounts.map(item => parseInt(item.active, 10) + parseInt(item.nonActive, 10), 0));
 
   const historyResult = useScrapingQuery(
     [MelonNetworkHistoryQuery, MelonNetworkHistoryQuery],
@@ -52,8 +49,6 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
       gav: formatBigNumber(item.gav, 18, 0),
     };
   });
-
-  const maxGav = Math.max(...melonNetworkHistories.map(item => item.gav), 0);
 
   return (
     <Layout title="Funds">
@@ -73,24 +68,7 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
                   funds ({fundCounts[fundCounts.length - 1].active} active,{' '}
                   {fundCounts && fundCounts[fundCounts.length - 1].nonActive} not active)
                 </Typography>
-                <ResponsiveContainer height={200} width="100%">
-                  <AreaChart data={fundCounts}>
-                    <XAxis
-                      dataKey="timestamp"
-                      type="number"
-                      domain={['dataMin', 'dataMax']}
-                      tickFormatter={timeStr => formatDate(timeStr)}
-                      stroke="#dddddd"
-                    />
-                    <YAxis domain={[0, maxFunds]} orientation="right" stroke="#dddddd" />
-                    <Area type="monotone" dataKey="nonActive" stackId="1" stroke="#87cefa" fill="#87cefa" />
-                    <Area type="monotone" dataKey="active" stackId="1" stroke="#00bfff" fill="#00bfff" />
-                    <Tooltip
-                      labelFormatter={value => `Date: ${formatDate(value)}`}
-                      contentStyle={{ backgroundColor: '#4A4A4A' }}
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
+                <TSAreaChart data={fundCounts} dataKeys={['active', 'nonActive']} />
               </>
             )}
           </CardContent>
@@ -108,24 +86,7 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
                 <Typography variant="body1">
                   {melonNetworkHistories && melonNetworkHistories[melonNetworkHistories.length - 1].gav} ETH
                 </Typography>
-                <ResponsiveContainer height={200} width="100%">
-                  <AreaChart data={melonNetworkHistories}>
-                    <XAxis
-                      dataKey="timestamp"
-                      type="number"
-                      domain={['dataMin', 'dataMax']}
-                      tickFormatter={timeStr => formatDate(timeStr)}
-                      stroke="#dddddd"
-                    />
-                    <YAxis domain={[0, maxGav]} orientation="right" stroke="#dddddd" />
-                    <Area type="monotone" dataKey="gav" stroke="#00bfff" fill="#00bfff" dot={false} />
-                    <Tooltip
-                      labelFormatter={value => `Date: ${formatDate(value)}`}
-                      formatter={value => [`${value} ETH`, 'Total assets']}
-                      contentStyle={{ backgroundColor: '#4A4A4A' }}
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
+                <TSAreaChart data={melonNetworkHistories} dataKeys={['gav']} />
               </>
             )}
           </CardContent>

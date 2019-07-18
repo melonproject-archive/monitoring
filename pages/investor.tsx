@@ -5,7 +5,6 @@ import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 import InvestorDetailsQuery from '~/queries/InvestorDetailsQuery';
 import Layout from '~/components/Layout';
-import TimeSeriesChart from '~/components/TimeSeriesChart';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import InvestmentList from '~/components/InvestmentList';
 import InvestorActivity from '~/components/InvestorActivity';
@@ -14,6 +13,7 @@ import { robustIRR } from '~/utils/robustIRR';
 import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
 import EtherscanLink from '~/components/EtherscanLink';
+import TSLineChart from '~/components/TSLineChart';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -86,16 +86,13 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
     };
   });
 
-  const valuationHistory =
-    result.data &&
-    result.data.investor &&
-    result.data.investor.valuationHistory.map(valuation => {
-      return {
-        ...valuation,
-        nav: valuation.nav ? formatBigNumber(valuation.nav, 18, 3) : 0,
-        gav: valuation.gav ? formatBigNumber(valuation.gav, 18, 3) : 0,
-      };
-    });
+  const valuationHistory = R.pathOr([], ['data', 'investor', 'valuationHistory'], result).map(valuation => {
+    return {
+      ...valuation,
+      nav: valuation.nav ? formatBigNumber(valuation.nav, 18, 3) : 0,
+      gav: valuation.gav ? formatBigNumber(valuation.gav, 18, 3) : 0,
+    };
+  });
 
   const maxValuation = valuationHistory && Math.max(...valuationHistory.map(item => item.nav), 0);
 
@@ -139,7 +136,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
       <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">All assets</Typography>
-          <TimeSeriesChart data={valuationHistory} dataKeys={['nav']} yMax={maxValuation} />
+          <TSLineChart data={valuationHistory} dataKeys={['nav']} yMax={maxValuation} />
         </Paper>
       </Grid>
 
@@ -148,7 +145,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
           <Grid item={true} xs={12} sm={6} md={6} key={item.id}>
             <Paper className={props.classes.paper}>
               <Typography variant="h6">{item.fund && item.fund.name}</Typography>
-              <TimeSeriesChart data={item.valuationHistory} dataKeys={['nav']} yMax={item.maxValuation} />
+              <TSLineChart data={item.valuationHistory} dataKeys={['nav']} yMax={item.maxValuation} />
             </Paper>
           </Grid>
         ))}

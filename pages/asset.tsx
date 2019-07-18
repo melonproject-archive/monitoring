@@ -9,12 +9,12 @@ import {
   MelonNetworkAssetHistoryQuery,
 } from '~/queries/AssetDetailsQuery';
 import Layout from '~/components/Layout';
-import TimeSeriesChart from '~/components/TimeSeriesChart';
 import MaterialTable from 'material-table';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import EtherscanLink from '~/components/EtherscanLink';
+import TSLineChart from '~/components/TSLineChart';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -69,8 +69,8 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
     }
     return {
       timestamp: item.timestamp,
-      price: item.price > 0 ? formatBigNumber(item.price) : undefined,
-      dailyReturn: index > 0 ? dailyReturn : 0,
+      price: item.price > 0 ? formatBigNumber(item.price, item.decimals, 6) : undefined,
+      dailyReturn: index > 0 ? (dailyReturn * 100).toFixed(2) : 0,
     };
   });
 
@@ -114,13 +114,13 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Price in ETH</Typography>
-          <TimeSeriesChart data={priceHistory} dataKeys={['price']} loading={result.loading} />
+          <TSLineChart data={priceHistory} dataKeys={['price']} loading={result.loading} />
         </Paper>
       </Grid>
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Daily price change [%]</Typography>
-          <TimeSeriesChart
+          <TSLineChart
             data={priceHistory}
             dataKeys={['dailyReturn']}
             referenceLine={true}
@@ -131,7 +131,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Aggregate value of {asset && asset.symbol} within Melon network</Typography>
-          <TimeSeriesChart data={networkValues} dataKeys={['amount']} yMax={maxValue} loading={result.loading} />
+          <TSLineChart data={networkValues} dataKeys={['amount']} yMax={maxValue} loading={result.loading} />
         </Paper>
       </Grid>
 

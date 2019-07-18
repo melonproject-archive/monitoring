@@ -4,9 +4,9 @@ import * as R from 'ramda';
 import { withStyles } from '@material-ui/styles';
 import { StyleRulesCallback } from '@material-ui/core';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
-import TimeSeriesChart from '../TimeSeriesChart';
 import { FundHoldingsHistoryQuery } from '~/queries/FundDetailsQuery';
 import { formatBigNumber } from '~/utils/formatBigNumber';
+import TSLineChart from '../TSLineChart';
 
 export interface FundHoldingsChartProps {
   fundAddres: string;
@@ -36,7 +36,7 @@ const FundHoldingsChart: React.FunctionComponent<FundHoldingsChartProps> = props
         [holdingsHistory[k].asset.symbol]: formatBigNumber(
           holdingsHistory[k].assetGav,
           holdingsHistory[k].asset.decimals,
-          3,
+          6,
         ),
       });
       ts = holdingsHistory[k].timestamp;
@@ -44,12 +44,13 @@ const FundHoldingsChart: React.FunctionComponent<FundHoldingsChartProps> = props
       groupedHoldingsHistory[groupedHoldingsHistory.length - 1][holdingsHistory[k].asset.symbol] = formatBigNumber(
         holdingsHistory[k].assetGav,
         holdingsHistory[k].asset.decimals,
+        6,
       );
     }
   }
 
   return (
-    <TimeSeriesChart data={groupedHoldingsHistory} dataKeys={props.assets} yMax={props.yMax} loading={result.loading} />
+    <TSLineChart data={groupedHoldingsHistory} dataKeys={props.assets} yMax={props.yMax} loading={result.loading} />
   );
 };
 

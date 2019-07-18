@@ -2,7 +2,7 @@ import React from 'react';
 import MaterialTable from 'material-table';
 
 import { withStyles } from '@material-ui/styles';
-import { StyleRulesCallback } from '@material-ui/core';
+import { StyleRulesCallback, Tooltip } from '@material-ui/core';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { useQuery } from '@apollo/react-hooks';
 import { AssetListQuery } from '~/queries/AssetListQuery';
@@ -44,7 +44,11 @@ const columns = [
     title: 'Aggregate amount',
     type: 'numeric',
     render: rowData => {
-      return formatBigNumber(rowData.aggregateAmount, rowData.decimals, 3);
+      return (
+        <Tooltip title={formatBigNumber(rowData.aggregateAmount, 18, 18)}>
+          <span>{formatBigNumber(rowData.aggregateAmount, 18, 4)}</span>
+        </Tooltip>
+      );
     },
     customSort: (a, b) => sortBigNumber(a, b, 'aggregateAmount'),
   },
@@ -53,7 +57,11 @@ const columns = [
     type: 'numeric',
     defaultSort: 'desc',
     render: rowData => {
-      return formatBigNumber(rowData.aggregateAmountInEth, 18, 3);
+      return (
+        <Tooltip title={formatBigNumber(rowData.aggregateAmountInEth, 18, 18)}>
+          <span>{formatBigNumber(rowData.aggregateAmountInEth, 18, 4)}</span>
+        </Tooltip>
+      );
     },
     customSort: (a, b) => sortBigNumber(a, b, 'aggregateAmountInEth'),
   },

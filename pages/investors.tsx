@@ -3,13 +3,13 @@ import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, No
 import { InvestorCountQuery, InvestmentHistoryQuery, InvestmentRequestsQuery } from '~/queries/InvestorListQuery';
 
 import Layout from '~/components/Layout';
-import TimeSeriesChart from '~/components/TimeSeriesChart';
 import InvestorList from '~/components/InvestorList';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { useQuery } from '@apollo/react-hooks';
+import TSLineChart from '~/components/TSLineChart';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -59,7 +59,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
       <Grid item={true} xs={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Total number of investments into Melon funds</Typography>
-          <TimeSeriesChart
+          <TSLineChart
             data={investorCounts}
             dataKeys={['numberOfInvestors']}
             yMax={maxNumberOfInvestors}
