@@ -1,6 +1,6 @@
 import React from 'react';
 import * as R from 'ramda';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr, Tooltip } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { FundDetailsQuery, FundCalculationsHistoryQuery } from '~/queries/FundDetailsQuery';
 import { useRouter } from 'next/router';
@@ -13,11 +13,11 @@ import BigNumber from 'bignumber.js';
 import { hexToString } from '~/utils/hexToString';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import FundHoldingsChart from '~/components/FundHoldingsChart';
-import TradeList from '~/components/TradeList';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import EtherscanLink from '~/components/EtherscanLink';
 import TSLineChart from '~/components/TSLineChart';
 import TooltipNumber from '~/components/TooltipNumber';
+import TradeList from '~/components/TradeList';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -26,6 +26,12 @@ const styles: StyleRulesCallback = theme => ({
   aStyle: {
     textDecoration: 'none',
     color: 'white',
+  },
+  truncate: {
+    width: '250px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
 });
 
@@ -155,97 +161,97 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           <Typography variant="h5">{fund && fund.name}&nbsp;</Typography>
           <br />
           <Grid container={true}>
-            <Grid item={true} xs={4} sm={4} md={4}>
-              Protocol&nbsp;version
+            <Grid item={true} xs={6} sm={6} md={4}>
+              Protocol version
             </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
+            <Grid item={true} xs={6} sm={6} md={8}>
               {fund && hexToString(fund.version.name)}
             </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
+            <Grid item={true} xs={6} sm={6} md={4}>
               Address
             </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
+            <Grid item={true} xs={6} sm={6} md={8} className={props.classes.truncate}>
               <EtherscanLink address={fund && fund.id} />
             </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
+            <Grid item={true} xs={6} sm={6} md={4}>
               Manager
             </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
+            <Grid item={true} xs={6} sm={6} md={8} className={props.classes.truncate}>
               <EtherscanLink address={fund && fund.manager.id} />
             </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
-              Created
+            <Grid item={true} xs={6} sm={6} md={4}>
+              Created at
             </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
+            <Grid item={true} xs={6} sm={6} md={8}>
               {fund && formatDate(fund.createdAt, true)}
             </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
+            <Grid item={true} xs={6} sm={6} md={4}>
               Active
             </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
+            <Grid item={true} xs={6} sm={6} md={8}>
               {fund && fund.isShutdown ? 'No' : 'Yes'}
               {fund && fund.isShutdown && <> (deactivated: {fund.shutdownAt && formatDate(fund.shutdownAt)})</>}
               <div>&nbsp;</div>
             </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
+            <Grid item={true} xs={6} sm={6} md={4}>
               GAV
             </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
+            <Grid item={true} xs={6} sm={6} md={8}>
               {fund && <TooltipNumber number={fund.gav} />}
             </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
+            <Grid item={true} xs={6} sm={6} md={4}>
               NAV
             </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
+            <Grid item={true} xs={6} sm={6} md={8}>
               {fund && <TooltipNumber number={fund.nav} />}
             </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
-              #&nbsp;shares
+            <Grid item={true} xs={6} sm={6} md={4}>
+              # shares
             </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
+            <Grid item={true} xs={6} sm={6} md={8}>
               {fund && <TooltipNumber number={fund.totalSupply} />}
             </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
-              Share&nbsp;price
+            <Grid item={true} xs={6} sm={6} md={4}>
+              Share price
             </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
+            <Grid item={true} xs={6} sm={6} md={8}>
               {fund && <TooltipNumber number={fund.sharePrice} />}
               <div>&nbsp;</div>
             </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
-              Management&nbsp;fee
+            <Grid item={true} xs={6} sm={6} md={4}>
+              Management fee
             </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
+            <Grid item={true} xs={6} sm={6} md={8}>
               {fund && formatBigNumber(fund.feeManager.managementFee.managementFeeRate + '00', 18, 2)}%
             </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
-              Performance&nbsp;fee
+            <Grid item={true} xs={6} sm={6} md={4}>
+              Performance fee
             </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
+            <Grid item={true} xs={6} sm={6} md={8}>
               {fund && formatBigNumber(fund.feeManager.performanceFee.performanceFeeRate + '00', 18, 2)}%{' '}
             </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
-              Performance&nbsp;fee&nbsp;period
+            <Grid item={true} xs={6} sm={6} md={4}>
+              Performance fee period
             </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
+            <Grid item={true} xs={6} sm={6} md={8}>
               {fund && fund.feeManager.performanceFee.performanceFeePeriod / (60 * 60 * 24)} days <div>&nbsp;</div>
             </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
+            <Grid item={true} xs={6} sm={6} md={4}>
               Return since inception
             </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
+            <Grid item={true} xs={6} sm={6} md={8}>
               {returnSinceInception && returnSinceInception.toFixed(2)}%{' '}
             </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
+            <Grid item={true} xs={6} sm={6} md={4}>
               Annualized return{' '}
             </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
+            <Grid item={true} xs={6} sm={6} md={8}>
               {annualizedReturn && annualizedReturn.toFixed(2)}%{' '}
             </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
+            <Grid item={true} xs={6} sm={6} md={4}>
               Volatility
             </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
+            <Grid item={true} xs={6} sm={6} md={8}>
               {volatility && volatility.toFixed(2)}%{' '}
             </Grid>
           </Grid>
@@ -263,34 +269,14 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 title: 'Amount',
                 type: 'numeric',
                 render: rowData => {
-                  return (
-                    <Tooltip title={formatBigNumber(rowData.amount, rowData.asset.decimals, 18)}>
-                      <span>{formatBigNumber(rowData.amount, rowData.asset.decimals, 4)}</span>
-                    </Tooltip>
-                  );
+                  return <TooltipNumber number={rowData.amount} decimals={rowData.asset.decimals} />;
                 },
               },
-              // {
-              //   title: 'Price',
-              //   type: 'numeric',
-              //   render: rowData => {
-              //     console.log(rowData);
-              //     const price = new BigNumber(rowData.assetGav)
-              //       .times(new BigNumber('1e18'))
-              //       .div(new BigNumber(rowData.amount))
-              //       .toString();
-              //     return formatBigNumber(price, 18, 3);
-              //   },
-              // },
               {
                 title: 'Value [ETH]',
                 type: 'numeric',
                 render: rowData => {
-                  return (
-                    <Tooltip title={formatBigNumber(rowData.assetGav, 18, 18)}>
-                      <span>{formatBigNumber(rowData.assetGav, 18, 4)}</span>
-                    </Tooltip>
-                  );
+                  return <TooltipNumber number={rowData.assetGav} />;
                 },
                 defaultSort: 'desc',
                 customSort: (a, b) => sortBigNumber(a, b, 'assetGav'),
@@ -310,7 +296,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           />
         </NoSsr>
       </Grid>
-      <Grid item={true} xs={12} sm={6} md={6}>
+      <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Share Price</Typography>
           <TSLineChart
@@ -323,7 +309,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         </Paper>
       </Grid>
 
-      <Grid item={true} xs={12} sm={6} md={6}>
+      <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Daily share price change (%)</Typography>
 
@@ -336,21 +322,21 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         </Paper>
       </Grid>
 
-      <Grid item={true} xs={12} sm={6} md={6}>
+      <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">NAV</Typography>
           <TSLineChart data={normalizedNumbers} dataKeys={['nav', 'gav']} yMax={maxNav} loading={result.loading} />
         </Paper>
       </Grid>
 
-      <Grid item={true} xs={12} sm={6} md={6}>
+      <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5"># Shares</Typography>
           <TSLineChart data={normalizedNumbers} dataKeys={['totalSupply']} yMax={maxSupply} loading={result.loading} />
         </Paper>
       </Grid>
 
-      <Grid item={true} xs={12} sm={6} md={6}>
+      <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Fund holdings</Typography>
           <FundHoldingsChart
@@ -360,7 +346,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           />
         </Paper>
       </Grid>
-      <Grid item={true} xs={12} sm={6} md={6}>
+      <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Fees in denomination asset</Typography>
           <TSLineChart data={normalizedNumbers} dataKeys={['feesInDenominationAsset']} loading={result.loading} />
@@ -375,7 +361,13 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 title: 'Time',
                 field: 'timestamp',
                 render: rowData => {
-                  return formatDate(rowData.timestamp);
+                  return formatDate(rowData.timestamp, true);
+                },
+                cellStyle: {
+                  whiteSpace: 'nowrap',
+                },
+                headerStyle: {
+                  whiteSpace: 'nowrap',
                 },
               },
               {
@@ -389,21 +381,21 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               {
                 title: 'Shares',
                 render: rowData => {
-                  return formatBigNumber(rowData.shares, 18, 3);
+                  return <TooltipNumber number={rowData.shares} />;
                 },
                 type: 'numeric',
               },
               {
                 title: 'Share Price',
                 render: rowData => {
-                  return formatBigNumber(rowData.sharePrice, 18, 3);
+                  return <TooltipNumber number={rowData.sharePrice} />;
                 },
                 type: 'numeric',
               },
               {
                 title: 'Amount in ETH',
                 render: rowData => {
-                  return formatBigNumber(rowData.amountInDenominationAsset, 18, 3);
+                  return <TooltipNumber number={rowData.amountInDenominationAsset} />;
                 },
                 type: 'numeric',
               },
@@ -422,7 +414,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           />
         </NoSsr>
       </Grid>
-      <Grid item={true} xs={12} sm={6} md={6}>
+      <Grid item={true} xs={12} sm={12} md={6}>
         <NoSsr>
           <MaterialTable
             columns={[
@@ -433,7 +425,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               {
                 title: 'Shares',
                 render: rowData => {
-                  return formatBigNumber(rowData.shares, 18, 3);
+                  return <TooltipNumber number={rowData.shares} />;
                 },
                 type: 'numeric',
               },
@@ -452,21 +444,27 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           />
         </NoSsr>
       </Grid>
-      <Grid item={true} xs={12} sm={6} md={6}>
+      <Grid item={true} xs={12} sm={12} md={6}>
         <NoSsr>
           <MaterialTable
             columns={[
               {
                 title: 'Time',
                 render: rowData => {
-                  return formatDate(rowData.timestamp);
+                  return formatDate(rowData.timestamp, true);
+                },
+                cellStyle: {
+                  whiteSpace: 'nowrap',
+                },
+                headerStyle: {
+                  whiteSpace: 'nowrap',
                 },
               },
               {
                 title: 'Shares',
                 type: 'numeric',
                 render: rowData => {
-                  return formatBigNumber(rowData.shares, 18, 6);
+                  return <TooltipNumber number={rowData.shares} />;
                 },
               },
             ]}
@@ -480,7 +478,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           />
         </NoSsr>
       </Grid>
-      <Grid item={true} xs={12} sm={6} md={6}>
+      <Grid item={true} xs={12} sm={12} md={6}>
         <NoSsr>
           <MaterialTable
             columns={[
@@ -518,31 +516,26 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           />
         </NoSsr>
       </Grid>
-      <Grid item={true} xs={12} sm={6} md={6}>
-        <NoSsr>
-          <MaterialTable
-            columns={[
-              {
-                title: 'Contract',
-                field: 'name',
-              },
-              {
-                title: 'Address',
-                field: 'address',
-                render: rowData => {
-                  return <EtherscanLink address={rowData.address} />;
-                },
-              },
-            ]}
-            data={contractAddresses}
-            title="Contract addresses"
-            isLoading={result.loading}
-            options={{
-              paging: false,
-              search: false,
-            }}
-          />
-        </NoSsr>
+      <Grid item={true} xs={12} sm={12} md={6}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">Contract addresses</Typography>
+          <br />
+          <Grid container={true}>
+            {contractAddresses &&
+              contractAddresses.map(a => {
+                return (
+                  <>
+                    <Grid item={true} xs={6} sm={6} md={4}>
+                      {a.name}
+                    </Grid>
+                    <Grid item={true} xs={6} sm={6} md={8} className={props.classes.truncate}>
+                      <EtherscanLink address={a.address} />
+                    </Grid>
+                  </>
+                );
+              })}
+          </Grid>
+        </Paper>
       </Grid>
       <Grid item={true} xs={12} sm={12} md={12}>
         <NoSsr>
@@ -566,6 +559,12 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                   render: rowData => {
                     return formatDate(rowData.requestTimestamp, true);
                   },
+                  cellStyle: {
+                    whiteSpace: 'nowrap',
+                  },
+                  headerStyle: {
+                    whiteSpace: 'nowrap',
+                  },
                 },
                 {
                   title: 'Investor',
@@ -574,14 +573,14 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 {
                   title: 'Shares',
                   render: rowData => {
-                    return formatBigNumber(rowData.shares, 18, 3);
+                    return <TooltipNumber number={rowData.shares} />;
                   },
                   type: 'numeric',
                 },
                 {
                   title: 'Amount',
                   render: rowData => {
-                    return formatBigNumber(rowData.amount, rowData.asset.decimals, 3);
+                    return <TooltipNumber number={rowData.amount} decimals={rowData.asset.decimals} />;
                   },
                   type: 'numeric',
                 },
@@ -597,6 +596,12 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                   title: 'Expires',
                   render: rowData => {
                     return rowData.expires && formatDate(rowData.expires, true);
+                  },
+                  cellStyle: {
+                    whiteSpace: 'nowrap',
+                  },
+                  headerStyle: {
+                    whiteSpace: 'nowrap',
                   },
                 },
               ]}

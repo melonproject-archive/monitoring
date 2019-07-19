@@ -25,6 +25,9 @@ const columns = [
   {
     title: 'Name',
     field: 'name',
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
     title: 'Creation date',
@@ -32,6 +35,9 @@ const columns = [
       return formatDate(rowData.createdAt, true);
     },
     customSort: (a, b) => sortBigNumber(a, b, 'createdAt'),
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
     title: 'Denomination',
@@ -49,6 +55,9 @@ const columns = [
       return <TooltipNumber number={rowData.gav} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'gav'),
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
     title: 'Share price',
@@ -58,18 +67,27 @@ const columns = [
     },
     customSort: (a, b) => sortBigNumber(a, b, 'sharePrice'),
     defaultSort: 'desc',
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
-    title: 'Number of shares',
+    title: '# shares',
     type: 'numeric',
     render: rowData => {
       return <TooltipNumber number={rowData.totalSupply} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'totalSupply'),
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
-    title: 'Protocol version',
+    title: 'Protocol',
     field: 'versionName',
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
     title: 'Status',
@@ -78,6 +96,9 @@ const columns = [
     },
     customSort: (a, b) => {
       return a.isShutdown === b.isShutdown ? 0 : a.isShutdown ? 1 : -1;
+    },
+    cellStyle: {
+      whiteSpace: 'nowrap',
     },
   },
 ];

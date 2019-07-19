@@ -16,6 +16,7 @@ import { formatDate } from '~/utils/formatDate';
 import EtherscanLink from '~/components/EtherscanLink';
 import TSLineChart from '~/components/TSLineChart';
 import { moneyMultiple } from '~/utils/moneyMultiple';
+import TooltipNumber from '~/components/TooltipNumber';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -124,7 +125,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
 
       {investments &&
         investments.map(item => (
-          <Grid item={true} xs={12} sm={6} md={6} key={item.id}>
+          <Grid item={true} xs={12} sm={12} md={6} key={item.id}>
             <Paper className={props.classes.paper}>
               <Typography variant="h6">{item.fund && item.fund.name}</Typography>
               <TSLineChart data={item.valuationHistory} dataKeys={['nav']} yMax={item.maxValuation} />
@@ -153,14 +154,14 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
                 {
                   title: 'Shares',
                   render: rowData => {
-                    return formatBigNumber(rowData.shares, 18, 3);
+                    return <TooltipNumber number={rowData.shares} />;
                   },
                   type: 'numeric',
                 },
                 {
                   title: 'Amount',
                   render: rowData => {
-                    return formatBigNumber(rowData.amount, rowData.asset.decimals, 3);
+                    return <TooltipNumber number={rowData.amount} decimals={rowData.asset.decimals} />;
                   },
                   type: 'numeric',
                 },

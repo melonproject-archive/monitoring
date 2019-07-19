@@ -35,6 +35,12 @@ const columns = [
       return formatDate(rowData.createdAt);
     },
     customSort: (a, b) => sortBigNumber(a, b, 'createdAt'),
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
     title: 'Investments',
@@ -49,16 +55,34 @@ const columns = [
     },
     customSort: (a, b) => sortBigNumber(a, b, 'netAum'),
     defaultSort: 'desc',
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
     title: 'Money multiple',
     field: 'multiple',
     type: 'numeric',
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
     title: 'Annualized return [%]',
     field: 'xirr',
     type: 'numeric',
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
 ];
 

@@ -10,6 +10,7 @@ import { formatBigNumber } from '~/utils/formatBigNumber';
 import MaterialTable from 'material-table';
 import { formatThousands } from '~/utils/formatThousands';
 import TSLineChart from '~/components/TSLineChart';
+import TooltipNumber from '~/components/TooltipNumber';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -64,26 +65,26 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
               Total Ether consumed{' '}
             </Grid>
             <Grid item={true} xs={8} sm={8} md={8}>
-              {engineQuantities && formatBigNumber(engineQuantities.totalEtherConsumed, 18, 4)} ETH
+              <TooltipNumber number={engineQuantities.totalEtherConsumed} /> ETH
             </Grid>
             <Grid item={true} xs={4} sm={4} md={4}>
               Total MLN burned{' '}
             </Grid>
             <Grid item={true} xs={8} sm={8} md={8}>
-              {engineQuantities && formatBigNumber(engineQuantities.totalMlnBurned, 18, 4)} MLN
+              <TooltipNumber number={engineQuantities.totalMlnBurned} /> MLN
               <div>&nbsp;</div>
             </Grid>
             <Grid item={true} xs={4} sm={4} md={4}>
               Frozen Ether{' '}
             </Grid>
             <Grid item={true} xs={8} sm={8} md={8}>
-              {engineQuantities && formatBigNumber(engineQuantities.frozenEther, 18, 4)} ETH
+              <TooltipNumber number={engineQuantities.frozenEther} /> ETH
             </Grid>
             <Grid item={true} xs={4} sm={4} md={4}>
               Liquid Ether{' '}
             </Grid>
             <Grid item={true} xs={8} sm={8} md={8}>
-              {engineQuantities && formatBigNumber(engineQuantities.liquidEther, 18, 4)} ETH
+              <TooltipNumber number={engineQuantities.liquidEther} /> ETH
             </Grid>
             <Grid item={true} xs={4} sm={4} md={4}>
               Last Thaw
@@ -112,14 +113,20 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
           <TSLineChart data={amguCumulative} dataKeys={['cumulativeAmount']} />
         </Paper>
       </Grid>
-      <Grid item={true} xs={12} sm={6} md={6}>
+      <Grid item={true} xs={12} sm={12} md={12}>
         <NoSsr>
           <MaterialTable
             columns={[
               {
                 title: 'Time',
                 render: rowData => {
-                  return formatDate(rowData.timestamp);
+                  return formatDate(rowData.timestamp, true);
+                },
+                cellStyle: {
+                  whiteSpace: 'nowrap',
+                },
+                headerStyle: {
+                  whiteSpace: 'nowrap',
                 },
               },
               {
@@ -129,7 +136,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
               {
                 title: 'Amount',
                 render: rowData => {
-                  return formatBigNumber(rowData.amount, 18, 3);
+                  return <TooltipNumber number={rowData.amount} />;
                 },
                 type: 'numeric',
               },

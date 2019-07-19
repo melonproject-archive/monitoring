@@ -26,6 +26,12 @@ const columns = [
   {
     title: 'Name',
     field: 'name',
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
     title: 'Last price',
@@ -34,28 +40,52 @@ const columns = [
     },
     type: 'numeric',
     customSort: (a, b) => sortBigNumber(a, b, 'lastPrice'),
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
     title: '# funds',
     field: 'numberOfFunds.length',
     type: 'numeric',
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
-    title: 'Aggregate amount',
+    title: 'Amount',
     type: 'numeric',
     render: rowData => {
       return <TooltipNumber number={rowData.aggregateAmount} decimals={rowData.decimals} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'aggregateAmount'),
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
-    title: 'Aggregate amount in ETH',
+    title: 'Amount in ETH',
     type: 'numeric',
     defaultSort: 'desc',
     render: rowData => {
       return <TooltipNumber number={rowData.aggregateAmountInEth} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'aggregateAmountInEth'),
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
 ];
 

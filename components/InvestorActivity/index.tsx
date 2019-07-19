@@ -22,14 +22,26 @@ const columns: Column[] = [
   {
     title: 'Date',
     render: rowData => {
-      return formatDate(rowData.timestamp);
+      return formatDate(rowData.timestamp, true);
     },
     defaultSort: 'asc',
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
     title: 'Fund',
     field: 'fund.name',
     defaultSort: 'asc',
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
     title: 'Activity',
@@ -50,6 +62,12 @@ const columns: Column[] = [
       return <TooltipNumber number={rowData.sharePrice} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'sharePrice'),
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
     title: 'Amount [ETH]',
@@ -58,6 +76,12 @@ const columns: Column[] = [
       return <TooltipNumber number={rowData.amount} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'amount'),
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
 ];
 

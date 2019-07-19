@@ -15,7 +15,7 @@ const TooltipNumber: React.FunctionComponent<TooltipNumberProps> = props => {
   //   const startOfAddress = props.address.slice(0, 28);
   //   const endOfAddress = props.address.slice(-4);
   return (
-    <Tooltip title={formatBigNumber(props.number, props.decimals || 18, 18)}>
+    <Tooltip title={formatBigNumber(props.number, props.decimals || 18, 18)} placement="right">
       <span>{formatBigNumber(props.number, props.decimals || 18, 4)}</span>
     </Tooltip>
   );

@@ -22,6 +22,12 @@ const columns: Column[] = [
     title: 'Fund',
     field: 'fund.name',
     defaultSort: 'asc',
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
     title: 'Shares',
@@ -32,20 +38,32 @@ const columns: Column[] = [
     customSort: (a, b) => sortBigNumber(a, b, 'shares'),
   },
   {
-    title: 'Invested amount [ETH]',
+    title: 'Invested [ETH]',
     type: 'numeric',
     render: rowData => {
       return <TooltipNumber number={rowData.investedAmount} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'investedAmount'),
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
-    title: 'Redeemed amount [ETH]',
+    title: 'Redeemed [ETH]',
     type: 'numeric',
     render: rowData => {
       return <TooltipNumber number={rowData.redeemedAmount} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'redeemedAmount'),
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
     title: 'Current Value [ETH]',
@@ -54,16 +72,34 @@ const columns: Column[] = [
       return <TooltipNumber number={rowData.nav} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'nav'),
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
     title: 'Money multiple',
     type: 'numeric',
     field: 'multiple',
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
     title: 'Annualized return [%]',
     type: 'numeric',
     field: 'xirr',
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
+    headerStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
 ];
 

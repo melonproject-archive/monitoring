@@ -10,6 +10,7 @@ import { formatDate } from '~/utils/formatDate';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { useQuery } from '@apollo/react-hooks';
 import TSLineChart from '~/components/TSLineChart';
+import TooltipNumber from '~/components/TooltipNumber';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -80,6 +81,12 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
                 render: rowData => {
                   return formatDate(rowData.timestamp, true);
                 },
+                cellStyle: {
+                  whiteSpace: 'nowrap',
+                },
+                headerStyle: {
+                  whiteSpace: 'nowrap',
+                },
               },
               {
                 title: 'Investor',
@@ -92,13 +99,25 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
               {
                 title: 'Fund',
                 field: 'fund.name',
+                cellStyle: {
+                  whiteSpace: 'nowrap',
+                },
+                headerStyle: {
+                  whiteSpace: 'nowrap',
+                },
               },
               {
-                title: 'Amount',
+                title: 'Amount [ETH]',
                 render: rowData => {
                   return formatBigNumber(rowData.amountInDenominationAsset, 18, 3);
                 },
                 type: 'numeric',
+                cellStyle: {
+                  whiteSpace: 'nowrap',
+                },
+                headerStyle: {
+                  whiteSpace: 'nowrap',
+                },
               },
             ]}
             data={investmentHistory}
@@ -125,10 +144,16 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
                   render: rowData => {
                     return formatDate(rowData.requestTimestamp, true);
                   },
+                  cellStyle: {
+                    whiteSpace: 'nowrap',
+                  },
                 },
                 {
                   title: 'Fund',
                   field: 'fund.name',
+                  cellStyle: {
+                    whiteSpace: 'nowrap',
+                  },
                 },
                 {
                   title: 'Investor',
@@ -137,14 +162,14 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
                 {
                   title: 'Shares',
                   render: rowData => {
-                    return formatBigNumber(rowData.shares, 18, 3);
+                    return <TooltipNumber number={rowData.shares} />;
                   },
                   type: 'numeric',
                 },
                 {
                   title: 'Amount',
                   render: rowData => {
-                    return formatBigNumber(rowData.amount, rowData.asset.decimals, 3);
+                    return <TooltipNumber number={rowData.amount} decimals={rowData.asset.decimals} />;
                   },
                   type: 'numeric',
                 },
@@ -160,6 +185,9 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
                   title: 'Expires',
                   render: rowData => {
                     return rowData.expires && formatDate(rowData.expires, true);
+                  },
+                  cellStyle: {
+                    whiteSpace: 'nowrap',
                   },
                 },
               ]}

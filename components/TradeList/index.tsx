@@ -4,10 +4,10 @@ import MaterialTable from 'material-table';
 
 import { withStyles } from '@material-ui/styles';
 import { StyleRulesCallback } from '@material-ui/core';
-import { formatBigNumber } from '~/utils/formatBigNumber';
 import { formatDate } from '~/utils/formatDate';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import { methodSigToName } from '~/utils/methodSigToName';
+import TooltipNumber from '../TooltipNumber';
 
 export interface TradeListProps {
   data: any;
@@ -34,48 +34,108 @@ const TradeList: React.FunctionComponent<TradeListProps> = props => {
       },
       customSort: (a, b) => sortBigNumber(a, b, 'timestamp'),
       defaultSort: 'desc',
+      cellStyle: {
+        whiteSpace: 'nowrap',
+      },
     },
     {
       title: 'Fund',
       field: 'trading.fund.name',
       hidden: props.hideFund,
+      cellStyle: {
+        whiteSpace: 'nowrap',
+      },
+      headerStyle: {
+        whiteSpace: 'nowrap',
+      },
     },
     {
       title: 'Maker asset',
       field: 'orderAddress2.symbol',
+      cellStyle: {
+        whiteSpace: 'nowrap',
+      },
+      headerStyle: {
+        whiteSpace: 'nowrap',
+      },
     },
     {
       title: 'Taker asset',
       field: 'orderAddress3.symbol',
+      cellStyle: {
+        whiteSpace: 'nowrap',
+      },
+      headerStyle: {
+        whiteSpace: 'nowrap',
+      },
     },
     {
       title: 'Maker asset qty',
       render: rowData => {
-        return formatBigNumber(rowData.orderValue0, (rowData.orderAddress2 && rowData.orderAddress2.decimals) || 18, 3);
+        return (
+          <TooltipNumber
+            number={rowData.orderValue0}
+            decimals={(rowData.orderAddress2 && rowData.orderAddress2.decimals) || 18}
+          />
+        );
       },
       customSort: (a, b) => sortBigNumber(a, b, 'orderValue0'),
       type: 'numeric',
+      cellStyle: {
+        whiteSpace: 'nowrap',
+      },
+      headerStyle: {
+        whiteSpace: 'nowrap',
+      },
     },
     {
       title: 'Taker asset qty',
       render: rowData => {
-        return formatBigNumber(rowData.orderValue1, (rowData.orderAddress3 && rowData.orderAddress3.decimals) || 18, 3);
+        return (
+          <TooltipNumber
+            number={rowData.orderValue1}
+            decimals={(rowData.orderAddress3 && rowData.orderAddress3.decimals) || 18}
+          />
+        );
       },
       customSort: (a, b) => sortBigNumber(a, b, 'orderValue1'),
       type: 'numeric',
+      cellStyle: {
+        whiteSpace: 'nowrap',
+      },
+      headerStyle: {
+        whiteSpace: 'nowrap',
+      },
     },
     {
       title: 'Taker asset qty traded',
       render: rowData => {
-        return formatBigNumber(rowData.orderValue6, (rowData.orderAddress3 && rowData.orderAddress3.decimals) || 18, 3);
+        return (
+          <TooltipNumber
+            number={rowData.orderValue6}
+            decimals={(rowData.orderAddress3 && rowData.orderAddress3.decimals) || 18}
+          />
+        );
       },
       customSort: (a, b) => sortBigNumber(a, b, 'orderValue6'),
       type: 'numeric',
+      cellStyle: {
+        whiteSpace: 'nowrap',
+      },
+      headerStyle: {
+        whiteSpace: 'nowrap',
+      },
     },
     {
       title: 'Method Signature',
       render: rowData => {
         return methodSigToName(rowData.methodSignature);
+      },
+      cellStyle: {
+        whiteSpace: 'nowrap',
+      },
+      headerStyle: {
+        whiteSpace: 'nowrap',
       },
     },
     {

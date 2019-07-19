@@ -15,6 +15,7 @@ import { sortBigNumber } from '~/utils/sortBigNumber';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import EtherscanLink from '~/components/EtherscanLink';
 import AssetCharts from '~/components/AssetCharts';
+import TooltipNumber from '~/components/TooltipNumber';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -122,12 +123,20 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
               {
                 title: 'Fund',
                 field: 'name',
+                cellStyle: {
+                  whiteSpace: 'nowrap',
+                },
+                headerStyle: {
+                  whiteSpace: 'nowrap',
+                },
               },
               {
                 title: 'Amount',
                 type: 'numeric',
                 render: rowData => {
-                  return formatBigNumber(rowData.assetValue.amount, rowData.assetValue.asset.decimals, 3);
+                  return (
+                    <TooltipNumber number={rowData.assetValue.amount} decimals={rowData.assetValue.asset.decimals} />
+                  );
                 },
                 customSort: (a, b) => sortBigNumber(a, b, ['assetValue', 'amount']),
               },
@@ -135,10 +144,16 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
                 title: 'Value in ETH',
                 type: 'numeric',
                 render: rowData => {
-                  return formatBigNumber(rowData.assetValue.assetGav, 18, 3);
+                  return <TooltipNumber number={rowData.assetValue.assetGav} />;
                 },
                 defaultSort: 'desc',
                 customSort: (a, b) => sortBigNumber(a, b, ['assetValue', 'assetGav']),
+                cellStyle: {
+                  whiteSpace: 'nowrap',
+                },
+                headerStyle: {
+                  whiteSpace: 'nowrap',
+                },
               },
             ]}
             data={funds}
