@@ -1,18 +1,15 @@
 import React from 'react';
-import * as R from 'ramda';
 import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
 
 import { withStyles } from '@material-ui/styles';
 import { StyleRulesCallback } from '@material-ui/core';
-import { FundListQuery } from '~/queries/FundListQuery';
-import { hexToString } from '~/utils/hexToString';
 import { sortBigNumber } from '~/utils/sortBigNumber';
-import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import TooltipNumber from '../TooltipNumber';
 
 export interface FundListProps {
   data?: any;
+  loading?: boolean;
 }
 
 const styles: StyleRulesCallback = theme => ({
@@ -104,26 +101,15 @@ const columns = [
 ];
 
 const FundList: React.FunctionComponent<FundListProps> = props => {
-  const result = useScrapingQuery([FundListQuery, FundListQuery], proceedPaths(['funds']), {
-    ssr: false,
-  });
-
-  const funds = R.pathOr([], ['data', 'funds'], result).map(fund => {
-    return {
-      ...fund,
-      versionName: hexToString(fund.version.name),
-    };
-  });
-
   return (
     <MaterialTable
       columns={columns as any}
-      data={funds}
+      data={props.data}
       title="Funds"
       options={{
         paging: false,
       }}
-      isLoading={result.loading}
+      isLoading={props.loading}
       onRowClick={(_, rowData) => {
         const url = '/fund?address=' + rowData.id;
         window.open(url, '_self');

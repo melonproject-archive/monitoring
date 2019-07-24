@@ -1,6 +1,6 @@
 import React from 'react';
 import * as R from 'ramda';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr, Link } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { FundDetailsQuery, FundCalculationsHistoryQuery } from '~/queries/FundDetailsQuery';
 import { useRouter } from 'next/router';
@@ -18,6 +18,7 @@ import EtherscanLink from '~/components/EtherscanLink';
 import TSLineChart from '~/components/TSLineChart';
 import TooltipNumber from '~/components/TooltipNumber';
 import TradeList from '~/components/TradeList';
+import FundDebugInformation from '~/components/FundDebugInformation';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -33,6 +34,10 @@ const styles: StyleRulesCallback = theme => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
+  debug: {
+    color: '#777',
+    fontSize: '9px',
+  },
 });
 
 type FundProps = WithStyles<typeof styles>;
@@ -46,6 +51,8 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       fund: router && router.query.address,
     },
   });
+
+  const debugLink = router && '/fund?address=' + router.query.address + '&debug=1';
 
   const fund = R.pathOr(undefined, ['data', 'fund'], result);
   const assets = R.pathOr([], ['data', 'assets'], result);
@@ -525,10 +532,10 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               contractAddresses.map(a => {
                 return (
                   <>
-                    <Grid item={true} xs={6} sm={6} md={4}>
+                    <Grid item={true} xs={6} sm={6} md={4} key={a.name}>
                       {a.name}
                     </Grid>
-                    <Grid item={true} xs={6} sm={6} md={8} className={props.classes.truncate}>
+                    <Grid item={true} xs={6} sm={6} md={8} className={props.classes.truncate} key={a.address}>
                       <EtherscanLink address={a.address} />
                     </Grid>
                   </>
@@ -550,7 +557,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         </NoSsr>
       </Grid>
       {investmentRequests && (
-        <Grid item={true} xs={12}>
+        <Grid item={true} xs={12} sm={12} md={12}>
           <NoSsr>
             <MaterialTable
               columns={[
@@ -620,6 +627,14 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           </NoSsr>
         </Grid>
       )}
+      {(router && router.query.debug === '1') || (
+        <Grid item={true} xs={12} sm={12} md={12}>
+          <Link href={debugLink} className={props.classes.debug}>
+            Fund Events
+          </Link>
+        </Grid>
+      )}
+      {router && router.query.debug === '1' && <FundDebugInformation address={router.query.address} />}
     </Layout>
   );
 };

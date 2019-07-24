@@ -174,6 +174,7 @@ export const FundHoldingsHistoryQuery = gql`
       timestamp
       amount
       assetGav
+      validPrice
       asset {
         id
         symbol

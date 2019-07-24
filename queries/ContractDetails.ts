@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
-export const ContractsQuery = gql`
-  query ContractsQuery($limit: Int!, $skip: Int!) {
-    contracts(first: $limit, skip: $skip, orderBy: createdAt) {
+export const ContractDetailsQuery = gql`
+  query ContractDetailsQuery($address: ID!) {
+    contract(id: $address) {
       id
       name
       createdAt

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
-import { InvestorCountQuery, InvestmentHistoryQuery, InvestmentRequestsQuery } from '~/queries/InvestorListQuery';
+import { Grid, withStyles, WithStyles, StyleRulesCallback, NoSsr } from '@material-ui/core';
+import { InvestmentHistoryQuery, InvestmentRequestsQuery } from '~/queries/InvestorListQuery';
 
 import Layout from '~/components/Layout';
 import InvestorList from '~/components/InvestorList';
@@ -9,7 +9,6 @@ import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { useQuery } from '@apollo/react-hooks';
-import TSLineChart from '~/components/TSLineChart';
 import TooltipNumber from '~/components/TooltipNumber';
 
 const styles: StyleRulesCallback = theme => ({
@@ -21,13 +20,6 @@ const styles: StyleRulesCallback = theme => ({
 type InvestorsProps = WithStyles<typeof styles>;
 
 const Investors: React.FunctionComponent<InvestorsProps> = props => {
-  const result = useScrapingQuery([InvestorCountQuery, InvestorCountQuery], proceedPaths(['investorCounts']), {
-    ssr: false,
-  });
-
-  const investorCounts = (result.data && result.data.investorCounts) || [];
-  const maxNumberOfInvestors = Math.max(...investorCounts.map(item => item.numberOfInvestors), 0);
-
   const investmentHistoryResult = useQuery(InvestmentHistoryQuery, { ssr: false, variables: { limit: 10 } });
 
   const investmentHistory = (investmentHistoryResult.data && investmentHistoryResult.data.investmentHistories) || [];
@@ -57,17 +49,6 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
 
   return (
     <Layout title="Investors">
-      <Grid item={true} xs={12}>
-        <Paper className={props.classes.paper}>
-          <Typography variant="h5">Total number of investments into Melon funds</Typography>
-          <TSLineChart
-            data={investorCounts}
-            dataKeys={['numberOfInvestors']}
-            yMax={maxNumberOfInvestors}
-            loading={result.loading}
-          />
-        </Paper>
-      </Grid>
       <Grid item={true} xs={12}>
         <InvestorList />
       </Grid>
@@ -126,7 +107,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
               paging: false,
               search: false,
             }}
-            isLoading={result.loading}
+            isLoading={investmentHistoryResult.loading}
             onRowClick={(_, rowData) => {
               const url = '/investor?address=' + rowData.owner.id;
               window.open(url, '_self');
@@ -197,7 +178,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
                 paging: false,
                 search: false,
               }}
-              isLoading={result.loading}
+              isLoading={investmentRequestsResult.loading}
               onRowClick={(_, rowData) => {
                 const url = '/investor?address=' + rowData.owner.id;
                 window.open(url, '_self');

@@ -33,8 +33,8 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
     return carry + parseInt(item.amount, 10);
   }, 0);
 
-  const state = R.pathOr({}, ['data', 'state'], result);
-  const engineQuantities = R.pathOr({}, ['data', 'state', 'currentEngine'], result);
+  const state = R.pathOr({}, ['data', 'state'], result) as any;
+  const engineQuantities = R.pathOr({}, ['data', 'state', 'currentEngine'], result) as any;
 
   return (
     <Layout title="Engine">

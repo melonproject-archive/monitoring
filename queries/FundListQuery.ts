@@ -15,6 +15,7 @@ export const MelonNetworkHistoryQuery = gql`
     melonNetworkHistories(orderBy: timestamp, first: $limit, skip: $skip) {
       timestamp
       gav
+      validGav
     }
   }
 `;

@@ -14,15 +14,11 @@ const styles: StyleRulesCallback = theme => ({
   paper: {
     padding: theme.spacing(2),
   },
-  aStyle: {
-    textDecoration: 'none',
-    color: 'white',
-  },
 });
 
-type ManagersProps = WithStyles<typeof styles>;
+type ManagerProps = WithStyles<typeof styles>;
 
-const Managers: React.FunctionComponent<ManagersProps> = props => {
+const Managers: React.FunctionComponent<ManagerProps> = props => {
   const router = useRouter();
   const result = useQuery(ManagerDetailsQuery, {
     ssr: false,
@@ -32,7 +28,7 @@ const Managers: React.FunctionComponent<ManagersProps> = props => {
     },
   });
 
-  const manager = R.pathOr([], ['data', 'fundManager'], result);
+  const manager = R.pathOr([], ['data', 'fundManager'], result) as any;
 
   const funds =
     manager &&

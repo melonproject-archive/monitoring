@@ -30,14 +30,16 @@ const FundHoldingsChart: React.FunctionComponent<FundHoldingsChartProps> = props
   const groupedHoldingsHistory: any[] = [];
   let ts = 0;
   for (let k = 0; k < holdingsLength; k++) {
+    if (!holdingsHistory[k].validPrice) {
+      continue;
+    }
     if (ts !== holdingsHistory[k].timestamp) {
       groupedHoldingsHistory.push({
         timestamp: holdingsHistory[k].timestamp,
-        [holdingsHistory[k].asset.symbol]: formatBigNumber(
-          holdingsHistory[k].assetGav,
-          holdingsHistory[k].asset.decimals,
-          6,
-        ),
+        validPrice: holdingsHistory[k].validPrice,
+        [holdingsHistory[k].asset.symbol]: holdingsHistory[k].validPrice
+          ? formatBigNumber(holdingsHistory[k].assetGav, holdingsHistory[k].asset.decimals, 6)
+          : undefined,
       });
       ts = holdingsHistory[k].timestamp;
     } else {

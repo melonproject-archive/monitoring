@@ -13,7 +13,6 @@ import {
   IconButton,
   Hidden,
   Drawer,
-  NoSsr,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import Link from 'next/link';
@@ -33,8 +32,9 @@ const menuItems = [
   { title: 'Investors', link: 'investors' },
   { title: 'Asset Universe', link: 'assets' },
   { title: 'Exchanges', link: 'exchanges' },
-  // { title: 'Contracts', link: 'contracts' },
+  { title: 'Melon Network', link: 'network' },
   { title: 'Engine', link: 'engine' },
+  // { title: 'Contracts', link: 'contracts' },
   // { title: 'Addresses', link: 'addresses' },
   // { title: 'Glossary', link: 'glossary' },
 ];
@@ -106,7 +106,7 @@ class Layout extends React.Component<LayoutProps> {
     const { classes } = this.props;
 
     const drawer = (
-      <div>
+      <>
         <div className={classes.toolbar}>
           <Link href="/">
             <a className={classes.aStyle}>
@@ -151,7 +151,7 @@ class Layout extends React.Component<LayoutProps> {
             </a>{' '}
           </Typography>
         </Paper>
-      </div>
+      </>
     );
 
     return (
@@ -204,19 +204,17 @@ class Layout extends React.Component<LayoutProps> {
           </nav>
           <main className={classes.content}>
             <div className={classes.toolbar} />
-            <NoSsr>
-              <Grid container={true}>
-                <Grid
-                  container={true}
-                  item={true}
-                  xs={12}
-                  spacing={2}
-                  style={{ paddingLeft: '16px', paddingTop: '16px' }}
-                >
-                  {this.props.children}
-                </Grid>
+            <Grid container={true}>
+              <Grid
+                container={true}
+                item={true}
+                xs={12}
+                spacing={2}
+                style={{ paddingLeft: '16px', paddingTop: '16px' }}
+              >
+                {this.props.children}
               </Grid>
-            </NoSsr>
+            </Grid>
           </main>
         </div>
       </>

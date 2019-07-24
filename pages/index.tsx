@@ -5,18 +5,17 @@ import {
   withStyles,
   WithStyles,
   StyleRulesCallback,
-  Typography,
-  NoSsr,
   Card,
   CardContent,
+  Typography,
   CircularProgress,
 } from '@material-ui/core';
-import { FundCountQuery, MelonNetworkHistoryQuery } from '~/queries/FundListQuery';
+import { FundListQuery, FundCountQuery, MelonNetworkHistoryQuery } from '~/queries/FundListQuery';
 import FundList from '~/components/FundList';
 import Layout from '~/components/Layout';
-import { formatBigNumber } from '~/utils/formatBigNumber';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
-import TSAreaChart from '~/components/TSAreaChart';
+import { hexToString } from '~/utils/hexToString';
+import { formatBigNumber } from '~/utils/formatBigNumber';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -24,7 +23,20 @@ const styles: StyleRulesCallback = theme => ({
   },
 });
 
-const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
+type HomeProps = WithStyles<typeof styles>;
+
+const Home: React.FunctionComponent<WithStyles<HomeProps>> = props => {
+  const fundListResult = useScrapingQuery([FundListQuery, FundListQuery], proceedPaths(['funds']), {
+    ssr: false,
+  });
+
+  const funds = R.pathOr([], ['data', 'funds'], fundListResult).map(fund => {
+    return {
+      ...fund,
+      versionName: hexToString(fund.version.name),
+    };
+  });
+
   const result = useScrapingQuery([FundCountQuery, FundCountQuery], proceedPaths(['fundCounts']), {
     ssr: false,
   });
@@ -43,12 +55,14 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
 
   const historyLoading = historyResult.loading;
 
-  const melonNetworkHistories = R.pathOr([], ['data', 'melonNetworkHistories'], historyResult).map(item => {
-    return {
-      ...item,
-      gav: formatBigNumber(item.gav, 18, 0),
-    };
-  });
+  const melonNetworkHistories = R.pathOr([], ['data', 'melonNetworkHistories'], historyResult)
+    .filter(item => item.validGav)
+    .map(item => {
+      return {
+        ...item,
+        gav: formatBigNumber(item.gav, 18, 0),
+      };
+    });
 
   return (
     <Layout title="Funds">
@@ -61,14 +75,13 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
             {(loading && <CircularProgress />) || (
               <>
                 <br />
-                <Typography variant="body1">
+                <Typography variant="body1" align="right">
                   {fundCounts &&
                     parseInt(fundCounts[fundCounts.length - 1].active, 10) +
                       parseInt(fundCounts[fundCounts.length - 1].nonActive, 10)}{' '}
-                  funds ({fundCounts[fundCounts.length - 1].active} active,{' '}
+                  funds <br />({fundCounts[fundCounts.length - 1].active} active,{' '}
                   {fundCounts && fundCounts[fundCounts.length - 1].nonActive} not active)
                 </Typography>
-                <TSAreaChart data={fundCounts} dataKeys={['active', 'nonActive']} />
               </>
             )}
           </CardContent>
@@ -83,20 +96,17 @@ const Home: React.FunctionComponent<WithStyles<typeof styles>> = props => {
             {(historyLoading && <CircularProgress />) || (
               <>
                 <br />
-                <Typography variant="body1">
-                  {melonNetworkHistories && melonNetworkHistories[melonNetworkHistories.length - 1].gav} ETH
+                <Typography variant="body1" align="right">
+                  {melonNetworkHistories && melonNetworkHistories[melonNetworkHistories.length - 1].gav} ETH <br />
+                  &nbsp;
                 </Typography>
-                <TSAreaChart data={melonNetworkHistories} dataKeys={['gav']} />
               </>
             )}
           </CardContent>
         </Card>
       </Grid>
-
       <Grid item={true} xs={12} sm={12} md={12}>
-        <NoSsr>
-          <FundList />
-        </NoSsr>
+        <FundList data={funds} loading={fundListResult.loading} />
       </Grid>
     </Layout>
   );
