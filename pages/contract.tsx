@@ -7,6 +7,7 @@ import Layout from '~/components/Layout';
 
 import EtherscanLink from '~/components/EtherscanLink';
 import { ContractDetailsQuery } from '~/queries/ContractDetails';
+import { formatDate } from '~/utils/formatDate';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -45,6 +46,12 @@ const Contract: React.FunctionComponent<ContractProps> = props => {
             </Grid>
             <Grid item={true} xs={6} sm={6} md={8}>
               {contract && contract.name}
+            </Grid>
+            <Grid item={true} xs={6} sm={6} md={4}>
+              Created at
+            </Grid>
+            <Grid item={true} xs={6} sm={6} md={8}>
+              {contract && formatDate(contract.createdAt, true)}
             </Grid>
           </Grid>
         </Paper>

@@ -35,8 +35,6 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
 
   const fundCounts = R.pathOr([], ['data', 'fundCounts'], result);
 
-  const loading = result.loading;
-
   const historyResult = useScrapingQuery(
     [MelonNetworkHistoryQuery, MelonNetworkHistoryQuery],
     proceedPaths(['melonNetworkHistories']),
@@ -44,8 +42,6 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
       ssr: false,
     },
   );
-
-  const historyLoading = historyResult.loading;
 
   const melonNetworkHistories = R.pathOr([], ['data', 'melonNetworkHistories'], historyResult)
     .filter(item => item.validGav)
@@ -69,7 +65,7 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
           <Typography variant="h5" component="h2">
             Number of funds
           </Typography>
-          {(loading && <CircularProgress />) || (
+          {(result.loading && <CircularProgress />) || (
             <>
               <br />
               <Typography variant="body1">
@@ -90,7 +86,7 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
           <Typography variant="h5" component="h2">
             Total assets under management
           </Typography>
-          {(historyLoading && <CircularProgress />) || (
+          {(historyResult.loading && <CircularProgress />) || (
             <>
               <br />
               <Typography variant="body1">
@@ -104,8 +100,17 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
       </Grid>
       <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
-          <Typography variant="h5">Total number of investments into Melon funds</Typography>
-          <TSAreaChart data={investorCounts} dataKeys={['numberOfInvestors']} loading={result.loading} />
+          <Typography variant="h5">Investors</Typography>
+          {(historyResult.loading && <CircularProgress />) || (
+            <>
+              <br />
+              <Typography variant="body1">
+                {investorCounts && investorCounts[investorCounts.length - 1].numberOfInvestors} investors
+              </Typography>
+              <br />
+              <TSAreaChart data={investorCounts} dataKeys={['numberOfInvestors']} />
+            </>
+          )}
         </Paper>
       </Grid>
     </Layout>
