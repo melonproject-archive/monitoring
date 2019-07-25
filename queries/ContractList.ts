@@ -5,7 +5,7 @@ export const ContractsQuery = gql`
     contracts(first: $limit, skip: $skip, orderBy: createdAt) {
       id
       name
-      # description
+      description
       createdAt
       parent {
         id

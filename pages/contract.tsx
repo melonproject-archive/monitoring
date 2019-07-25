@@ -49,9 +49,9 @@ const Contract: React.FunctionComponent<ContractProps> = props => {
               {contract && <EtherscanLink address={contract.id} />}
               {contract && contract.name === 'Hub' && (
                 <>
-                  <br />
+                  &nbsp;
                   <a href={'/fund?address=' + contract.id} className={props.classes.aStyle}>
-                    {contract.id}
+                    (-> Fund details)
                   </a>
                 </>
               )}
