@@ -105,7 +105,7 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
             <>
               <br />
               <Typography variant="body1">
-                {investorCounts && investorCounts[investorCounts.length - 1].numberOfInvestors} investors
+                {investorCounts.length && investorCounts[investorCounts.length - 1].numberOfInvestors} investors
               </Typography>
               <br />
               <TSAreaChart data={investorCounts} dataKeys={['numberOfInvestors']} />
