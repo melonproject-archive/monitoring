@@ -65,7 +65,7 @@ const createDataLink = () => {
   }
 
   const wsLink = new WebSocketLink({
-    uri: 'wss://api.thegraph.com/subgraphs/name/melonproject/melon',
+    uri: 'wss://api.thegraph.com/subgraphs/subgraphs/name/melonproject/melon',
     options: {
       reconnect: true,
     },

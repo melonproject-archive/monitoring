@@ -12,29 +12,45 @@ if (typeof Highcharts === 'object') {
   DarkUnica(Highcharts);
 }
 
-export interface TSChartProps {
-  data: any;
+export interface TSGroupedChartProps {
+  data: any[];
   dataKeys: string[];
+  referenceLine?: boolean;
   height?: number;
-
+  yMin?: any;
+  yMax?: any;
   loading?: boolean;
+  page?: string;
 }
 
 const styles: StyleRulesCallback = theme => ({});
 
-const TSLineChart: React.FunctionComponent<TSChartProps> = props => {
+const TSGroupedChart: React.FunctionComponent<TSGroupedChartProps> = props => {
+  const series = props.dataKeys.map(key => {
+    return {
+      name: key,
+      data: props.data.map(d => {
+        return [parseInt(d.timestamp, 10) * 1000, parseFloat(d[key])];
+      }),
+      type: 'column',
+      dataGrouping: {
+        forced: true,
+        units: [['day', [1]]],
+      },
+    };
+  });
+
   const options = {
-    chart: {
-      type: 'spline',
-    },
     navigator: {
+      baseSeries: 1,
       adaptToUpdatedData: false,
+      series,
     },
     scrollbar: {
       liveRedraw: false,
     },
     rangeSelector: {
-      selected: 1,
+      selected: 0,
     },
     xAxis: {
       type: 'datetime',
@@ -42,33 +58,6 @@ const TSLineChart: React.FunctionComponent<TSChartProps> = props => {
       minTickInterval: 28 * 24 * 3600 * 1000,
       max: now(),
     },
-    yAxis: [
-      {
-        title: {
-          text: 'Price',
-        },
-        height: '33%',
-        lineWidth: 1,
-      },
-      {
-        title: {
-          text: 'Daily change (%)',
-        },
-        top: '33%',
-        height: '33%',
-        offset: 0,
-        lineWidth: 1,
-      },
-      {
-        title: {
-          text: 'Aggregate value',
-        },
-        top: '66%',
-        height: '33%',
-        offset: 0,
-        lineWidth: 1,
-      },
-    ],
     colors: [
       '#00bfff',
       '#1e90ff',
@@ -82,28 +71,7 @@ const TSLineChart: React.FunctionComponent<TSChartProps> = props => {
       '#7798BF',
       '#aaeeee',
     ],
-    series: [
-      {
-        name: 'Price',
-        data: props.data.priceHistory.map(d => {
-          return [parseInt(d.timestamp, 10) * 1000, parseFloat(d.price)];
-        }),
-      },
-      {
-        name: 'Daily change',
-        data: props.data.priceHistory.map(d => {
-          return [parseInt(d.timestamp, 10) * 1000, parseFloat(d.dailyReturn)];
-        }),
-        yAxis: 1,
-      },
-      {
-        name: 'Aggregate value',
-        data: props.data.networkValues.map(d => {
-          return [parseInt(d.timestamp, 10) * 1000, parseFloat(d.amount)];
-        }),
-        yAxis: 2,
-      },
-    ],
+    series,
     credits: {
       enabled: false,
     },
@@ -115,7 +83,7 @@ const TSLineChart: React.FunctionComponent<TSChartProps> = props => {
           },
           chartOptions: {
             chart: {
-              height: 500,
+              height: 300,
             },
             subtitle: {
               text: null,
@@ -135,4 +103,4 @@ const TSLineChart: React.FunctionComponent<TSChartProps> = props => {
   );
 };
 
-export default withStyles(styles)(TSLineChart);
+export default withStyles(styles)(TSGroupedChart);

@@ -18,7 +18,7 @@ import EtherscanLink from '~/components/EtherscanLink';
 import TSLineChart from '~/components/TSLineChart';
 import TooltipNumber from '~/components/TooltipNumber';
 import TradeList from '~/components/TradeList';
-import FundDebugInformation from '~/components/FundDebugInformation';
+import EventList from '~/components/EventList';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -634,7 +634,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           </Link>
         </Grid>
       )}
-      {router && router.query.debug === '1' && <FundDebugInformation address={router.query.address} />}
+      {router && router.query.debug === '1' && <EventList fund={router.query.address} />}
     </Layout>
   );
 };

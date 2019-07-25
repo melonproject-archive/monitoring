@@ -22,6 +22,9 @@ export const EngineQuery = gql`
           event
           amount
         }
+        registry {
+          id
+        }
       }
     }
 

@@ -9,8 +9,8 @@ import { formatDate } from '~/utils/formatDate';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import MaterialTable from 'material-table';
 import { formatThousands } from '~/utils/formatThousands';
-import TSLineChart from '~/components/TSLineChart';
 import TooltipNumber from '~/components/TooltipNumber';
+import TSGroupedChart from '~/components/TSGroupedChart';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -38,7 +38,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
 
   return (
     <Layout title="Engine">
-      <Grid item={true} xs={12} sm={12} md={12}>
+      <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Melon Engine</Typography>
           <br />
@@ -107,10 +107,31 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
           </Grid>
         </Paper>
       </Grid>
+      <Grid item={true} xs={12} sm={12} md={6}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">Engine contract information</Typography>
+          <br />
+          <Grid container={true}>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Engine
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {engineQuantities && engineQuantities.id}
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              Registry
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {engineQuantities && engineQuantities.registry && engineQuantities.registry.id}
+              <div>&nbsp;</div>
+            </Grid>
+          </Grid>
+        </Paper>
+      </Grid>
       <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
-          <Typography variant="h5">Cumulative amgu paid</Typography>
-          <TSLineChart data={amguCumulative} dataKeys={['cumulativeAmount']} />
+          <Typography variant="h5">Amgu paid</Typography>
+          <TSGroupedChart data={amguPayments} dataKeys={['amount']} />
         </Paper>
       </Grid>
       <Grid item={true} xs={12} sm={12} md={12}>

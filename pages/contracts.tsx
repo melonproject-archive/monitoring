@@ -33,6 +33,16 @@ const Contracts: React.FunctionComponent<ContractsProps> = props => {
                 field: 'name',
               },
               {
+                title: 'Description',
+                field: 'description',
+                cellStyle: {
+                  whiteSpace: 'nowrap',
+                },
+                headerStyle: {
+                  whiteSpace: 'nowrap',
+                },
+              },
+              {
                 title: 'Address',
                 field: 'id',
               },
@@ -42,6 +52,12 @@ const Contracts: React.FunctionComponent<ContractsProps> = props => {
                   return formatDate(rowData.createdAt, true);
                 },
                 customSort: (a, b) => sortBigNumber(a, b, 'createdAt'),
+                cellStyle: {
+                  whiteSpace: 'nowrap',
+                },
+                headerStyle: {
+                  whiteSpace: 'nowrap',
+                },
               },
               {
                 title: 'Parent',

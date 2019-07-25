@@ -4,14 +4,15 @@ import * as R from 'ramda';
 import { withStyles } from '@material-ui/styles';
 import { StyleRulesCallback, Grid } from '@material-ui/core';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
-import { FundDebugInformationQuery } from '~/queries/FundDebugInformationQuery';
+import { EventListFundQuery, EventListContractQuery } from '~/queries/EventListQuery';
 import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import EtherscanLink from '../EtherscanLink';
 
-export interface FundDebugInformationProps {
-  address: string;
+export interface EventListProps {
+  fund?: string;
+  contract?: string;
 }
 
 const styles: StyleRulesCallback = theme => ({
@@ -59,33 +60,31 @@ const columns = [
   },
 ];
 
-const FundDebugInformation: React.FunctionComponent<FundDebugInformationProps> = props => {
-  const debugInformationResult = useScrapingQuery(
-    [FundDebugInformationQuery, FundDebugInformationQuery],
-    proceedPaths(['eventHistories']),
-    {
-      ssr: false,
-      variables: {
-        fund: props.address,
-      },
-    },
-  );
+const EventList: React.FunctionComponent<EventListProps> = props => {
+  const query = props.fund ? EventListFundQuery : EventListContractQuery;
 
-  const fundEvents = R.pathOr([], ['data', 'eventHistories'], debugInformationResult);
+  const eventListResult = useScrapingQuery([query, query], proceedPaths(['eventHistories']), {
+    ssr: false,
+    variables: {
+      address: props.fund || props.contract,
+    },
+  });
+
+  const fundEvents = R.pathOr([], ['data', 'eventHistories'], eventListResult);
 
   return (
     <Grid item={true} xs={12} sm={12} md={12}>
       <MaterialTable
         columns={columns as any}
         data={fundEvents}
-        title="DEBUG: events related to fund"
+        title="Events"
         options={{
           paging: false,
         }}
-        isLoading={debugInformationResult.loading}
+        isLoading={eventListResult.loading}
       />
     </Grid>
   );
 };
 
-export default withStyles(styles)(FundDebugInformation);
+export default withStyles(styles)(EventList);

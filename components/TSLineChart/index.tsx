@@ -25,12 +25,6 @@ export interface TSChartProps {
 
 const styles: StyleRulesCallback = theme => ({});
 
-// const lineColor = index => {
-//   const lineColors = ['#00bfff', '#1e90ff', '#87cefa'];
-//   const pick = index % lineColors.length;
-//   return lineColors[pick];
-// };
-
 const TSLineChart: React.FunctionComponent<TSChartProps> = props => {
   const series = props.dataKeys.map(key => {
     return {
@@ -42,6 +36,9 @@ const TSLineChart: React.FunctionComponent<TSChartProps> = props => {
   });
 
   const options = {
+    chart: {
+      type: 'spline',
+    },
     navigator: {
       adaptToUpdatedData: false,
     },
@@ -53,6 +50,7 @@ const TSLineChart: React.FunctionComponent<TSChartProps> = props => {
     },
     xAxis: {
       type: 'datetime',
+      ordinal: false,
       minTickInterval: 28 * 24 * 3600 * 1000,
       max: now(),
     },
@@ -109,30 +107,6 @@ const TSLineChart: React.FunctionComponent<TSChartProps> = props => {
   return (
     // @ts-ignore
     <HighchartsReact key="mychart" highcharts={Highcharts} constructorType={'stockChart'} options={options} />
-
-    // <ResponsiveContainer height={props.height || 200} width="100%">
-    //   {(props.loading && <CircularProgress />) || (
-    //     <LineChart data={props.data}>
-    //       {props.dataKeys.map((key, index) => (
-    //         <Line key={key} type="monotone" dataKey={key} dot={false} stroke={lineColor(index)} />
-    //       ))}
-    //       <XAxis
-    //         dataKey="timestamp"
-    //         type="number"
-    //         domain={['dataMin', 'dataMax']}
-    //         tickFormatter={timeStr => formatDate(timeStr)}
-    //         stroke="#dddddd"
-    //       />
-    //       <YAxis domain={[props.yMin || 0, props.yMax || 'auto']} stroke="#dddddd" />
-    //       {props.referenceLine && <ReferenceLine y={0} stroke="gray" strokeDasharray="3 3" />}
-
-    //       <Tooltip
-    //         labelFormatter={value => 'Date: ' + formatDate(value)}
-    //         contentStyle={{ backgroundColor: '#4A4A4A' }}
-    //       />
-    //     </LineChart>
-    //   )}
-    // </ResponsiveContainer>
   );
 };
 

@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/styles';
 import { StyleRulesCallback } from '@material-ui/core';
 
 import Highcharts from 'highcharts/highstock';
+
 import HighchartsReact from 'highcharts-react-official';
 import DarkUnica from 'highcharts/themes/dark-unica';
 import { now } from 'moment';
@@ -42,7 +43,7 @@ const TSAreaChart: React.FunctionComponent<TSAreaChartProps> = props => {
 
   const options = {
     chart: {
-      type: 'line',
+      type: 'spline',
     },
     navigator: {
       adaptToUpdatedData: false,
@@ -55,6 +56,7 @@ const TSAreaChart: React.FunctionComponent<TSAreaChartProps> = props => {
     },
     xAxis: {
       type: 'datetime',
+      ordinal: false,
       minTickInterval: 28 * 24 * 3600 * 1000,
       max: now(),
     },

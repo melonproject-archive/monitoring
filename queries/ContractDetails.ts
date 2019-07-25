@@ -5,6 +5,7 @@ export const ContractDetailsQuery = gql`
     contract(id: $address) {
       id
       name
+      # description
       createdAt
       parent {
         id
@@ -12,6 +13,9 @@ export const ContractDetailsQuery = gql`
       }
       children {
         id
+        name
+        # description
+        createdAt
       }
     }
   }
