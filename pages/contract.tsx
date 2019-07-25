@@ -47,6 +47,14 @@ const Contract: React.FunctionComponent<ContractProps> = props => {
             </Grid>
             <Grid item={true} xs={6} sm={6} md={8}>
               {contract && <EtherscanLink address={contract.id} />}
+              {contract && contract.name === 'Hub' && (
+                <>
+                  <br />
+                  <a href={'/fund?address=' + contract.id} className={props.classes.aStyle}>
+                    {contract.id}
+                  </a>
+                </>
+              )}
             </Grid>
             <Grid item={true} xs={6} sm={6} md={4}>
               Type
