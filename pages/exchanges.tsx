@@ -46,7 +46,7 @@ const Exchanges: React.FunctionComponent<ExchangesProps> = props => {
   const trading = (exchangeMethodCallResult.data && exchangeMethodCallResult.data.exchangeMethodCalls) || [];
 
   return (
-    <Layout title="Exchanges">
+    <Layout title="Exchanges" page="exchanges">
       <Grid item={true} xs={12} sm={12} md={12}>
         <NoSsr>
           <ExchangeList data={exchanges} loading={result.loading} />

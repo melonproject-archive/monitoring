@@ -48,7 +48,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
   });
 
   return (
-    <Layout title="Investors">
+    <Layout title="Investors" page="investors">
       <Grid item={true} xs={12}>
         <InvestorList />
       </Grid>

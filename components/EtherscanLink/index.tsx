@@ -36,21 +36,15 @@ const styles = {
 };
 
 const EtherscanLink: React.FunctionComponent<EtherscanLinkProps> = props => {
-  //   const startOfAddress = props.address.slice(0, 28);
-  //   const endOfAddress = props.address.slice(-4);
   return (
-    // <div>
     <a
       href={'https://etherscan.io/address/' + props.address}
       target="_blank"
       rel="noopener noreferrer"
       style={styles.link}
     >
-      {/* <span style={styles.start}>{startOfAddress}</span>
-        <span style={styles.end}>{endOfAddress}</span> */}
       {props.address}
     </a>
-    // </div>
   );
 };
 

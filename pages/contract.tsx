@@ -37,7 +37,7 @@ const Contract: React.FunctionComponent<ContractProps> = props => {
   const contract = R.pathOr(undefined, ['data', 'contract'], result);
 
   return (
-    <Layout title="Contract">
+    <Layout title="Contract" page="contract">
       <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Contract information</Typography>

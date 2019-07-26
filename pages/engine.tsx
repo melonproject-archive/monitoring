@@ -37,7 +37,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
   const engineQuantities = R.pathOr({}, ['data', 'state', 'currentEngine'], result) as any;
 
   return (
-    <Layout title="Engine">
+    <Layout title="Melon Engine" page="engine">
       <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Melon Engine</Typography>

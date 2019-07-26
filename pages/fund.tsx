@@ -162,7 +162,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
   });
 
   return (
-    <Layout title="Fund">
+    <Layout title="Fund" page="fund">
       <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">{fund && fund.name}&nbsp;</Typography>

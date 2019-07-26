@@ -5,45 +5,35 @@ import {
   withStyles,
   WithStyles,
   StyleRulesCallback,
-  Card,
-  CardContent,
   Typography,
   CircularProgress,
+  Paper,
 } from '@material-ui/core';
-import { FundListQuery, FundCountQuery, MelonNetworkHistoryQuery } from '~/queries/FundListQuery';
-import FundList from '~/components/FundList';
+import { FundCountQuery, MelonNetworkHistoryQuery } from '~/queries/FundListQuery';
 import Layout from '~/components/Layout';
-import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
-import { hexToString } from '~/utils/hexToString';
 import { formatBigNumber } from '~/utils/formatBigNumber';
+import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
+import TSAreaChart from '~/components/TSAreaChart';
+import { InvestorCountQuery } from '~/queries/InvestorListQuery';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
     padding: theme.spacing(2),
   },
+  aStyle: {
+    textDecoration: 'none',
+    color: 'white',
+  },
 });
 
-type HomeProps = WithStyles<typeof styles>;
+type NetworkProps = WithStyles<typeof styles>;
 
-const Home: React.FunctionComponent<WithStyles<HomeProps>> = props => {
-  const fundListResult = useScrapingQuery([FundListQuery, FundListQuery], proceedPaths(['funds']), {
-    ssr: false,
-  });
-
-  const funds = R.pathOr([], ['data', 'funds'], fundListResult).map(fund => {
-    return {
-      ...fund,
-      versionName: hexToString(fund.version.name),
-    };
-  });
-
+const Network: React.FunctionComponent<NetworkProps> = props => {
   const result = useScrapingQuery([FundCountQuery, FundCountQuery], proceedPaths(['fundCounts']), {
     ssr: false,
   });
 
   const fundCounts = R.pathOr([], ['data', 'fundCounts'], result);
-
-  const loading = result.loading;
 
   const historyResult = useScrapingQuery(
     [MelonNetworkHistoryQuery, MelonNetworkHistoryQuery],
@@ -52,8 +42,6 @@ const Home: React.FunctionComponent<WithStyles<HomeProps>> = props => {
       ssr: false,
     },
   );
-
-  const historyLoading = historyResult.loading;
 
   const melonNetworkHistories = R.pathOr([], ['data', 'melonNetworkHistories'], historyResult)
     .filter(item => item.validGav)
@@ -64,52 +52,69 @@ const Home: React.FunctionComponent<WithStyles<HomeProps>> = props => {
       };
     });
 
+  const investorResult = useScrapingQuery([InvestorCountQuery, InvestorCountQuery], proceedPaths(['investorCounts']), {
+    ssr: false,
+  });
+
+  const investorCounts = R.pathOr([], ['data', 'investorCounts'], investorResult);
+
   return (
-    <Layout title="Funds">
+    <Layout title="Network overview" page="/">
       <Grid item={true} xs={12} sm={12} md={6}>
-        <Card>
-          <CardContent>
-            <Typography variant="h5" component="h2">
-              Number of funds
-            </Typography>
-            {(loading && <CircularProgress />) || (
-              <>
-                <br />
-                <Typography variant="body1" align="right">
-                  {fundCounts &&
-                    parseInt(fundCounts[fundCounts.length - 1].active, 10) +
-                      parseInt(fundCounts[fundCounts.length - 1].nonActive, 10)}{' '}
-                  funds <br />({fundCounts[fundCounts.length - 1].active} active,{' '}
-                  {fundCounts && fundCounts[fundCounts.length - 1].nonActive} not active)
-                </Typography>
-              </>
-            )}
-          </CardContent>
-        </Card>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5" component="h2">
+            Number of funds
+          </Typography>
+          {(result.loading && <CircularProgress />) || (
+            <>
+              <br />
+              <Typography variant="body1">
+                {fundCounts &&
+                  parseInt(fundCounts[fundCounts.length - 1].active, 10) +
+                    parseInt(fundCounts[fundCounts.length - 1].nonActive, 10)}{' '}
+                funds ({fundCounts[fundCounts.length - 1].active} active,{' '}
+                {fundCounts && fundCounts[fundCounts.length - 1].nonActive} not active)
+              </Typography>
+              <br />
+              <TSAreaChart data={fundCounts} dataKeys={['active', 'nonActive']} />
+            </>
+          )}
+        </Paper>
       </Grid>
       <Grid item={true} xs={12} sm={12} md={6}>
-        <Card>
-          <CardContent>
-            <Typography variant="h5" component="h2">
-              Total assets under management
-            </Typography>
-            {(historyLoading && <CircularProgress />) || (
-              <>
-                <br />
-                <Typography variant="body1" align="right">
-                  {melonNetworkHistories && melonNetworkHistories[melonNetworkHistories.length - 1].gav} ETH <br />
-                  &nbsp;
-                </Typography>
-              </>
-            )}
-          </CardContent>
-        </Card>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5" component="h2">
+            Total assets under management
+          </Typography>
+          {(historyResult.loading && <CircularProgress />) || (
+            <>
+              <br />
+              <Typography variant="body1">
+                {melonNetworkHistories && melonNetworkHistories[melonNetworkHistories.length - 1].gav} ETH
+              </Typography>
+              <br />
+              <TSAreaChart data={melonNetworkHistories} dataKeys={['gav']} />
+            </>
+          )}
+        </Paper>
       </Grid>
-      <Grid item={true} xs={12} sm={12} md={12}>
-        <FundList data={funds} loading={fundListResult.loading} />
+      <Grid item={true} xs={12} sm={12} md={6}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">Investors</Typography>
+          {(historyResult.loading && <CircularProgress />) || (
+            <>
+              <br />
+              <Typography variant="body1">
+                {investorCounts.length && investorCounts[investorCounts.length - 1].numberOfInvestors} investors
+              </Typography>
+              <br />
+              <TSAreaChart data={investorCounts} dataKeys={['numberOfInvestors']} />
+            </>
+          )}
+        </Paper>
       </Grid>
     </Layout>
   );
 };
 
-export default withStyles(styles)(Home);
+export default withStyles(styles)(Network);

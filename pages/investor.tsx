@@ -98,7 +98,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
     });
 
   return (
-    <Layout title="Investor">
+    <Layout title="Investor" page="investor">
       <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Investor information</Typography>

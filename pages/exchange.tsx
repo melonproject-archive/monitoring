@@ -32,7 +32,7 @@ const Exchange: React.FunctionComponent<ExchangeProps> = props => {
   const calls = exchange && exchange.calls;
 
   return (
-    <Layout title="Exchange">
+    <Layout title="Exchange" page="exchange">
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">{exchange && exchange.name}&nbsp;</Typography>

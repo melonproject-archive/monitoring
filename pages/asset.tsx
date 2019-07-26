@@ -100,7 +100,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
       .filter(fund => fund.assetValue.amount);
 
   return (
-    <Layout title="Assets">
+    <Layout title="Asset" page="asset">
       <Grid item={true} xs={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">{asset && asset.symbol + ' - ' + asset.name}&nbsp;</Typography>

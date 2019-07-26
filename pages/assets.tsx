@@ -17,7 +17,7 @@ type AssetsProps = WithStyles<typeof styles>;
 
 const Assets: React.FunctionComponent<AssetsProps> = props => {
   return (
-    <Layout title="Asset Universe">
+    <Layout title="Asset Universe" page="assets">
       <Grid item={true} xs={12} sm={12} md={12}>
         <NoSsr>
           <AssetList />

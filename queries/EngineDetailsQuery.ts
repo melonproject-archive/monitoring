@@ -1,5 +1,13 @@
 import gql from 'graphql-tag';
 
+export const LastPriceUpdateQuery = gql`
+  query LastPriceUpdateQuery {
+    state(id: "0x") {
+      lastPriceUpdate
+    }
+  }
+`;
+
 export const EngineQuery = gql`
   query EngineQuery($limit: Int!) {
     state(id: "0x") {

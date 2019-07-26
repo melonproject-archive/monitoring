@@ -16,30 +16,32 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import Link from 'next/link';
+import PriceFeedUpdate from '../PriceFeedUpdate';
 
 // import Navigation from '../Navigation';
 // import { Head  } from 'next/document';
 
 export interface LayoutProps {
   title: string;
+  page: string;
   children: ReactNode;
   classes: any;
 }
 
 const menuItems = [
-  { title: 'Funds', link: '/' },
+  { title: 'Network overview', link: '/' },
+  { title: 'Melon Engine', link: 'engine' },
+  { title: 'Melon Funds', link: 'funds' },
   // { title: 'Managers', link: 'managers' },
   { title: 'Investors', link: 'investors' },
   { title: 'Asset Universe', link: 'assets' },
   { title: 'Exchanges', link: 'exchanges' },
-  { title: 'Melon Network', link: 'network' },
-  { title: 'Engine', link: 'engine' },
   // { title: 'Contracts', link: 'contracts' },
   // { title: 'Addresses', link: 'addresses' },
-  // { title: 'Glossary', link: 'glossary' },
+  { title: 'Glossary', link: 'glossary' },
 ];
 
-const drawerWidth = 200;
+const drawerWidth = 240;
 
 const styles = theme => ({
   root: {
@@ -117,7 +119,7 @@ class Layout extends React.Component<LayoutProps> {
                   width="50"
                   height="50"
                 />{' '}
-                <Typography variant="h6">&nbsp;MLN Network</Typography>
+                <Typography variant="h6">&nbsp;Melon Network</Typography>
               </div>
             </a>
           </Link>
@@ -126,7 +128,7 @@ class Layout extends React.Component<LayoutProps> {
         <List>
           {menuItems.map((item, index) => (
             <Link key={item.title} href={item.link}>
-              <ListItem button={true} component="a" selected={this.props.title === item.title}>
+              <ListItem button={true} component="a" selected={this.props.page === item.link}>
                 <ListItemText primary={item.title} />
               </ListItem>
             </Link>
@@ -150,6 +152,8 @@ class Layout extends React.Component<LayoutProps> {
               https://github.com/melonproject/melon-lab/releases
             </a>{' '}
           </Typography>
+          <p>&nbsp;</p>
+          <PriceFeedUpdate />
         </Paper>
       </>
     );

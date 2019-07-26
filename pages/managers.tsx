@@ -17,7 +17,7 @@ type ManagersProps = WithStyles<typeof styles>;
 
 const Managers: React.FunctionComponent<ManagersProps> = props => {
   return (
-    <Layout title="Managers">
+    <Layout title="Managers" page="managers">
       <Grid item={true} xs={12} sm={12} md={12}>
         <NoSsr>
           <ManagerList />

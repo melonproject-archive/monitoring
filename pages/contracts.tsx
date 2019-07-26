@@ -23,7 +23,7 @@ const Contracts: React.FunctionComponent<ContractsProps> = props => {
   const contracts = (contractResult.data && contractResult.data.contracts) || [];
 
   return (
-    <Layout title="Contracts">
+    <Layout title="Contracts" page="contracts">
       <Grid item={true} xs={12} sm={12} md={12}>
         <NoSsr>
           <MaterialTable
