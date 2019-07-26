@@ -1,4 +1,5 @@
 import React from 'react';
+
 import * as R from 'ramda';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
 import { AmguPaymentsQuery, EngineQuery } from '~/queries/EngineDetailsQuery';
@@ -12,6 +13,7 @@ import { formatThousands } from '~/utils/formatThousands';
 import TooltipNumber from '~/components/TooltipNumber';
 import TSGroupedChart from '~/components/TSGroupedChart';
 import { sortBigNumber } from '~/utils/sortBigNumber';
+import LineItem from '~/components/LineItem';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -43,68 +45,33 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
           <Typography variant="h5">Melon Engine</Typography>
           <br />
           <Grid container={true}>
-            <Grid item={true} xs={4} sm={4} md={4}>
-              <Typography variant="caption">Total Amgu consumed </Typography>
-            </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
-              {engineQuantities && formatThousands(engineQuantities.totalAmguConsumed)}{' '}
-            </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
-              <Typography variant="caption">Amgu Price</Typography>
-            </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
-              {engineQuantities && formatBigNumber(engineQuantities.amguPrice, 18, 7)} MLN{' '}
-            </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
-              <Typography variant="caption">MLN burned</Typography>
-            </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
+            <LineItem name="Total Amgu Consumed">
+              {engineQuantities && formatThousands(engineQuantities.totalAmguConsumed)}
+            </LineItem>
+            <LineItem name="Amgu Price">
+              {engineQuantities && formatBigNumber(engineQuantities.amguPrice, 18, 7)} MLN
+            </LineItem>
+            <LineItem name="MLN burned">
               <TooltipNumber number={engineQuantities.totalMlnBurned} /> MLN
-            </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
-              <Typography variant="caption">Total MLN supply</Typography>
-            </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
-              n/a MLN
-            </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
-              <Typography variant="caption">ETH consumed</Typography>
-            </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
+            </LineItem>
+            <LineItem name="Total MLN supply">&nbsp;</LineItem>
+            <LineItem name="ETH consumed">
               <TooltipNumber number={engineQuantities.totalEtherConsumed} /> ETH
-            </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
-              <Typography variant="caption">Engine premium</Typography>
-            </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
-              {engineQuantities && engineQuantities.premiumPercent}% <div>&nbsp;</div>
-            </Grid>
+            </LineItem>
+            <LineItem name="Engine premium" linebreak={true}>
+              {engineQuantities && engineQuantities.premiumPercent}%
+            </LineItem>
 
-            <Grid item={true} xs={4} sm={4} md={4}>
-              <Typography variant="caption">Frozen ETH</Typography>
-            </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
+            <LineItem name="Frozen ETH">
               <TooltipNumber number={engineQuantities.frozenEther} /> ETH
-            </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
-              <Typography variant="caption">Liquid ETH</Typography>
-            </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
+            </LineItem>
+            <LineItem name="Liquid ETH">
               <TooltipNumber number={engineQuantities.liquidEther} /> ETH
-            </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
-              <Typography variant="caption">Last thaw</Typography>
-            </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
-              {engineQuantities && formatDate(engineQuantities.lastThaw, true)}{' '}
-            </Grid>
-
-            <Grid item={true} xs={4} sm={4} md={4}>
-              <Typography variant="caption">Thawing Delay</Typography>
-            </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
+            </LineItem>
+            <LineItem name="Last thaw">{engineQuantities && formatDate(engineQuantities.lastThaw, true)}</LineItem>
+            <LineItem name="Thawing delay">
               {engineQuantities && engineQuantities.thawingDelay / (24 * 3600)} days
-            </Grid>
+            </LineItem>
           </Grid>
         </Paper>
       </Grid>

@@ -10,6 +10,7 @@ import TooltipNumber from '../TooltipNumber';
 
 export interface AssetListProps {
   data?: any;
+  rates?: any;
 }
 
 const styles: StyleRulesCallback = theme => ({
@@ -17,77 +18,6 @@ const styles: StyleRulesCallback = theme => ({
     padding: theme.spacing(2),
   },
 });
-
-const columns = [
-  {
-    title: 'Symbol',
-    field: 'symbol',
-  },
-  {
-    title: 'Name',
-    field: 'name',
-    cellStyle: {
-      whiteSpace: 'nowrap',
-    },
-    headerStyle: {
-      whiteSpace: 'nowrap',
-    },
-  },
-  {
-    title: 'Last price',
-    render: rowData => {
-      return <TooltipNumber number={rowData.lastPrice} />;
-    },
-    type: 'numeric',
-    customSort: (a, b) => sortBigNumber(a, b, 'lastPrice'),
-    cellStyle: {
-      whiteSpace: 'nowrap',
-    },
-    headerStyle: {
-      whiteSpace: 'nowrap',
-    },
-  },
-  {
-    title: '# funds',
-    field: 'numberOfFunds.length',
-    type: 'numeric',
-    cellStyle: {
-      whiteSpace: 'nowrap',
-    },
-    headerStyle: {
-      whiteSpace: 'nowrap',
-    },
-  },
-  {
-    title: 'Amount',
-    type: 'numeric',
-    render: rowData => {
-      return <TooltipNumber number={rowData.aggregateAmount} decimals={rowData.decimals} />;
-    },
-    customSort: (a, b) => sortBigNumber(a, b, 'aggregateAmount'),
-    cellStyle: {
-      whiteSpace: 'nowrap',
-    },
-    headerStyle: {
-      whiteSpace: 'nowrap',
-    },
-  },
-  {
-    title: 'Amount in ETH',
-    type: 'numeric',
-    defaultSort: 'desc',
-    render: rowData => {
-      return <TooltipNumber number={rowData.aggregateAmountInEth} />;
-    },
-    customSort: (a, b) => sortBigNumber(a, b, 'aggregateAmountInEth'),
-    cellStyle: {
-      whiteSpace: 'nowrap',
-    },
-    headerStyle: {
-      whiteSpace: 'nowrap',
-    },
-  },
-];
 
 const AssetList: React.FunctionComponent<AssetListProps> = props => {
   const result = useQuery(AssetListQuery, {
@@ -104,6 +34,91 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
       aggregateAmountInEth: asset.melonNetworkAssetHistory && asset.melonNetworkAssetHistory[0].assetGav,
     };
   });
+
+  const columns = [
+    {
+      title: 'Symbol',
+      field: 'symbol',
+    },
+    {
+      title: 'Name',
+      field: 'name',
+      cellStyle: {
+        whiteSpace: 'nowrap',
+      },
+      headerStyle: {
+        whiteSpace: 'nowrap',
+      },
+    },
+    {
+      title: 'Last price (pricefeed)',
+      render: rowData => {
+        return <TooltipNumber number={rowData.lastPrice} />;
+      },
+      type: 'numeric',
+      customSort: (a, b) => sortBigNumber(a, b, 'lastPrice'),
+      cellStyle: {
+        whiteSpace: 'nowrap',
+      },
+      headerStyle: {
+        whiteSpace: 'nowrap',
+      },
+    },
+    {
+      title: 'Last price (CoinAPI)',
+      render: rowData => {
+        return props.rates.hasOwnProperty(rowData.symbol) ? (1 / props.rates[rowData.symbol].rate).toFixed(4) : '';
+      },
+      type: 'numeric',
+      customSort: (a, b) => sortBigNumber(a, b, 'lastPrice'),
+      cellStyle: {
+        whiteSpace: 'nowrap',
+      },
+      headerStyle: {
+        whiteSpace: 'nowrap',
+      },
+    },
+    {
+      title: '# funds',
+      field: 'numberOfFunds.length',
+      type: 'numeric',
+      cellStyle: {
+        whiteSpace: 'nowrap',
+      },
+      headerStyle: {
+        whiteSpace: 'nowrap',
+      },
+    },
+    {
+      title: 'Amount',
+      type: 'numeric',
+      render: rowData => {
+        return <TooltipNumber number={rowData.aggregateAmount} decimals={rowData.decimals} />;
+      },
+      customSort: (a, b) => sortBigNumber(a, b, 'aggregateAmount'),
+      cellStyle: {
+        whiteSpace: 'nowrap',
+      },
+      headerStyle: {
+        whiteSpace: 'nowrap',
+      },
+    },
+    {
+      title: 'Amount in ETH',
+      type: 'numeric',
+      defaultSort: 'desc',
+      render: rowData => {
+        return <TooltipNumber number={rowData.aggregateAmountInEth} />;
+      },
+      customSort: (a, b) => sortBigNumber(a, b, 'aggregateAmountInEth'),
+      cellStyle: {
+        whiteSpace: 'nowrap',
+      },
+      headerStyle: {
+        whiteSpace: 'nowrap',
+      },
+    },
+  ];
 
   return (
     <MaterialTable
