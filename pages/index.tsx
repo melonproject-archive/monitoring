@@ -15,6 +15,9 @@ import { formatBigNumber } from '~/utils/formatBigNumber';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import TSAreaChart from '~/components/TSAreaChart';
 import { InvestorCountQuery } from '~/queries/InvestorListQuery';
+import { AmguPaymentsQuery, AmguConsumedQuery } from '~/queries/EngineDetailsQuery';
+import { useQuery } from '@apollo/react-hooks';
+import { formatThousands } from '~/utils/formatThousands';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -23,6 +26,13 @@ const styles: StyleRulesCallback = theme => ({
   aStyle: {
     textDecoration: 'none',
     color: 'white',
+  },
+  logoBox: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  logoDiv: {
+    marginLeft: 'auto',
   },
 });
 
@@ -58,8 +68,40 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
 
   const investorCounts = R.pathOr([], ['data', 'investorCounts'], investorResult);
 
+  const amguResult = useScrapingQuery([AmguPaymentsQuery, AmguPaymentsQuery], proceedPaths(['amguPayments']), {
+    ssr: false,
+  });
+
+  const amguPayments = R.pathOr([], ['data', 'amguPayments'], amguResult);
+
+  const amguCumulative: any[] = [];
+  amguPayments.reduce((carry, item) => {
+    amguCumulative.push({ ...item, cumulativeAmount: carry });
+    return carry + parseInt(item.amount, 10);
+  }, 0);
+
+  const amguSumResult = useQuery(AmguConsumedQuery, { ssr: false });
+  const amguSum = R.pathOr('', ['data', 'state', 'currentEngine', 'totalAmguConsumed'], amguSumResult);
+
   return (
     <Layout title="Network overview" page="/">
+      <Grid item={true} xs={12} sm={12} md={12}>
+        <Paper className={props.classes.paper}>
+          <div className={props.classes.logoBox}>
+            <Typography variant="body1">
+              Melon network monitoring tool - your friendly companion into the Melon ecosystem
+            </Typography>
+            <div className={props.classes.logoDiv}>
+              <img
+                src="https://github.com/melonproject/branding/raw/master/melon/11_Melon_icon.png"
+                alt="MLN logo"
+                width="50"
+                height="50"
+              />
+            </div>
+          </div>
+        </Paper>
+      </Grid>
       <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5" component="h2">
@@ -109,6 +151,19 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
               </Typography>
               <br />
               <TSAreaChart data={investorCounts} dataKeys={['numberOfInvestors']} />
+            </>
+          )}
+        </Paper>
+      </Grid>
+      <Grid item={true} xs={12} sm={12} md={6}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">Amgu consumed</Typography>
+          {(amguResult.loading && <CircularProgress />) || (
+            <>
+              <br />
+              <Typography variant="body1">{amguPayments.length && formatThousands(amguSum)} amgu</Typography>
+              <br />
+              <TSAreaChart data={amguCumulative} dataKeys={['cumulativeAmount']} />
             </>
           )}
         </Paper>

@@ -11,6 +11,7 @@ import MaterialTable from 'material-table';
 import { formatThousands } from '~/utils/formatThousands';
 import TooltipNumber from '~/components/TooltipNumber';
 import TSGroupedChart from '~/components/TSGroupedChart';
+import { sortBigNumber } from '~/utils/sortBigNumber';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -33,104 +34,83 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
     return carry + parseInt(item.amount, 10);
   }, 0);
 
-  const state = R.pathOr({}, ['data', 'state'], result) as any;
   const engineQuantities = R.pathOr({}, ['data', 'state', 'currentEngine'], result) as any;
 
   return (
     <Layout title="Melon Engine" page="engine">
-      <Grid item={true} xs={12} sm={12} md={6}>
+      <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Melon Engine</Typography>
           <br />
           <Grid container={true}>
             <Grid item={true} xs={4} sm={4} md={4}>
-              Amgu Price
-            </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
-              {engineQuantities && formatBigNumber(engineQuantities.amguPrice, 18, 7)} MLN{' '}
-            </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
-              Thawing Delay{' '}
-            </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
-              {engineQuantities && engineQuantities.thawingDelay / (24 * 3600)} days <div>&nbsp;</div>
-            </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
-              Total Amgu consumed{' '}
+              <Typography variant="caption">Total Amgu consumed </Typography>
             </Grid>
             <Grid item={true} xs={8} sm={8} md={8}>
               {engineQuantities && formatThousands(engineQuantities.totalAmguConsumed)}{' '}
             </Grid>
             <Grid item={true} xs={4} sm={4} md={4}>
-              Total Ether consumed{' '}
+              <Typography variant="caption">Amgu Price</Typography>
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              {engineQuantities && formatBigNumber(engineQuantities.amguPrice, 18, 7)} MLN{' '}
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              <Typography variant="caption">MLN burned</Typography>
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              <TooltipNumber number={engineQuantities.totalMlnBurned} /> MLN
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              <Typography variant="caption">Total MLN supply</Typography>
+            </Grid>
+            <Grid item={true} xs={8} sm={8} md={8}>
+              n/a MLN
+            </Grid>
+            <Grid item={true} xs={4} sm={4} md={4}>
+              <Typography variant="caption">ETH consumed</Typography>
             </Grid>
             <Grid item={true} xs={8} sm={8} md={8}>
               <TooltipNumber number={engineQuantities.totalEtherConsumed} /> ETH
             </Grid>
             <Grid item={true} xs={4} sm={4} md={4}>
-              Total MLN burned{' '}
+              <Typography variant="caption">Engine premium</Typography>
             </Grid>
             <Grid item={true} xs={8} sm={8} md={8}>
-              <TooltipNumber number={engineQuantities.totalMlnBurned} /> MLN
-              <div>&nbsp;</div>
+              {engineQuantities && engineQuantities.premiumPercent}% <div>&nbsp;</div>
             </Grid>
+
             <Grid item={true} xs={4} sm={4} md={4}>
-              Frozen Ether{' '}
+              <Typography variant="caption">Frozen ETH</Typography>
             </Grid>
             <Grid item={true} xs={8} sm={8} md={8}>
               <TooltipNumber number={engineQuantities.frozenEther} /> ETH
             </Grid>
             <Grid item={true} xs={4} sm={4} md={4}>
-              Liquid Ether{' '}
+              <Typography variant="caption">Liquid ETH</Typography>
             </Grid>
             <Grid item={true} xs={8} sm={8} md={8}>
               <TooltipNumber number={engineQuantities.liquidEther} /> ETH
             </Grid>
             <Grid item={true} xs={4} sm={4} md={4}>
-              Last Thaw
+              <Typography variant="caption">Last thaw</Typography>
             </Grid>
             <Grid item={true} xs={8} sm={8} md={8}>
               {engineQuantities && formatDate(engineQuantities.lastThaw, true)}{' '}
             </Grid>
+
             <Grid item={true} xs={4} sm={4} md={4}>
-              Current premium percent
+              <Typography variant="caption">Thawing Delay</Typography>
             </Grid>
             <Grid item={true} xs={8} sm={8} md={8}>
-              {engineQuantities && engineQuantities.premiumPercent}% <div>&nbsp;</div>
-            </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
-              Pricefeed last updated
-            </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
-              {state && formatDate(state.lastPriceUpdate, true)}{' '}
-            </Grid>
-          </Grid>
-        </Paper>
-      </Grid>
-      <Grid item={true} xs={12} sm={12} md={6}>
-        <Paper className={props.classes.paper}>
-          <Typography variant="h5">Engine contract information</Typography>
-          <br />
-          <Grid container={true}>
-            <Grid item={true} xs={4} sm={4} md={4}>
-              Engine
-            </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
-              {engineQuantities && engineQuantities.id}
-            </Grid>
-            <Grid item={true} xs={4} sm={4} md={4}>
-              Registry
-            </Grid>
-            <Grid item={true} xs={8} sm={8} md={8}>
-              {engineQuantities && engineQuantities.registry && engineQuantities.registry.id}
-              <div>&nbsp;</div>
+              {engineQuantities && engineQuantities.thawingDelay / (24 * 3600)} days
             </Grid>
           </Grid>
         </Paper>
       </Grid>
       <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
-          <Typography variant="h5">Amgu paid</Typography>
+          <Typography variant="h5">Amgu consumed</Typography>
           <TSGroupedChart data={amguPayments} dataKeys={['amount']} />
         </Paper>
       </Grid>
@@ -143,6 +123,8 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
                 render: rowData => {
                   return formatDate(rowData.timestamp, true);
                 },
+                customSort: (a, b) => sortBigNumber(a, b, 'timestamp'),
+                defaultSort: 'desc',
                 cellStyle: {
                   whiteSpace: 'nowrap',
                 },
@@ -160,12 +142,14 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
                   return <TooltipNumber number={rowData.amount} />;
                 },
                 type: 'numeric',
+                sorting: false,
               },
               {
                 title: 'Asset',
                 render: rowData => {
                   return rowData.event === 'Thaw' ? 'ETH' : 'MLN';
                 },
+                sorting: false,
               },
             ]}
             data={engineQuantities && engineQuantities.etherEvents}
@@ -173,6 +157,10 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
             options={{
               paging: false,
               search: false,
+            }}
+            onRowClick={(_, rowData) => {
+              const url = 'https://etherscan.io/tx/' + rowData.id;
+              window.open(url, '_blank');
             }}
           />
         </NoSsr>

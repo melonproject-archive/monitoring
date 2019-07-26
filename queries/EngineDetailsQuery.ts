@@ -8,6 +8,17 @@ export const LastPriceUpdateQuery = gql`
   }
 `;
 
+export const AmguConsumedQuery = gql`
+  query AmguConsumedQuery {
+    state(id: "0x") {
+      currentEngine {
+        amguPrice
+        totalAmguConsumed
+      }
+    }
+  }
+`;
+
 export const EngineQuery = gql`
   query EngineQuery($limit: Int!) {
     state(id: "0x") {
@@ -26,12 +37,10 @@ export const EngineQuery = gql`
         premiumPercent
         lastUpdate
         etherEvents(orderBy: timestamp) {
+          id
           timestamp
           event
           amount
-        }
-        registry {
-          id
         }
       }
     }
