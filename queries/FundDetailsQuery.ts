@@ -104,6 +104,10 @@ export const FundDetailsQuery = gql`
       }
       trading {
         id
+        exchanges {
+          id
+          name
+        }
         calls(orderBy: timestamp, orderDirection: "desc") {
           timestamp
           exchange {

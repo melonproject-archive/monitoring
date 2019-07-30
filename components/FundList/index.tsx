@@ -108,6 +108,10 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
       render: rowData => {
         return priceChange(rowData.calculationsHistory[0].sharePrice, rowData.calculationsHistory[1].sharePrice);
       },
+      customSort: (a, b) =>
+        a.calculationsHistory[0].sharePrice -
+        a.calculationsHistory[1].sharePrice -
+        (b.calculationsHistory[0].sharePrice - b.calculationsHistory[1].sharePrice),
     },
     {
       title: '# shares',
@@ -156,7 +160,8 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
       data={props.data}
       title="Funds"
       options={{
-        paging: false,
+        paging: true,
+        pageSize: 20,
         doubleHorizontalScroll: true,
       }}
       isLoading={props.loading}

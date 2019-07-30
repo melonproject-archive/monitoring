@@ -101,7 +101,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
   const lastReturn =
     normalizedNumbers && normalizedNumbers.length > 0 && normalizedNumbers[normalizedNumbers.length - 1].dailyReturn;
 
-  const sharePriceChangeColor = lastReturn > 0 ? 'secondary' : 'error';
+  const sharePriceChangeColor = lastReturn > 0 ? 'secondary' : lastReturn < 0 ? 'error' : 'primary';
 
   const maxSharePrice = Math.max(...normalizedNumbers.map(item => item.sharePrice));
   const minSharePrice = Math.min(...normalizedNumbers.map(item => item.sharePrice));
@@ -232,7 +232,17 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               {returnSinceInception && returnSinceInception.toFixed(2)}%
             </LineItem>
             <LineItem name="Annualized return">{annualizedReturn && annualizedReturn.toFixed(2)}%</LineItem>
-            <LineItem name="Volatility">{volatility && volatility.toFixed(2)}%</LineItem>
+            <LineItem name="Volatility">
+              {volatility && volatility.toFixed(2)}%<div>&nbsp;</div>
+            </LineItem>
+            <LineItem name="Authorized exchanges">
+              {fund &&
+                fund.trading.exchanges
+                  .map(exchange => {
+                    return exchange.name;
+                  })
+                  .join(', ')}
+            </LineItem>
           </Grid>
         </Paper>
       </Grid>

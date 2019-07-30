@@ -31,7 +31,7 @@ const menuItems = [
   { title: 'Network overview', link: '/' },
   { title: 'Melon Engine', link: 'engine' },
   { title: 'Melon Funds', link: 'funds' },
-  // { title: 'Managers', link: 'managers' },
+  { title: 'Managers', link: 'managers' },
   { title: 'Investors', link: 'investors' },
   { title: 'Asset Universe', link: 'assets' },
   { title: 'Exchanges', link: 'exchanges' },
