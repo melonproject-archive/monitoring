@@ -157,6 +157,7 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
       title="Funds"
       options={{
         paging: false,
+        doubleHorizontalScroll: true,
       }}
       isLoading={props.loading}
       onRowClick={(_, rowData) => {

@@ -108,7 +108,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
 
   const maxNav = Math.max(...normalizedNumbers.map(item => item.nav), 0);
   const maxGav = Math.max(...normalizedNumbers.map(item => item.gav), 0);
-  const maxSupply = Math.max(...normalizedNumbers.map(item => item.totalSupply), 0);
+  // const maxSupply = Math.max(...normalizedNumbers.map(item => item.totalSupply), 0);
 
   const returnSinceInception =
     normalizedNumbers &&
@@ -140,7 +140,16 @@ const Fund: React.FunctionComponent<FundProps> = props => {
 
   const feesPaidOut = R.pathOr([], ['feeManager', 'feeRewardHistory'], fund);
 
-  const policies = fund && fund.policyManager && fund.policyManager.policies;
+  const policies =
+    fund &&
+    fund.policyManager &&
+    fund.policyManager.policies.map(policy => {
+      const category =
+        policy.identifier === 'UserWhitelist' || policy.identifier === 'UserBlackList'
+          ? 'Compliance'
+          : 'Risk Management';
+      return { ...policy, category };
+    });
 
   const contractNames = [
     { name: 'Accounting', field: 'accounting' },
@@ -236,6 +245,10 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 field: 'identifier',
               },
               {
+                title: 'Category',
+                field: 'category',
+              },
+              {
                 title: 'Parameters',
                 type: 'numeric',
                 render: rowData => {
@@ -256,7 +269,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               },
             ]}
             data={policies}
-            title="Risk management &amp; compliance policies"
+            title="Fund ruleset"
             isLoading={result.loading}
             options={{
               paging: false,
@@ -340,7 +353,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         </Paper>
       </Grid>
 
-      <Grid item={true} xs={12} sm={12} md={6}>
+      {/* <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Daily share price change (%)</Typography>
 
@@ -351,7 +364,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
             loading={result.loading}
           />
         </Paper>
-      </Grid>
+      </Grid> */}
 
       <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
@@ -360,12 +373,12 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         </Paper>
       </Grid>
 
-      <Grid item={true} xs={12} sm={12} md={6}>
+      {/* <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5"># Shares</Typography>
           <TSLineChart data={normalizedNumbers} dataKeys={['totalSupply']} yMax={maxSupply} loading={result.loading} />
         </Paper>
-      </Grid>
+      </Grid> */}
 
       <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
@@ -377,11 +390,78 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           />
         </Paper>
       </Grid>
+
       <Grid item={true} xs={12} sm={12} md={6}>
+        <NoSsr>
+          <MaterialTable
+            columns={[
+              {
+                title: 'Time',
+                render: rowData => {
+                  return formatDate(rowData.timestamp, true);
+                },
+                cellStyle: {
+                  whiteSpace: 'nowrap',
+                },
+                headerStyle: {
+                  whiteSpace: 'nowrap',
+                },
+              },
+              {
+                title: 'Shares',
+                type: 'numeric',
+                render: rowData => {
+                  return <TooltipNumber number={rowData.shares} />;
+                },
+              },
+            ]}
+            data={feesPaidOut}
+            title="Fees paid out"
+            isLoading={result.loading}
+            options={{
+              paging: false,
+              search: false,
+            }}
+          />
+        </NoSsr>
+      </Grid>
+
+      {/* <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Fees in denomination asset</Typography>
           <TSLineChart data={normalizedNumbers} dataKeys={['feesInDenominationAsset']} loading={result.loading} />
         </Paper>
+      </Grid> */}
+
+      <Grid item={true} xs={12} sm={12} md={12}>
+        <NoSsr>
+          <MaterialTable
+            columns={[
+              {
+                title: 'Investor',
+                field: 'owner.id',
+              },
+              {
+                title: 'Shares',
+                render: rowData => {
+                  return <TooltipNumber number={rowData.shares} />;
+                },
+                type: 'numeric',
+              },
+            ]}
+            data={investments}
+            title="Current investors"
+            options={{
+              paging: false,
+              search: false,
+            }}
+            isLoading={result.loading}
+            onRowClick={(_, rowData) => {
+              const url = '/investor?address=' + rowData.owner.id;
+              window.open(url, '_self');
+            }}
+          />
+        </NoSsr>
       </Grid>
 
       <Grid item={true} xs={12} sm={12} md={12}>
@@ -445,84 +525,8 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           />
         </NoSsr>
       </Grid>
-      <Grid item={true} xs={12} sm={12} md={6}>
-        <NoSsr>
-          <MaterialTable
-            columns={[
-              {
-                title: 'Investor',
-                field: 'owner.id',
-              },
-              {
-                title: 'Shares',
-                render: rowData => {
-                  return <TooltipNumber number={rowData.shares} />;
-                },
-                type: 'numeric',
-              },
-            ]}
-            data={investments}
-            title="Investors"
-            options={{
-              paging: false,
-              search: false,
-            }}
-            isLoading={result.loading}
-            onRowClick={(_, rowData) => {
-              const url = '/investor?address=' + rowData.owner.id;
-              window.open(url, '_self');
-            }}
-          />
-        </NoSsr>
-      </Grid>
-      <Grid item={true} xs={12} sm={12} md={6}>
-        <NoSsr>
-          <MaterialTable
-            columns={[
-              {
-                title: 'Time',
-                render: rowData => {
-                  return formatDate(rowData.timestamp, true);
-                },
-                cellStyle: {
-                  whiteSpace: 'nowrap',
-                },
-                headerStyle: {
-                  whiteSpace: 'nowrap',
-                },
-              },
-              {
-                title: 'Shares',
-                type: 'numeric',
-                render: rowData => {
-                  return <TooltipNumber number={rowData.shares} />;
-                },
-              },
-            ]}
-            data={feesPaidOut}
-            title="Fees paid out"
-            isLoading={result.loading}
-            options={{
-              paging: false,
-              search: false,
-            }}
-          />
-        </NoSsr>
-      </Grid>
 
-      <Grid item={true} xs={12} sm={12} md={12}>
-        <NoSsr>
-          <TradeList
-            data={fund && fund.trading.calls}
-            loading={result.loading}
-            hideFund={true}
-            hideExchange={false}
-            linkFile="exchange"
-            linkPath={['exchange', 'id']}
-          />
-        </NoSsr>
-      </Grid>
-      {investmentRequests && (
+      {investmentRequests.length > 0 && (
         <Grid item={true} xs={12} sm={12} md={12}>
           <NoSsr>
             <MaterialTable
@@ -593,6 +597,20 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           </NoSsr>
         </Grid>
       )}
+
+      <Grid item={true} xs={12} sm={12} md={12}>
+        <NoSsr>
+          <TradeList
+            data={fund && fund.trading.calls}
+            loading={result.loading}
+            hideFund={true}
+            hideExchange={false}
+            linkFile="exchange"
+            linkPath={['exchange', 'id']}
+          />
+        </NoSsr>
+      </Grid>
+
       {(router && router.query.debug === '1') || (
         <Grid item={true} xs={12} sm={12} md={12}>
           <Link href={debugLink} className={props.classes.debug}>
