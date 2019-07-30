@@ -19,6 +19,7 @@ import TSLineChart from '~/components/TSLineChart';
 import TooltipNumber from '~/components/TooltipNumber';
 import TradeList from '~/components/TradeList';
 import EventList from '~/components/EventList';
+import LineItem from '~/components/LineItem';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -91,6 +92,16 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       };
     },
   );
+
+  const lastSharePriceChange =
+    normalizedNumbers &&
+    normalizedNumbers.length > 0 &&
+    normalizedNumbers[normalizedNumbers.length - 1].sharePrice -
+      normalizedNumbers[normalizedNumbers.length - 2].sharePrice;
+  const lastReturn =
+    normalizedNumbers && normalizedNumbers.length > 0 && normalizedNumbers[normalizedNumbers.length - 1].dailyReturn;
+
+  const sharePriceChangeColor = lastReturn > 0 ? 'secondary' : 'error';
 
   const maxSharePrice = Math.max(...normalizedNumbers.map(item => item.sharePrice));
   const minSharePrice = Math.min(...normalizedNumbers.map(item => item.sharePrice));
@@ -165,105 +176,96 @@ const Fund: React.FunctionComponent<FundProps> = props => {
     <Layout title="Fund" page="fund">
       <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
-          <Typography variant="h5">{fund && fund.name}&nbsp;</Typography>
+          <Typography variant="h5">Fund Factsheet</Typography>
           <br />
           <Grid container={true}>
-            <Grid item={true} xs={6} sm={6} md={4}>
-              Protocol version
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={8}>
-              {fund && hexToString(fund.version.name)}
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={4}>
-              Address
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={8} className={props.classes.truncate}>
+            <LineItem name="Fund name">{fund && fund.name}</LineItem>
+            <LineItem name="Protocol version">{fund && hexToString(fund.version.name)}</LineItem>
+            <LineItem name="Fund address">
               <EtherscanLink address={fund && fund.id} />
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={4}>
-              Manager
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={8} className={props.classes.truncate}>
+            </LineItem>
+            <LineItem name="Manager address">
               <EtherscanLink address={fund && fund.manager.id} />
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={4}>
-              Created at
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={8}>
-              {fund && formatDate(fund.createdAt, true)}
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={4}>
-              Active
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={8}>
-              {fund && fund.isShutdown ? 'No' : 'Yes'}
+            </LineItem>
+            <LineItem name="Inception">{fund && formatDate(fund.createdAt, true)}</LineItem>
+            <LineItem name="Status">
+              {fund && fund.isShutdown ? 'Inactive' : 'Active'}
               {fund && fund.isShutdown && <> (deactivated: {fund.shutdownAt && formatDate(fund.shutdownAt)})</>}
               <div>&nbsp;</div>
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={4}>
-              GAV
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={8}>
-              {fund && <TooltipNumber number={fund.gav} />}
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={4}>
-              NAV
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={8}>
-              {fund && <TooltipNumber number={fund.nav} />}
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={4}>
-              # shares
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={8}>
-              {fund && <TooltipNumber number={fund.totalSupply} />}
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={4}>
-              Share price
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={8}>
-              {fund && <TooltipNumber number={fund.sharePrice} />}
+            </LineItem>
+            <LineItem name="GAV">{fund && <TooltipNumber number={fund.gav} />} ETH</LineItem>
+            <LineItem name="NAV">{fund && <TooltipNumber number={fund.nav} />} ETH</LineItem>
+            <LineItem name="# shares">{fund && <TooltipNumber number={fund.totalSupply} />} shares</LineItem>
+            <LineItem name="Share price">
+              {fund && <TooltipNumber number={fund.sharePrice} />}{' '}
+              <Typography variant="caption" color={sharePriceChangeColor}>
+                {lastSharePriceChange && lastSharePriceChange > 0 && '+'}
+                {lastSharePriceChange && lastSharePriceChange.toFixed(4)} ({lastReturn && lastReturn > 0 && '+'}
+                {lastReturn}%)
+              </Typography>
               <div>&nbsp;</div>
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={4}>
-              Management fee
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={8}>
+            </LineItem>
+
+            <LineItem name="Management fee">
               {fund && formatBigNumber(fund.feeManager.managementFee.managementFeeRate + '00', 18, 2)}%
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={4}>
-              Performance fee
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={8}>
+            </LineItem>
+            <LineItem name="Performance fee">
               {fund && formatBigNumber(fund.feeManager.performanceFee.performanceFeeRate + '00', 18, 2)}%{' '}
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={4}>
-              Performance fee period
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={8}>
-              {fund && fund.feeManager.performanceFee.performanceFeePeriod / (60 * 60 * 24)} days <div>&nbsp;</div>
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={4}>
-              Return since inception
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={8}>
-              {returnSinceInception && returnSinceInception.toFixed(2)}%{' '}
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={4}>
-              Annualized return{' '}
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={8}>
-              {annualizedReturn && annualizedReturn.toFixed(2)}%{' '}
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={4}>
-              Volatility
-            </Grid>
-            <Grid item={true} xs={6} sm={6} md={8}>
-              {volatility && volatility.toFixed(2)}%{' '}
-            </Grid>
+            </LineItem>
+            <LineItem name="Performance fee period">
+              {fund && fund.feeManager.performanceFee.performanceFeePeriod / (60 * 60 * 24)} days
+            </LineItem>
+            <LineItem name="Start of next perfomance fee period">
+              (to be implemented)<div>&nbsp;</div>
+            </LineItem>
+
+            <LineItem name="Return since inception">
+              {returnSinceInception && returnSinceInception.toFixed(2)}%
+            </LineItem>
+            <LineItem name="Annualized return">{annualizedReturn && annualizedReturn.toFixed(2)}%</LineItem>
+            <LineItem name="Volatility">{volatility && volatility.toFixed(2)}%</LineItem>
           </Grid>
         </Paper>
       </Grid>
+      <Grid item={true} xs={12} sm={12} md={6}>
+        <NoSsr>
+          <MaterialTable
+            columns={[
+              {
+                title: 'Policy',
+                field: 'identifier',
+              },
+              {
+                title: 'Parameters',
+                type: 'numeric',
+                render: rowData => {
+                  switch (rowData.identifier) {
+                    case 'Max concentration':
+                      return formatBigNumber(rowData.maxConcentration + '00', 18, 0) + '%';
+                    case 'Price tolerance':
+                      return formatBigNumber(rowData.priceTolerance + '00', 18, 0) + '%';
+                    case 'Max positions':
+                      return rowData.maxPositions;
+                    case 'Asset whitelist':
+                      return rowData.assetWhiteList
+                        .map(asset => asset.symbol)
+                        .sort()
+                        .join(', ');
+                  }
+                },
+              },
+            ]}
+            data={policies}
+            title="Risk management &amp; compliance policies"
+            isLoading={result.loading}
+            options={{
+              paging: false,
+              search: false,
+            }}
+          />
+        </NoSsr>
+      </Grid>
+
       <Grid item={true} xs={12} sm={12} md={6}>
         <NoSsr>
           <MaterialTable
@@ -290,7 +292,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               },
             ]}
             data={currentHoldings}
-            title="Assets in portfolio"
+            title="Portfolio holdings"
             options={{
               paging: false,
               search: false,
@@ -303,6 +305,28 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           />
         </NoSsr>
       </Grid>
+      <Grid item={true} xs={12} sm={12} md={6}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">Fund component contracts</Typography>
+          <br />
+          <Grid container={true}>
+            {contractAddresses &&
+              contractAddresses.map(a => {
+                return (
+                  <>
+                    <Grid item={true} xs={6} sm={6} md={4} key={a.name}>
+                      {a.name}
+                    </Grid>
+                    <Grid item={true} xs={6} sm={6} md={8} className={props.classes.truncate} key={a.address}>
+                      <EtherscanLink address={a.address} />
+                    </Grid>
+                  </>
+                );
+              })}
+          </Grid>
+        </Paper>
+      </Grid>
+
       <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Share Price</Typography>
@@ -485,65 +509,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           />
         </NoSsr>
       </Grid>
-      <Grid item={true} xs={12} sm={12} md={6}>
-        <NoSsr>
-          <MaterialTable
-            columns={[
-              {
-                title: 'Policy',
-                field: 'identifier',
-              },
-              {
-                title: 'Parameters',
-                type: 'numeric',
-                render: rowData => {
-                  switch (rowData.identifier) {
-                    case 'Max concentration':
-                      return formatBigNumber(rowData.maxConcentration + '00', 18, 0) + '%';
-                    case 'Price tolerance':
-                      return formatBigNumber(rowData.priceTolerance + '00', 18, 0) + '%';
-                    case 'Max positions':
-                      return rowData.maxPositions;
-                    case 'Asset whitelist':
-                      return rowData.assetWhiteList
-                        .map(asset => asset.symbol)
-                        .sort()
-                        .join(', ');
-                  }
-                },
-              },
-            ]}
-            data={policies}
-            title="Risk management &amp; compliance policies"
-            isLoading={result.loading}
-            options={{
-              paging: false,
-              search: false,
-            }}
-          />
-        </NoSsr>
-      </Grid>
-      <Grid item={true} xs={12} sm={12} md={6}>
-        <Paper className={props.classes.paper}>
-          <Typography variant="h5">Contract addresses</Typography>
-          <br />
-          <Grid container={true}>
-            {contractAddresses &&
-              contractAddresses.map(a => {
-                return (
-                  <>
-                    <Grid item={true} xs={6} sm={6} md={4} key={a.name}>
-                      {a.name}
-                    </Grid>
-                    <Grid item={true} xs={6} sm={6} md={8} className={props.classes.truncate} key={a.address}>
-                      <EtherscanLink address={a.address} />
-                    </Grid>
-                  </>
-                );
-              })}
-          </Grid>
-        </Paper>
-      </Grid>
+
       <Grid item={true} xs={12} sm={12} md={12}>
         <NoSsr>
           <TradeList

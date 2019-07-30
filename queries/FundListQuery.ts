@@ -41,6 +41,9 @@ export const FundListQuery = gql`
           symbol
         }
       }
+      calculationsHistory(orderBy: timestamp, orderDirection: desc, first: 2) {
+        sharePrice
+      }
     }
   }
 `;

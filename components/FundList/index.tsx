@@ -3,11 +3,12 @@ import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
 
 import { withStyles } from '@material-ui/styles';
-import { StyleRulesCallback, Tooltip } from '@material-ui/core';
+import { StyleRulesCallback, Tooltip, Typography } from '@material-ui/core';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import TooltipNumber from '../TooltipNumber';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { formatThousands } from '~/utils/formatThousands';
+import BigNumber from 'bignumber.js';
 
 export interface FundListProps {
   data?: any;
@@ -19,9 +20,26 @@ const styles: StyleRulesCallback = theme => ({
   paper: {
     padding: theme.spacing(2),
   },
+  positiveChange: {
+    color: '#ff0000',
+  },
 });
 
 const FundList: React.FunctionComponent<FundListProps> = props => {
+  const priceChange = (today, yesterday) => {
+    const bnToday = new BigNumber(today);
+    const bnYesterday = new BigNumber(yesterday);
+    const color = bnToday.gt(bnYesterday) ? 'secondary' : bnToday.lt(bnYesterday) ? 'error' : 'primary';
+    const prefix = bnToday.gt(bnYesterday) ? '+' : '';
+
+    return (
+      <Typography variant="body2" color={color}>
+        {prefix}
+        <TooltipNumber number={new BigNumber(today).minus(new BigNumber(yesterday)).toString()} />
+      </Typography>
+    );
+  };
+
   const columns = [
     {
       title: 'Name',
@@ -83,6 +101,12 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
       defaultSort: 'desc',
       headerStyle: {
         whiteSpace: 'nowrap',
+      },
+    },
+    {
+      title: 'Change',
+      render: rowData => {
+        return priceChange(rowData.calculationsHistory[0].sharePrice, rowData.calculationsHistory[1].sharePrice);
       },
     },
     {
