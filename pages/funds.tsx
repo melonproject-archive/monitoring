@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
 import {
   Grid,
@@ -16,6 +16,8 @@ import Layout from '~/components/Layout';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import { hexToString } from '~/utils/hexToString';
 import { formatBigNumber } from '~/utils/formatBigNumber';
+import { fetchSingleCoinApiRate } from '~/utils/coinApi';
+import { formatThousands } from '~/utils/formatThousands';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -23,9 +25,25 @@ const styles: StyleRulesCallback = theme => ({
   },
 });
 
+const getUSDRate = () => {
+  const [rate, setRate] = useState({ rate: 1 });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const r = await fetchSingleCoinApiRate();
+      setRate(r);
+    };
+
+    fetchData();
+  }, []);
+  return rate;
+};
+
 type HomeProps = WithStyles<typeof styles>;
 
 const Home: React.FunctionComponent<WithStyles<HomeProps>> = props => {
+  const rate = getUSDRate();
+
   const fundListResult = useScrapingQuery([FundListQuery, FundListQuery], proceedPaths(['funds']), {
     ssr: false,
   });
@@ -64,6 +82,9 @@ const Home: React.FunctionComponent<WithStyles<HomeProps>> = props => {
       };
     });
 
+  const ethAum = melonNetworkHistories.length && melonNetworkHistories[melonNetworkHistories.length - 1].gav;
+  const usdAum = formatThousands((ethAum && ethAum * rate.rate).toFixed(0));
+
   return (
     <Layout title="Melon Funds" page="funds">
       <Grid item={true} xs={12} sm={12} md={6}>
@@ -97,8 +118,9 @@ const Home: React.FunctionComponent<WithStyles<HomeProps>> = props => {
               <>
                 <br />
                 <Typography variant="body1" align="right">
-                  {melonNetworkHistories && melonNetworkHistories[melonNetworkHistories.length - 1].gav} ETH <br />
-                  &nbsp;
+                  {ethAum} ETH
+                  <br />
+                  {usdAum} USD
                 </Typography>
               </>
             )}

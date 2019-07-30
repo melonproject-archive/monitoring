@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
 import {
   Grid,
@@ -18,6 +18,7 @@ import { InvestorCountQuery } from '~/queries/InvestorListQuery';
 import { AmguPaymentsQuery, AmguConsumedQuery } from '~/queries/EngineDetailsQuery';
 import { useQuery } from '@apollo/react-hooks';
 import { formatThousands } from '~/utils/formatThousands';
+import { fetchSingleCoinApiRate } from '~/utils/coinApi';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -38,7 +39,22 @@ const styles: StyleRulesCallback = theme => ({
 
 type NetworkProps = WithStyles<typeof styles>;
 
+const getUSDRate = () => {
+  const [rate, setRate] = useState({ rate: 1 });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const r = await fetchSingleCoinApiRate();
+      setRate(r);
+    };
+
+    fetchData();
+  }, []);
+  return rate;
+};
+
 const Network: React.FunctionComponent<NetworkProps> = props => {
+  const rate = getUSDRate();
   const result = useScrapingQuery([FundCountQuery, FundCountQuery], proceedPaths(['fundCounts']), {
     ssr: false,
   });
@@ -82,6 +98,9 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
 
   const amguSumResult = useQuery(AmguConsumedQuery, { ssr: false });
   const amguSum = R.pathOr('', ['data', 'state', 'currentEngine', 'totalAmguConsumed'], amguSumResult);
+
+  const ethAum = melonNetworkHistories.length && melonNetworkHistories[melonNetworkHistories.length - 1].gav;
+  const usdAum = formatThousands((ethAum && ethAum * rate.rate).toFixed(0));
 
   return (
     <Layout title="Network overview" page="/">
@@ -132,7 +151,7 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
             <>
               <br />
               <Typography variant="body1">
-                {melonNetworkHistories && melonNetworkHistories[melonNetworkHistories.length - 1].gav} ETH
+                {ethAum} ETH / {usdAum} USD
               </Typography>
               <br />
               <TSAreaChart data={melonNetworkHistories} dataKeys={['gav']} />
