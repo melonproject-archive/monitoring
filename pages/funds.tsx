@@ -23,6 +23,10 @@ const styles: StyleRulesCallback = theme => ({
   paper: {
     padding: theme.spacing(2),
   },
+  aStyle: {
+    textDecoration: 'none',
+    color: 'white',
+  },
 });
 
 const getUSDRate = () => {
@@ -41,7 +45,7 @@ const getUSDRate = () => {
 
 type HomeProps = WithStyles<typeof styles>;
 
-const Home: React.FunctionComponent<WithStyles<HomeProps>> = props => {
+const Home: React.FunctionComponent<HomeProps> = props => {
   const rate = getUSDRate();
 
   const fundListResult = useScrapingQuery([FundListQuery, FundListQuery], proceedPaths(['funds']), {
@@ -128,7 +132,20 @@ const Home: React.FunctionComponent<WithStyles<HomeProps>> = props => {
         </Card>
       </Grid>
       <Grid item={true} xs={12} sm={12} md={12}>
-        <FundList data={funds} loading={fundListResult.loading} />
+        <Card>
+          <CardContent>
+            <Typography variant="body1">
+              To set up a fund on the melon network or to invest into a fund, please download the latest Melon manager
+              interface from{' '}
+              <a href="https://github.com/melonproject/melon-lab/releases" className={props.classes.aStyle}>
+                https://github.com/melonproject/melon-lab/releases
+              </a>
+            </Typography>
+          </CardContent>
+        </Card>
+      </Grid>
+      <Grid item={true} xs={12} sm={12} md={12}>
+        <FundList data={funds} loading={fundListResult.loading} ethusd={rate.rate} />
       </Grid>
     </Layout>
   );

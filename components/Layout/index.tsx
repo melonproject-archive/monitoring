@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 import {
   Grid,
-  Paper,
   withStyles,
   Typography,
   Divider,
@@ -123,19 +122,19 @@ class Layout extends React.Component<LayoutProps> {
               </div>
             </a>
           </Link>
+          <Divider />
+          <List>
+            {menuItems.map((item, index) => (
+              <Link key={item.title} href={item.link}>
+                <ListItem button={true} component="a" selected={this.props.page === item.link}>
+                  <ListItemText primary={item.title} />
+                </ListItem>
+              </Link>
+            ))}
+          </List>
         </div>
-        <Divider />
-        <List>
-          {menuItems.map((item, index) => (
-            <Link key={item.title} href={item.link}>
-              <ListItem button={true} component="a" selected={this.props.page === item.link}>
-                <ListItemText primary={item.title} />
-              </ListItem>
-            </Link>
-          ))}
-        </List>
 
-        <Paper className={classes.paper}>
+        <div className={classes.paper}>
           <Typography variant="h6">Important notice</Typography>
           <Typography variant="caption">
             This is work in progress, and may contain incomplete and incorrect data. The current Melon Monitoring Tool
@@ -145,16 +144,8 @@ class Layout extends React.Component<LayoutProps> {
             </a>
           </Typography>
           <p>&nbsp;</p>
-          <Typography variant="caption">
-            To set up a fund on the melon network, please download the latest <b>Melon manager interface</b>
-            from{' '}
-            <a href="https://github.com/melonproject/melon-lab/releases" className={classes.aStyle}>
-              https://github.com/melonproject/melon-lab/releases
-            </a>{' '}
-          </Typography>
-          <p>&nbsp;</p>
           <PriceFeedUpdate />
-        </Paper>
+        </div>
       </>
     );
 
