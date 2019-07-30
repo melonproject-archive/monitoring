@@ -18,7 +18,7 @@ import { InvestorCountQuery } from '~/queries/InvestorListQuery';
 import { AmguPaymentsQuery, AmguConsumedQuery } from '~/queries/EngineDetailsQuery';
 import { useQuery } from '@apollo/react-hooks';
 import { formatThousands } from '~/utils/formatThousands';
-import { fetchSingleCoinApiRate } from '~/utils/coinApi';
+import { fetchSingleCoinApiRate, fetchCoinApiRates } from '~/utils/coinApi';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -39,7 +39,7 @@ const styles: StyleRulesCallback = theme => ({
 
 type NetworkProps = WithStyles<typeof styles>;
 
-const getUSDRate = () => {
+const getEthUsdRate = () => {
   const [rate, setRate] = useState({ rate: 1 });
 
   useEffect(() => {
@@ -53,8 +53,37 @@ const getUSDRate = () => {
   return rate;
 };
 
+const getMlnRates = () => {
+  const [rates, setRate] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const r = await fetchCoinApiRates('MLN');
+      setRate(r);
+    };
+
+    fetchData();
+  }, []);
+  return rates;
+};
+
 const Network: React.FunctionComponent<NetworkProps> = props => {
-  const rate = getUSDRate();
+  const ethUsdRate = getEthUsdRate();
+  const mlnRates = getMlnRates();
+
+  const fxRates = {
+    MLNETH: mlnRates && mlnRates.ETH.rate.toFixed(4),
+    MLNUSD: mlnRates && mlnRates.USD.rate.toFixed(4),
+    ETHUSD: ethUsdRate && ethUsdRate.rate.toFixed(4),
+  };
+
+  const mlnSetupCosts = 1.75;
+  const setupCosts = {
+    MLN: mlnSetupCosts.toFixed(4),
+    ETH: mlnRates && (mlnSetupCosts * mlnRates.ETH.rate).toFixed(4),
+    USD: mlnRates && (mlnSetupCosts * mlnRates.USD.rate).toFixed(4),
+  };
+
   const result = useScrapingQuery([FundCountQuery, FundCountQuery], proceedPaths(['fundCounts']), {
     ssr: false,
   });
@@ -100,7 +129,7 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
   const amguSum = R.pathOr('', ['data', 'state', 'currentEngine', 'totalAmguConsumed'], amguSumResult);
 
   const ethAum = melonNetworkHistories.length && melonNetworkHistories[melonNetworkHistories.length - 1].gav;
-  const usdAum = formatThousands((ethAum && ethAum * rate.rate).toFixed(0));
+  const usdAum = formatThousands((ethAum && ethAum * ethUsdRate.rate).toFixed(0));
 
   return (
     <Layout title="Network overview" page="/">
@@ -124,12 +153,40 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
       <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5" component="h2">
+            Exchange rates
+          </Typography>
+          <Typography variant="body1" align="right">
+            {fxRates.MLNETH} MLN/ETH
+            <br />
+            {fxRates.MLNUSD} MLN/USD
+            <br />
+            {fxRates.ETHUSD} ETH/USD
+          </Typography>
+        </Paper>
+      </Grid>
+      <Grid item={true} xs={12} sm={12} md={6}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5" component="h2">
+            Estimated setup costs
+          </Typography>
+          <Typography variant="body1" align="right">
+            {setupCosts.MLN} MLN
+            <br />
+            {setupCosts.ETH} ETH
+            <br />
+            {setupCosts.USD} USD
+          </Typography>
+        </Paper>
+      </Grid>
+      <Grid item={true} xs={12} sm={12} md={6}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5" component="h2">
             Number of funds
           </Typography>
           {(result.loading && <CircularProgress />) || (
             <>
               <br />
-              <Typography variant="body1">
+              <Typography variant="body1" align="right">
                 {fundCounts &&
                   parseInt(fundCounts[fundCounts.length - 1].active, 10) +
                     parseInt(fundCounts[fundCounts.length - 1].nonActive, 10)}{' '}
@@ -150,7 +207,7 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
           {(historyResult.loading && <CircularProgress />) || (
             <>
               <br />
-              <Typography variant="body1">
+              <Typography variant="body1" align="right">
                 {ethAum} ETH / {usdAum} USD
               </Typography>
               <br />
@@ -165,7 +222,7 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
           {(historyResult.loading && <CircularProgress />) || (
             <>
               <br />
-              <Typography variant="body1">
+              <Typography variant="body1" align="right">
                 {investorCounts.length && investorCounts[investorCounts.length - 1].numberOfInvestors} investors
               </Typography>
               <br />
@@ -180,7 +237,9 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
           {(amguResult.loading && <CircularProgress />) || (
             <>
               <br />
-              <Typography variant="body1">{amguPayments.length && formatThousands(amguSum)} amgu</Typography>
+              <Typography variant="body1" align="right">
+                {amguPayments.length && formatThousands(amguSum)} amgu
+              </Typography>
               <br />
               <TSAreaChart data={amguCumulative} dataKeys={['cumulativeAmount']} />
             </>

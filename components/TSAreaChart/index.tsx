@@ -44,6 +44,11 @@ const TSAreaChart: React.FunctionComponent<TSAreaChartProps> = props => {
   const options = {
     chart: {
       type: 'spline',
+      // events: {
+      //   load() {
+      //     this.showLoading();
+      //   },
+      // },
     },
     navigator: {
       adaptToUpdatedData: false,
