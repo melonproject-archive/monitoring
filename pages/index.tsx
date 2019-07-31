@@ -73,15 +73,15 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
 
   const fxRates = {
     MLNETH: mlnRates && mlnRates.ETH.rate.toFixed(4),
-    MLNUSD: mlnRates && mlnRates.USD.rate.toFixed(4),
+    MLNUSD: mlnRates && mlnRates.USD && mlnRates.USD.rate.toFixed(4),
     ETHUSD: ethUsdRate && ethUsdRate.rate.toFixed(4),
   };
 
   const mlnSetupCosts = 1.75;
   const setupCosts = {
     MLN: mlnSetupCosts.toFixed(4),
-    ETH: mlnRates && (mlnSetupCosts * mlnRates.ETH.rate).toFixed(4),
-    USD: mlnRates && (mlnSetupCosts * mlnRates.USD.rate).toFixed(4),
+    ETH: mlnRates && mlnRates.ETH && (mlnSetupCosts * mlnRates.ETH.rate).toFixed(4),
+    USD: mlnRates && mlnRates.USD && (mlnSetupCosts * mlnRates.USD.rate).toFixed(4),
   };
 
   const result = useScrapingQuery([FundCountQuery, FundCountQuery], proceedPaths(['fundCounts']), {
