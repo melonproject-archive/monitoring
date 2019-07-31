@@ -43,6 +43,7 @@ export const FundListQuery = gql`
       }
       calculationsHistory(orderBy: timestamp, orderDirection: desc, first: 2) {
         sharePrice
+        timestamp
       }
     }
   }

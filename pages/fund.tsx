@@ -103,6 +103,12 @@ const Fund: React.FunctionComponent<FundProps> = props => {
 
   const sharePriceChangeColor = lastReturn > 0 ? 'secondary' : lastReturn < 0 ? 'error' : 'primary';
 
+  const secondsNow = new Date().valueOf() / 1000;
+  const timeSinceInit = fund && secondsNow - fund.feeManager.performanceFee.initializeTime;
+  const secondsSinceLastPeriod = fund && timeSinceInit % fund.feeManager.performanceFee.performanceFeePeriod;
+  const nextPeriodStart =
+    fund && secondsNow + (fund.feeManager.performanceFee.performanceFeePeriod - secondsSinceLastPeriod);
+
   const maxSharePrice = Math.max(...normalizedNumbers.map(item => item.sharePrice));
   const minSharePrice = Math.min(...normalizedNumbers.map(item => item.sharePrice));
 
@@ -225,7 +231,8 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               {fund && fund.feeManager.performanceFee.performanceFeePeriod / (60 * 60 * 24)} days
             </LineItem>
             <LineItem name="Start of next perfomance fee period">
-              (to be implemented)<div>&nbsp;</div>
+              {nextPeriodStart && formatDate(nextPeriodStart, true)}
+              <div>&nbsp;</div>
             </LineItem>
 
             <LineItem name="Return since inception">

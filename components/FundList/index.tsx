@@ -9,6 +9,7 @@ import TooltipNumber from '../TooltipNumber';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { formatThousands } from '~/utils/formatThousands';
 import BigNumber from 'bignumber.js';
+import { TypographyProps } from '@material-ui/core/Typography';
 
 export interface FundListProps {
   data?: any;
@@ -26,18 +27,22 @@ const styles: StyleRulesCallback = theme => ({
 });
 
 const FundList: React.FunctionComponent<FundListProps> = props => {
-  const priceChange = (today, yesterday) => {
-    const bnToday = new BigNumber(today);
-    const bnYesterday = new BigNumber(yesterday);
-    const color = bnToday.gt(bnYesterday) ? 'secondary' : bnToday.lt(bnYesterday) ? 'error' : 'primary';
-    const prefix = bnToday.gt(bnYesterday) ? '+' : '';
+  const percentageChange = (current, previous) => {
+    if (current && previous) {
+      const bnCurrent = new BigNumber(current.sharePrice);
+      const bnPrevious = new BigNumber(previous.sharePrice);
 
-    return (
-      <Typography variant="body2" color={color}>
-        {prefix}
-        <TooltipNumber number={new BigNumber(today).minus(new BigNumber(yesterday)).toString()} />
-      </Typography>
-    );
+      const timeSpan = current.timestamp - previous.timestamp;
+      const returnSinceLastPriceUpdate = bnCurrent.dividedBy(bnPrevious).toNumber() - 1;
+      const dailyReturn = 100 * (Math.pow(1 + returnSinceLastPriceUpdate, (24 * 60 * 60) / timeSpan) - 1);
+
+      const color = dailyReturn > 0 ? 'secondary' : dailyReturn < 0 ? 'error' : 'primary';
+      const prefix = dailyReturn > 0 ? '+' : '';
+
+      return { color, prefix, dailyReturn };
+    } else {
+      return { color: 'primary', prefix: '', dailyReturn: 0 };
+    }
   };
 
   const columns = [
@@ -106,12 +111,17 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
     {
       title: 'Change',
       render: rowData => {
-        return priceChange(rowData.calculationsHistory[0].sharePrice, rowData.calculationsHistory[1].sharePrice);
+        const change = percentageChange(rowData.calculationsHistory[0], rowData.calculationsHistory[1]);
+        return (
+          <Typography variant="body2" color={change.color as TypographyProps['color']}>
+            {change.prefix}
+            {change.dailyReturn.toFixed(2)}%
+          </Typography>
+        );
       },
       customSort: (a, b) =>
-        a.calculationsHistory[0].sharePrice -
-        a.calculationsHistory[1].sharePrice -
-        (b.calculationsHistory[0].sharePrice - b.calculationsHistory[1].sharePrice),
+        percentageChange(a.calculationsHistory[0], a.calculationsHistory[1]).dailyReturn -
+        percentageChange(b.calculationsHistory[0], b.calculationsHistory[1]).dailyReturn,
     },
     {
       title: '# shares',

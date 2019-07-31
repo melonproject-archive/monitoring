@@ -67,6 +67,7 @@ export const FundDetailsQuery = gql`
         performanceFee {
           performanceFeeRate
           performanceFeePeriod
+          initializeTime
         }
         feeRewardHistory {
           timestamp
