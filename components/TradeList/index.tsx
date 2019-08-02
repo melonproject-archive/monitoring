@@ -151,7 +151,7 @@ const TradeList: React.FunctionComponent<TradeListProps> = props => {
     <MaterialTable
       columns={columns as any}
       data={props.data}
-      title={'Trading activity'}
+      title={'Trading activity on all exchanges'}
       options={{
         paging: props.paging,
         pageSize: 20,

@@ -102,7 +102,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
               },
             ]}
             data={investmentHistory}
-            title="Latest investments"
+            title="Latest investments and redemptions"
             options={{
               paging: false,
               search: false,
@@ -173,7 +173,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
                 },
               ]}
               data={investmentRequests}
-              title="Pending investments"
+              title="Pending investment request"
               options={{
                 paging: false,
                 search: false,
