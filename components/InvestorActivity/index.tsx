@@ -73,9 +73,9 @@ const columns: Column[] = [
     title: 'Amount [ETH]',
     type: 'numeric',
     render: rowData => {
-      return <TooltipNumber number={rowData.amount} />;
+      return <TooltipNumber number={rowData.amountInDenominationAsset} />;
     },
-    customSort: (a, b) => sortBigNumber(a, b, 'amount'),
+    customSort: (a, b) => sortBigNumber(a, b, 'amountInDenominationAsset'),
     cellStyle: {
       whiteSpace: 'nowrap',
     },

@@ -239,7 +239,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               {returnSinceInception && returnSinceInception.toFixed(2)}%
             </LineItem>
             <LineItem name="Annualized return">{annualizedReturn && annualizedReturn.toFixed(2)}%</LineItem>
-            <LineItem name="Volatility">
+            <LineItem name="Annual volatility">
               {volatility && volatility.toFixed(2)}%<div>&nbsp;</div>
             </LineItem>
             <LineItem name="Authorized exchanges">
@@ -529,7 +529,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               },
             ]}
             data={investmentHistory}
-            title="Investment History"
+            title="Investments and redemptions"
             options={{
               paging: false,
               search: false,
@@ -600,7 +600,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 },
               ]}
               data={investmentRequests}
-              title="Pending investments"
+              title="Pending investment requests"
               options={{
                 paging: false,
                 search: false,

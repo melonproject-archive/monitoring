@@ -91,7 +91,7 @@ const columns: Column[] = [
     },
   },
   {
-    title: 'Annualized return [%]',
+    title: 'IRR [%]',
     type: 'numeric',
     field: 'xirr',
     cellStyle: {

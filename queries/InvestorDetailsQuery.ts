@@ -48,6 +48,7 @@ export default gql`
         shares
         sharePrice
         amount
+        amountInDenominationAsset
         timestamp
         fund {
           id
