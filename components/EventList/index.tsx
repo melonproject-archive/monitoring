@@ -29,17 +29,28 @@ const columns = [
     },
     type: 'numeric',
     customSort: (a, b) => sortBigNumber(a, b, 'timestamp'),
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
   },
   {
     title: 'Contract',
     field: 'contract',
   },
   {
-    title: 'Contract Address',
+    title: 'Address',
     render: rowData => {
-      return <EtherscanLink address={rowData.contractAddress} />;
+      return <EtherscanLink address={rowData.contractAddress} short={true} />;
     },
   },
+  {
+    title: 'Tx hash',
+    render: rowData => {
+      const hash = rowData.id.substring(0, 66);
+      return <EtherscanLink tx={hash} short={true} />;
+    },
+  },
+
   {
     title: 'Event',
     field: 'event',
