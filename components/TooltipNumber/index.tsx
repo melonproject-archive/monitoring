@@ -7,6 +7,7 @@ import { formatBigNumber } from '~/utils/formatBigNumber';
 export interface TooltipNumberProps {
   number: any;
   decimals?: number;
+  digits?: number;
 }
 
 const styles = {};
@@ -14,7 +15,9 @@ const styles = {};
 const TooltipNumber: React.FunctionComponent<TooltipNumberProps> = props => {
   return (
     <Tooltip title={formatBigNumber(props.number, props.decimals || 18, 18)} placement="right">
-      <span>{formatBigNumber(props.number, props.decimals || 18, 4)}</span>
+      <span>
+        {formatBigNumber(props.number, props.decimals || 18, (props.digits && (props.digits as number)) || 4)}
+      </span>
     </Tooltip>
   );
 };

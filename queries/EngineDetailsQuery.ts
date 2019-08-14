@@ -34,6 +34,7 @@ export const EngineQuery = gql`
         totalEtherConsumed
         totalAmguConsumed
         totalMlnBurned
+        mlnTotalSupply
         premiumPercent
         lastUpdate
         etherEvents(orderBy: timestamp) {

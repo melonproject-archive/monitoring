@@ -52,9 +52,11 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
               {engineQuantities && formatBigNumber(engineQuantities.amguPrice, 18, 7)} MLN
             </LineItem>
             <LineItem name="MLN burned">
-              <TooltipNumber number={engineQuantities.totalMlnBurned} /> MLN
+              <TooltipNumber number={engineQuantities.totalMlnBurned} digits={0} /> MLN
             </LineItem>
-            <LineItem name="Total MLN supply">&nbsp;</LineItem>
+            <LineItem name="Total MLN supply">
+              {engineQuantities && formatThousands(formatBigNumber(engineQuantities.mlnTotalSupply, 18, 0))}
+            </LineItem>
             <LineItem name="ETH consumed">
               <TooltipNumber number={engineQuantities.totalEtherConsumed} /> ETH
             </LineItem>
