@@ -7,6 +7,7 @@ import {
   AssetDetailsQuery,
   SingleAssetPriceHistoryQuery,
   MelonNetworkAssetHistoryQuery,
+  AssetFundsQuery,
 } from '~/queries/AssetDetailsQuery';
 import Layout from '~/components/Layout';
 import MaterialTable from 'material-table';
@@ -14,8 +15,9 @@ import { formatBigNumber } from '~/utils/formatBigNumber';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import EtherscanLink from '~/components/EtherscanLink';
-import AssetCharts from '~/components/AssetCharts';
 import TooltipNumber from '~/components/TooltipNumber';
+import LineItem from '~/components/LineItem';
+import TSLineChart from '~/components/TSLineChart';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -27,6 +29,7 @@ type AssetProps = WithStyles<typeof styles>;
 
 const Asset: React.FunctionComponent<AssetProps> = props => {
   const router = useRouter();
+
   const result = useQuery(AssetDetailsQuery, {
     ssr: false,
     skip: !(router && router.query.address),
@@ -34,6 +37,14 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
       asset: router && router.query.address,
     },
   });
+
+  const assetFundsResult = useScrapingQuery(
+    [AssetFundsQuery, AssetFundsQuery],
+    proceedPaths(['asset', 'fundAccountings']),
+    {
+      ssr: false,
+    },
+  );
 
   const priceResult = useScrapingQuery(
     [SingleAssetPriceHistoryQuery, SingleAssetPriceHistoryQuery],
@@ -59,7 +70,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
     },
   );
 
-  const asset = result.data && result.data.asset;
+  const asset = R.pathOr([], ['data', 'asset'], result) as any;
 
   const priceHistory = R.pathOr([], ['data', 'assetPriceHistories'], priceResult).map((item, index, array) => {
     const timeSpan = index > 0 ? item.timestamp - array[index - 1].timestamp : 0;
@@ -82,37 +93,49 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
     };
   });
 
-  const funds =
-    asset &&
-    asset.fundAccountings
-      .filter(fa => fa.fund)
-      .map(fa => {
-        return { ...fa.fund };
-      })
-      .map(fund => {
-        return {
-          ...fund,
-          assetValue: fund.holdingsHistory.find(item => {
-            return item.asset.id === router.query.address;
-          }) || { amount: 0 },
-        };
-      })
-      .filter(fund => fund.assetValue.amount);
+  const funds = R.pathOr([], ['data', 'accountings'], assetFundsResult)
+    .filter(fa => fa.fund)
+    .map(fa => {
+      return { ...fa.fund };
+    })
+    .map(fund => {
+      return {
+        ...fund,
+        assetValue: fund.holdingsHistory.find(item => {
+          return item.asset.id === router.query.address;
+        }) || { amount: 0 },
+      };
+    })
+    .filter(fund => fund.assetValue.amount);
 
   return (
     <Layout title="Asset" page="asset">
-      <Grid item={true} xs={12}>
-        <Paper className={props.classes.paper}>
-          <Typography variant="h5">{asset && asset.symbol + ' - ' + asset.name}&nbsp;</Typography>
-          <div>
-            Address: <EtherscanLink address={asset && asset.id} />
-          </div>
-          <div>Decimals: {asset && asset.decimals}</div>
-        </Paper>
-      </Grid>
       <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
-          <AssetCharts data={{ priceHistory, networkValues }} dataKeys={['price']} loading={result.loading} />
+          <Typography variant="h5">{asset && asset.symbol && asset.symbol + ' - ' + asset.name}&nbsp;</Typography>
+          <br />
+          <Grid container={true}>
+            <LineItem name="Address">
+              <EtherscanLink address={asset && asset.id} />
+            </LineItem>
+            <LineItem name="Decimals" linebreak={true}>
+              {asset && asset.decimals}
+            </LineItem>
+            {/* <LineItem name="Price (Pricefeed)">{asset && asset.decimals}</LineItem>
+            <LineItem name="Price (CoinAPI)">{asset && asset.decimals}</LineItem> */}
+          </Grid>
+        </Paper>
+      </Grid>
+      <Grid item={true} xs={12} sm={12} md={6}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">Asset price</Typography>
+          <TSLineChart data={priceHistory} dataKeys={['price']} loading={result.loading} />
+        </Paper>
+      </Grid>
+      <Grid item={true} xs={12} sm={12} md={6}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">Amount</Typography>
+          <TSLineChart data={networkValues} dataKeys={['amount']} loading={result.loading} />
         </Paper>
       </Grid>
 
@@ -157,13 +180,13 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
               },
             ]}
             data={funds}
-            title={asset && `Funds with ${asset.symbol} in their portfolio`}
+            title={`Funds with ${asset && asset.symbol} in their portfolio`}
             options={{
               paging: true,
               pageSize: 10,
               search: true,
             }}
-            isLoading={result.loading}
+            isLoading={assetFundsResult.loading}
             onRowClick={(_, rowData) => {
               const url = '/fund?address=' + rowData.id;
               window.open(url, '_self');

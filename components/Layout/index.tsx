@@ -131,20 +131,15 @@ class Layout extends React.Component<LayoutProps> {
                 </ListItem>
               </Link>
             ))}
+            <ListItem>&nbsp;</ListItem>
+            <ListItem>
+              <PriceFeedUpdate />
+            </ListItem>
           </List>
         </div>
 
         <div className={classes.paper}>
-          <Typography variant="h6">Important notice</Typography>
-          <Typography variant="caption">
-            This is work in progress, and may contain incomplete and incorrect data. The current Melon Monitoring Tool
-            can be found at:{' '}
-            <a href="http://monitoring.melon.network/" className={classes.aStyle}>
-              http://monitoring.melon.network/
-            </a>
-          </Typography>
           <p>&nbsp;</p>
-          <PriceFeedUpdate />
         </div>
       </>
     );
