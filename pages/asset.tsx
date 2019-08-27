@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
@@ -18,6 +18,7 @@ import EtherscanLink from '~/components/EtherscanLink';
 import TooltipNumber from '~/components/TooltipNumber';
 import LineItem from '~/components/LineItem';
 import TSLineChart from '~/components/TSLineChart';
+import { fetchSingleCoinApiRate } from '~/utils/coinApi';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -27,8 +28,23 @@ const styles: StyleRulesCallback = theme => ({
 
 type AssetProps = WithStyles<typeof styles>;
 
+const getRates = () => {
+  const [rates, setRates] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const r = await fetchSingleCoinApiRate('MLN', 'ETH');
+      setRates(r);
+    };
+
+    fetchData();
+  }, []);
+  return rates;
+};
+
 const Asset: React.FunctionComponent<AssetProps> = props => {
   const router = useRouter();
+  const rates: any = getRates();
 
   const result = useQuery(AssetDetailsQuery, {
     ssr: false,
@@ -121,8 +137,10 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
             <LineItem name="Decimals" linebreak={true}>
               {asset && asset.decimals}
             </LineItem>
-            {/* <LineItem name="Price (Pricefeed)">{asset && asset.decimals}</LineItem>
-            <LineItem name="Price (CoinAPI)">{asset && asset.decimals}</LineItem> */}
+            <LineItem name="Price (Pricefeed)">
+              <TooltipNumber number={asset && asset.lastPrice} /> ETH
+            </LineItem>
+            <LineItem name="Price (CoinAPI)">{rates && rates.rate && rates.rate.toFixed(4)} ETH</LineItem>
           </Grid>
         </Paper>
       </Grid>

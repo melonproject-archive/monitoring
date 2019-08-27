@@ -7,6 +7,7 @@ export const AssetDetailsQuery = gql`
       symbol
       name
       decimals
+      lastPrice
     }
   }
 `;

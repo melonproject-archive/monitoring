@@ -70,7 +70,6 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
         return props.rates.hasOwnProperty(rowData.symbol) ? (1 / props.rates[rowData.symbol].rate).toFixed(4) : '';
       },
       type: 'numeric',
-      customSort: (a, b) => sortBigNumber(a, b, 'lastPrice'),
       cellStyle: {
         whiteSpace: 'nowrap',
       },
