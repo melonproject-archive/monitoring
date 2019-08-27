@@ -18,7 +18,7 @@ import EtherscanLink from '~/components/EtherscanLink';
 import TooltipNumber from '~/components/TooltipNumber';
 import LineItem from '~/components/LineItem';
 import TSLineChart from '~/components/TSLineChart';
-import { fetchSingleCoinApiRate } from '~/utils/coinApi';
+import { fetchCoinApiRates } from '~/utils/coinApi';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -33,7 +33,7 @@ const getRates = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const r = await fetchSingleCoinApiRate('MLN', 'ETH');
+      const r = await fetchCoinApiRates();
       setRates(r);
     };
 
@@ -140,7 +140,9 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
             <LineItem name="Price (Pricefeed)">
               <TooltipNumber number={asset && asset.lastPrice} /> ETH
             </LineItem>
-            <LineItem name="Price (CoinAPI)">{rates && rates.rate && rates.rate.toFixed(4)} ETH</LineItem>
+            <LineItem name="Price (CoinAPI)">
+              {rates && asset && rates[asset.symbol] && (1 / rates[asset.symbol].rate).toFixed(4)} ETH
+            </LineItem>
           </Grid>
         </Paper>
       </Grid>
