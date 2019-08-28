@@ -77,13 +77,6 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
     ETHUSD: ethUsdRate && ethUsdRate.rate.toFixed(4),
   };
 
-  const mlnSetupCosts = 1.75;
-  const setupCosts = {
-    MLN: mlnSetupCosts.toFixed(4),
-    ETH: mlnRates && mlnRates.ETH && (mlnSetupCosts * mlnRates.ETH.rate).toFixed(4),
-    USD: mlnRates && mlnRates.USD && (mlnSetupCosts * mlnRates.USD.rate).toFixed(4),
-  };
-
   const result = useScrapingQuery([FundCountQuery, FundCountQuery], proceedPaths(['fundCounts']), {
     ssr: false,
   });
@@ -127,6 +120,14 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
 
   const amguSumResult = useQuery(AmguConsumedQuery, { ssr: false });
   const amguSum = R.pathOr('', ['data', 'state', 'currentEngine', 'totalAmguConsumed'], amguSumResult);
+
+  const amguPrice = R.pathOr(1, ['data', 'state', 'currentEngine', 'amguPrice'], amguSumResult) as number;
+  const mlnSetupCosts = 17500000 * parseFloat(formatBigNumber(amguPrice, 18, 7));
+  const setupCosts = {
+    MLN: mlnSetupCosts.toFixed(4),
+    ETH: mlnRates && mlnRates.ETH && (mlnSetupCosts * mlnRates.ETH.rate).toFixed(4),
+    USD: mlnRates && mlnRates.USD && (mlnSetupCosts * mlnRates.USD.rate).toFixed(4),
+  };
 
   const ethAum = melonNetworkHistories.length && melonNetworkHistories[melonNetworkHistories.length - 1].gav;
   const usdAum = formatThousands((ethAum && ethAum * ethUsdRate.rate).toFixed(0));

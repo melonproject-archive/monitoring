@@ -17,7 +17,7 @@ const PriceFeedUpdate: React.FunctionComponent<{}> = props => {
     <Typography variant="caption">
       Pricefeed last updated:
       <br />
-      {formatDate(priceUpdate, true)}
+      {priceUpdate && formatDate(priceUpdate, true)}
     </Typography>
   );
 };
