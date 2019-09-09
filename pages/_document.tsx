@@ -26,6 +26,7 @@ export default class Document extends BaseDocument {
     return (
       <html>
         <Head>
+          <title>Melon Network</title>
           <meta charSet="utf-8" />
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
           <meta name="theme-color" content={theme.palette.primary.main} />
@@ -34,6 +35,7 @@ export default class Document extends BaseDocument {
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
         </Head>
+
         <body>
           <Main />
           <NextScript />
