@@ -93,14 +93,13 @@ const Fund: React.FunctionComponent<FundProps> = props => {
     },
   );
 
-  const lastSharePriceChange =
-    normalizedNumbers &&
-    normalizedNumbers.length > 0 &&
-    normalizedNumbers[normalizedNumbers.length - 1].sharePrice -
-      normalizedNumbers[normalizedNumbers.length - 2].sharePrice;
-  const lastReturn =
-    normalizedNumbers && normalizedNumbers.length > 0 && normalizedNumbers[normalizedNumbers.length - 1].dailyReturn;
+  const numbersLength = R.propOr(0, 'length', normalizedNumbers) as number;
+  const firstChange = R.head(normalizedNumbers) as any;
+  const afterChange = R.path([numbersLength - 1], normalizedNumbers) as any;
+  const beforeChange = R.path([numbersLength - 2], normalizedNumbers) as any;
 
+  const lastSharePriceChange = afterChange && beforeChange ? afterChange.sharePrice - beforeChange.sharePrice : null;
+  const lastReturn = afterChange ? afterChange.dailyReturn : null;
   const sharePriceChangeColor = lastReturn > 0 ? 'secondary' : lastReturn < 0 ? 'error' : 'primary';
 
   const secondsNow = new Date().valueOf() / 1000;
@@ -117,16 +116,13 @@ const Fund: React.FunctionComponent<FundProps> = props => {
   // const maxSupply = Math.max(...normalizedNumbers.map(item => item.totalSupply), 0);
 
   const returnSinceInception =
-    normalizedNumbers &&
-    normalizedNumbers.length > 0 &&
-    (normalizedNumbers[normalizedNumbers.length - 1].sharePrice / normalizedNumbers[0].sharePrice - 1) * 100;
+    firstChange && afterChange ? (afterChange.sharePrice / firstChange.sharePrice - 1) * 100 : null;
   const annualizedReturn =
     returnSinceInception &&
     normalizedNumbers &&
     (Math.pow(
       1 + returnSinceInception / 100,
-      (60 * 60 * 24 * 365.25) /
-        (normalizedNumbers[normalizedNumbers.length - 1].timestamp - normalizedNumbers[0].timestamp),
+      (60 * 60 * 24 * 365.25) / (afterChange.timestamp - firstChange.timestamp),
     ) -
       1) *
       100;
