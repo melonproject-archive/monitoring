@@ -31,7 +31,7 @@ const Addresses: React.FunctionComponent<AddressesProps> = props => {
   });
 
   return (
-    <Layout title="Contracts" page="addresses">
+    <Layout title="Addresses" page="addresses">
       <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>Addresses\</Paper>
       </Grid>

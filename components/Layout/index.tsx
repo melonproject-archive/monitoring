@@ -17,9 +17,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Link from 'next/link';
 import PriceFeedUpdate from '../PriceFeedUpdate';
 
-// import Navigation from '../Navigation';
-// import { Head  } from 'next/document';
-
 export interface LayoutProps {
   title: string;
   page: string;
@@ -147,7 +144,7 @@ class Layout extends React.Component<LayoutProps> {
     return (
       <>
         {/* <Head>
-          <title>MLN network - {this.props.title}</title>
+          <title>Melon Network - {this.props.title}</title>
         </Head> */}
 
         <div className={classes.root}>
