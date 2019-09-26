@@ -91,7 +91,7 @@ const InvestorList: React.FunctionComponent<InvestorListProps> = props => {
     ssr: false,
   });
 
-  const investors = R.pathOr([], ['data', 'investors'], result);
+  const investors = R.pathOr([], ['data', 'investors'], result).filter(inv => inv.id.length === 42);
 
   const investorsInclAum =
     investors &&
