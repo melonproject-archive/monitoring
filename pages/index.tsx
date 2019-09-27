@@ -19,7 +19,7 @@ import { AmguPaymentsQuery, AmguConsumedQuery } from '~/queries/EngineDetailsQue
 import { useQuery } from '@apollo/react-hooks';
 import { formatThousands } from '~/utils/formatThousands';
 import { fetchSingleCoinApiRate, fetchCoinApiRates } from '~/utils/coinApi';
-import Web3 from 'web3';
+import Eth from 'web3-eth';
 import EtherscanLink from '~/components/EtherscanLink';
 
 const styles: StyleRulesCallback = theme => ({
@@ -39,7 +39,7 @@ const styles: StyleRulesCallback = theme => ({
   },
 });
 
-const web3 = new Web3(Web3.givenProvider || 'https://mainnet.melonport.com');
+const eth = new Eth(Eth.givenProvider || 'https://mainnet.melonport.com');
 
 type NetworkProps = WithStyles<typeof styles>;
 
@@ -99,7 +99,7 @@ const getEnsAddresses = () => {
 
           return {
             ens,
-            address: (await web3.eth.ens.getAddress(ens)).toLowerCase(),
+            address: (await eth.ens.getAddress(ens)).toLowerCase(),
           };
         }),
       );
