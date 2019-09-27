@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/styles';
 export interface EtherscanLinkProps {
   address?: string;
   tx?: string;
+  ens?: string;
   short?: boolean;
 }
 
@@ -38,12 +39,12 @@ const styles = {
 };
 
 const EtherscanLink: React.FunctionComponent<EtherscanLinkProps> = props => {
-  const path = props.address ? 'address' : props.tx ? 'tx' : '';
-  const query = props.address || props.tx || '';
+  const path = props.address ? 'address/' : props.tx ? 'tx/' : props.ens ? 'enslookup?q=' : '';
+  const query = props.address || props.tx || props.ens || '';
   const queryShort = props.short ? query.substr(0, 6) + '...' : query;
 
   return (
-    <a href={`https://etherscan.io/${path}/${query}`} target="_blank" rel="noopener noreferrer" style={styles.link}>
+    <a href={`https://etherscan.io/${path}${query}`} target="_blank" rel="noopener noreferrer" style={styles.link}>
       {queryShort}
     </a>
   );

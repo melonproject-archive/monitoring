@@ -1,7 +1,16 @@
 import React from 'react';
 
 import * as R from 'ramda';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
+import {
+  Grid,
+  withStyles,
+  WithStyles,
+  StyleRulesCallback,
+  Typography,
+  Paper,
+  NoSsr,
+  CircularProgress,
+} from '@material-ui/core';
 import { AmguPaymentsQuery, EngineQuery } from '~/queries/EngineDetailsQuery';
 
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
@@ -11,9 +20,9 @@ import { formatBigNumber } from '~/utils/formatBigNumber';
 import MaterialTable from 'material-table';
 import { formatThousands } from '~/utils/formatThousands';
 import TooltipNumber from '~/components/TooltipNumber';
-import TSGroupedChart from '~/components/TSGroupedChart';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import LineItem from '~/components/LineItem';
+import TSAreaChart from '~/components/TSAreaChart';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -77,13 +86,17 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
           </Grid>
         </Paper>
       </Grid>
-      <Grid item={true} xs={12} sm={12} md={12}>
+      <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Amgu consumed</Typography>
-          <TSGroupedChart data={amguPayments} dataKeys={['amount']} />
+          {(result.loading && <CircularProgress />) || (
+            <>
+              <TSAreaChart data={amguCumulative} dataKeys={['cumulativeAmount']} />
+            </>
+          )}
         </Paper>
       </Grid>
-      <Grid item={true} xs={12} sm={12} md={12}>
+      <Grid item={true} xs={12} sm={12} md={6}>
         <NoSsr>
           <MaterialTable
             columns={[

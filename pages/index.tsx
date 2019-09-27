@@ -19,6 +19,8 @@ import { AmguPaymentsQuery, AmguConsumedQuery } from '~/queries/EngineDetailsQue
 import { useQuery } from '@apollo/react-hooks';
 import { formatThousands } from '~/utils/formatThousands';
 import { fetchSingleCoinApiRate, fetchCoinApiRates } from '~/utils/coinApi';
+import Web3 from 'web3';
+import EtherscanLink from '~/components/EtherscanLink';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -36,6 +38,8 @@ const styles: StyleRulesCallback = theme => ({
     marginLeft: 'auto',
   },
 });
+
+const web3 = new Web3(Web3.givenProvider || 'https://mainnet.melonport.com');
 
 type NetworkProps = WithStyles<typeof styles>;
 
@@ -67,9 +71,50 @@ const getMlnRates = () => {
   return rates;
 };
 
+const getEnsAddresses = () => {
+  const names = [
+    'melontoken',
+    'version',
+    'registry',
+    'fundfactory',
+    'kyberpricefeed',
+    'engine',
+    'engineadapter',
+    'ethfinexadapter',
+    'kyberadapter',
+    'matchingmarketadapter',
+    'zeroexv2adapter',
+    'fundranking',
+    'managementfee',
+    'performancefee',
+  ];
+
+  const [addresses, setAddresses] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const adr = await Promise.all(
+        names.map(async name => {
+          const ens = `${name}.melonprotocol.eth`;
+
+          return {
+            ens,
+            address: (await web3.eth.ens.getAddress(ens)).toLowerCase(),
+          };
+        }),
+      );
+      setAddresses(adr);
+    };
+    fetchData();
+  }, []);
+  return addresses;
+};
+
 const Network: React.FunctionComponent<NetworkProps> = props => {
   const ethUsdRate = getEthUsdRate();
   const mlnRates = getMlnRates();
+
+  const ens = getEnsAddresses();
 
   const fxRates = {
     MLNETH: mlnRates && mlnRates.ETH.rate.toFixed(4),
@@ -245,6 +290,27 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
               <TSAreaChart data={amguCumulative} dataKeys={['cumulativeAmount']} />
             </>
           )}
+        </Paper>
+      </Grid>
+      <Grid item={true} xs={12} sm={12} md={12}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">Contract addresses</Typography>
+          <br />
+          <Grid container={true}>
+            {ens &&
+              ens.map(a => {
+                return (
+                  <>
+                    <Grid item={true} xs={6} sm={6} md={4} key={a.ens}>
+                      {a.ens}
+                    </Grid>
+                    <Grid item={true} xs={6} sm={6} md={8} className={props.classes.truncate} key={a.address}>
+                      <EtherscanLink address={a.address} />
+                    </Grid>
+                  </>
+                );
+              })}
+          </Grid>
         </Paper>
       </Grid>
     </Layout>
