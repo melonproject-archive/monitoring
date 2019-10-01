@@ -102,17 +102,12 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
     },
   );
 
-  // .div(investments.length): temporary fix until subgraph is correct
   const valuationHistory = R.pathOr([], ['data', 'investorValuationHistories'], investorValuationHistoryResult).map(
     valuation => {
       return {
         ...valuation,
-        nav: valuation.nav
-          ? formatBigNumber(new BigNumber(valuation.nav).div(investments.length).toString(), 18, 3)
-          : 0,
-        gav: valuation.gav
-          ? formatBigNumber(new BigNumber(valuation.gav).div(investments.length).toString(), 18, 3)
-          : 0,
+        nav: valuation.nav ? formatBigNumber(valuation.nav, 18, 3) : 0,
+        gav: valuation.gav ? formatBigNumber(valuation.gav, 18, 3) : 0,
       };
     },
   );
