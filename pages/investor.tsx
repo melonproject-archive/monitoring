@@ -3,7 +3,11 @@ import * as R from 'ramda';
 import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
-import InvestorDetailsQuery from '~/queries/InvestorDetailsQuery';
+import {
+  InvestorDetailsQuery,
+  InvestmentValuationHistoryQuery,
+  InvestorValuationHistoryQuery,
+} from '~/queries/InvestorDetailsQuery';
 import Layout from '~/components/Layout';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import InvestmentList from '~/components/InvestmentList';
@@ -17,6 +21,7 @@ import EtherscanLink from '~/components/EtherscanLink';
 import TSLineChart from '~/components/TSLineChart';
 import { moneyMultiple } from '~/utils/moneyMultiple';
 import TooltipNumber from '~/components/TooltipNumber';
+import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -37,14 +42,30 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
   });
 
   const investor = R.pathOr(undefined, ['data', 'investor'], result);
-  const investments = R.pathOr([], ['data', 'investor', 'investments'], result).map(inv => {
-    const valuationHist = inv.valuationHistory.map(vals => {
-      return {
-        ...vals,
-        nav: vals.nav ? formatBigNumber(vals.nav, 18, 3) : 0,
-        gav: vals.gav ? formatBigNumber(vals.gav) : 0,
-      };
-    });
+  const investmentList = R.pathOr([], ['data', 'investor', 'investments'], result);
+
+  // valuation fir invididual investments
+  const investmentValuationHistoryResult = useScrapingQuery(
+    [InvestmentValuationHistoryQuery, InvestmentValuationHistoryQuery],
+    proceedPaths(['investmentValuationHistories']),
+    {
+      ssr: false,
+      variables: {
+        ids: investmentList.map(investment => investment.id),
+      },
+    },
+  );
+
+  const investments = investmentList.map(inv => {
+    const valuationHist = R.pathOr([], ['data', 'investmentValuationHistories'], investmentValuationHistoryResult)
+      .filter(h => h.investment.id === inv.id)
+      .map(vals => {
+        return {
+          ...vals,
+          nav: vals.nav ? formatBigNumber(vals.nav, 18, 3) : 0,
+          gav: vals.gav ? formatBigNumber(vals.gav) : 0,
+        };
+      });
     const cashflows = prepareCashFlows(inv.history, inv.nav);
     return {
       ...inv,
@@ -69,18 +90,31 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
     };
   });
 
-  const valuationHistory = R.pathOr([], ['data', 'investor', 'valuationHistory'], result).map(valuation => {
-    return {
-      ...valuation,
-      nav: valuation.nav ? formatBigNumber(valuation.nav, 18, 3) : 0,
-      gav: valuation.gav ? formatBigNumber(valuation.gav, 18, 3) : 0,
-    };
-  });
+  // valuation for investor as a whole
+  const investorValuationHistoryResult = useScrapingQuery(
+    [InvestorValuationHistoryQuery, InvestorValuationHistoryQuery],
+    proceedPaths(['investorValuationHistories']),
+    {
+      ssr: false,
+      variables: {
+        id: router && router.query.address,
+      },
+    },
+  );
+
+  const valuationHistory = R.pathOr([], ['data', 'investorValuationHistories'], investorValuationHistoryResult).map(
+    valuation => {
+      return {
+        ...valuation,
+        nav: valuation.nav ? formatBigNumber(valuation.nav, 18, 3) : 0,
+        gav: valuation.gav ? formatBigNumber(valuation.gav, 18, 3) : 0,
+      };
+    },
+  );
 
   const maxValuation = valuationHistory && Math.max(...valuationHistory.map(item => item.nav), 0);
 
   const investmentHistory = (investor && investor.investmentHistory) || [];
-
   const investmentRequests = ((investor && investor.investmentRequests) || [])
     .filter(item => item.status === 'PENDING')
     .map(item => {

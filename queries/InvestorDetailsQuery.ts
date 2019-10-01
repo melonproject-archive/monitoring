@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export default gql`
+export const InvestorDetailsQuery = gql`
   query InvestorDetailsQuery($investor: ID!) {
     investor(id: $investor) {
       id
@@ -60,6 +60,31 @@ export default gql`
         gav
         nav
       }
+    }
+  }
+`;
+
+export const InvestmentValuationHistoryQuery = gql`
+  query InvestmentValuationHistoryQuery($ids: [ID!], $limit: Int!, $skip: Int!) {
+    investmentValuationHistories(where: { investment_in: $ids }, orderBy: timestamp, first: $limit, skip: $skip) {
+      id
+      gav
+      nav
+      timestamp
+      investment {
+        id
+      }
+    }
+  }
+`;
+
+export const InvestorValuationHistoryQuery = gql`
+  query InvestorValuationHistoryQuery($id: ID!, $limit: Int!, $skip: Int!) {
+    investorValuationHistories(where: { owner: $id }, orderBy: timestamp, first: $limit, skip: $skip) {
+      id
+      gav
+      nav
+      timestamp
     }
   }
 `;
