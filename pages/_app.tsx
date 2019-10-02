@@ -57,7 +57,7 @@ const createErrorLink = () =>
 
 const createDataLink = () => {
   const httpLink = new HttpLink({
-    uri: 'https://api.thegraph.com/subgraphs/name/melonproject/melon',
+    uri: 'https://api.thegraph.com/subgraphs/id/QmTcFd9qtqrhdJk5ezK72HUnYAqemepMwr5p7XyGmUZAt9',
   });
 
   if (!process.browser) {
@@ -65,7 +65,7 @@ const createDataLink = () => {
   }
 
   const wsLink = new WebSocketLink({
-    uri: 'wss://api.thegraph.com/subgraphs/name/melonproject/melon',
+    uri: 'wss://api.thegraph.com/subgraphs/id/QmTcFd9qtqrhdJk5ezK72HUnYAqemepMwr5p7XyGmUZAt9',
     options: {
       reconnect: true,
     },
