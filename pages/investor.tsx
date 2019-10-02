@@ -50,6 +50,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
     proceedPaths(['investmentValuationHistories']),
     {
       ssr: false,
+      skip: !(router && router.query.address),
       variables: {
         ids: investmentList.map(investment => investment.id),
       },
@@ -96,6 +97,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
     proceedPaths(['investorValuationHistories']),
     {
       ssr: false,
+      skip: !(router && router.query.address),
       variables: {
         id: router && router.query.address,
       },
