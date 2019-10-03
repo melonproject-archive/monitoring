@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
-import {
-  Grid,
-  withStyles,
-  WithStyles,
-  StyleRulesCallback,
-  Typography,
-  CircularProgress,
-  Paper,
-} from '@material-ui/core';
+import { Grid, withStyles, WithStyles, Typography, CircularProgress, Paper } from '@material-ui/core';
 import { FundCountQuery, MelonNetworkHistoryQuery } from '~/queries/FundListQuery';
 import Layout from '~/components/Layout';
 import { formatBigNumber } from '~/utils/formatBigNumber';
@@ -22,7 +14,7 @@ import { fetchSingleCoinApiRate, fetchCoinApiRates } from '~/utils/coinApi';
 import EtherscanLink from '~/components/EtherscanLink';
 import { fetchEnsAddresses } from '~/utils/ens';
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -37,6 +29,12 @@ const styles: StyleRulesCallback = theme => ({
   logoDiv: {
     marginLeft: 'auto',
   },
+  // truncate: {
+  //   width: '250px',
+  //   whiteSpace: 'nowrap',
+  //   overflow: 'hidden',
+  //   textOverflow: 'ellipsis',
+  // },
 });
 
 type NetworkProps = WithStyles<typeof styles>;
@@ -276,7 +274,7 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
                     <Grid item={true} xs={6} sm={6} md={4} key={a.ens}>
                       {a.ens}
                     </Grid>
-                    <Grid item={true} xs={6} sm={6} md={8} className={props.classes.truncate} key={a.address}>
+                    <Grid item={true} xs={6} sm={6} md={8} key={a.address}>
                       <EtherscanLink address={a.address} />
                     </Grid>
                   </>

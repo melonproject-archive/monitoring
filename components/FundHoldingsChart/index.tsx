@@ -2,7 +2,6 @@ import React from 'react';
 import * as R from 'ramda';
 
 import { withStyles } from '@material-ui/styles';
-import { StyleRulesCallback } from '@material-ui/core';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import { FundHoldingsHistoryQuery } from '~/queries/FundDetailsQuery';
 import { formatBigNumber } from '~/utils/formatBigNumber';
@@ -14,7 +13,7 @@ export interface FundHoldingsChartProps {
   yMax: number;
 }
 
-const styles: StyleRulesCallback = theme => ({});
+const styles = theme => ({});
 
 const FundHoldingsChart: React.FunctionComponent<FundHoldingsChartProps> = props => {
   const result =

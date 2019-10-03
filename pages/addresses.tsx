@@ -1,10 +1,10 @@
 import React from 'react';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Paper } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, Paper } from '@material-ui/core';
 import { ContractsQuery } from '~/queries/ContractList';
 import Layout from '~/components/Layout';
 import { useQuery } from '@apollo/react-hooks';
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },

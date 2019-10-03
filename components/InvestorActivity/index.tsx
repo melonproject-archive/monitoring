@@ -2,7 +2,6 @@ import React from 'react';
 import MaterialTable, { Column } from 'material-table';
 
 import { withStyles } from '@material-ui/styles';
-import { StyleRulesCallback } from '@material-ui/core';
 import { formatDate } from '~/utils/formatDate';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import TooltipNumber from '../TooltipNumber';
@@ -18,7 +17,7 @@ const styles = theme => ({
   },
 });
 
-const columns: Column<any>[] = [
+const columns: Array<Column<any>> = [
   {
     title: 'Date',
     render: rowData => {

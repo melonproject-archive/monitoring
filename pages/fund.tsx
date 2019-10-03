@@ -1,6 +1,6 @@
 import React from 'react';
 import * as R from 'ramda';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr, Link } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, Typography, Paper, NoSsr, Link } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { FundDetailsQuery, FundCalculationsHistoryQuery } from '~/queries/FundDetailsQuery';
 import { useRouter } from 'next/router';
@@ -21,7 +21,7 @@ import TradeList from '~/components/TradeList';
 import EventList from '~/components/EventList';
 import LineItem from '~/components/LineItem';
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -29,16 +29,16 @@ const styles: StyleRulesCallback = theme => ({
     textDecoration: 'none',
     color: 'white',
   },
-  truncate: {
-    width: '250px',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  },
   debug: {
     color: '#777',
     fontSize: '9px',
   },
+  // truncate: {
+  //   width: '250px',
+  //   whiteSpace: 'nowrap',
+  //   overflow: 'hidden',
+  //   textOverflow: 'ellipsis',
+  // },
 });
 
 type FundProps = WithStyles<typeof styles>;
@@ -264,7 +264,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               {
                 title: 'Parameters',
                 type: 'numeric',
-                render: rowData => {
+                render: (rowData: any) => {
                   switch (rowData.identifier) {
                     case 'Max concentration':
                       return formatBigNumber(rowData.maxConcentration + '00', 18, 0) + '%';
@@ -303,14 +303,14 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               {
                 title: 'Amount',
                 type: 'numeric',
-                render: rowData => {
+                render: (rowData: any) => {
                   return <TooltipNumber number={rowData.amount} decimals={rowData.asset.decimals} />;
                 },
               },
               {
                 title: 'Value [ETH]',
                 type: 'numeric',
-                render: rowData => {
+                render: (rowData: any) => {
                   return <TooltipNumber number={rowData.assetGav} />;
                 },
                 defaultSort: 'desc',
@@ -343,7 +343,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                     <Grid item={true} xs={6} sm={6} md={4} key={a.name}>
                       {a.name}
                     </Grid>
-                    <Grid item={true} xs={6} sm={6} md={8} className={props.classes.truncate} key={a.address}>
+                    <Grid item={true} xs={6} sm={6} md={8} key={a.address}>
                       <EtherscanLink address={a.address} />
                     </Grid>
                   </>
@@ -456,7 +456,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               },
               {
                 title: 'Shares',
-                render: rowData => {
+                render: (rowData: any) => {
                   return <TooltipNumber number={rowData.shares} />;
                 },
                 type: 'numeric',
@@ -469,7 +469,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               search: false,
             }}
             isLoading={result.loading}
-            onRowClick={(_, rowData) => {
+            onRowClick={(_, rowData: any) => {
               const url = '/investor?address=' + rowData.owner.id;
               window.open(url, '_self');
             }}
@@ -504,21 +504,21 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               },
               {
                 title: 'Shares',
-                render: rowData => {
+                render: (rowData: any) => {
                   return <TooltipNumber number={rowData.shares} />;
                 },
                 type: 'numeric',
               },
               {
                 title: 'Share Price',
-                render: rowData => {
+                render: (rowData: any) => {
                   return <TooltipNumber number={rowData.sharePrice} />;
                 },
                 type: 'numeric',
               },
               {
                 title: 'Amount in ETH',
-                render: rowData => {
+                render: (rowData: any) => {
                   return <TooltipNumber number={rowData.amountInDenominationAsset} />;
                 },
                 type: 'numeric',

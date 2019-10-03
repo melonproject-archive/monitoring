@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, Typography, Paper, NoSsr } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 import {
@@ -20,7 +20,7 @@ import LineItem from '~/components/LineItem';
 import TSLineChart from '~/components/TSLineChart';
 import { fetchCoinApiRates } from '~/utils/coinApi';
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },

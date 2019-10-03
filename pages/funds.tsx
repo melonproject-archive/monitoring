@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
-import {
-  Grid,
-  withStyles,
-  WithStyles,
-  StyleRulesCallback,
-  Card,
-  CardContent,
-  Typography,
-  CircularProgress,
-} from '@material-ui/core';
+import { Grid, withStyles, WithStyles, Card, CardContent, Typography, CircularProgress } from '@material-ui/core';
 import { FundListQuery, FundCountQuery, MelonNetworkHistoryQuery } from '~/queries/FundListQuery';
 import FundList from '~/components/FundList';
 import Layout from '~/components/Layout';
@@ -19,7 +10,7 @@ import { formatBigNumber } from '~/utils/formatBigNumber';
 import { fetchSingleCoinApiRate } from '~/utils/coinApi';
 import { formatThousands } from '~/utils/formatThousands';
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },

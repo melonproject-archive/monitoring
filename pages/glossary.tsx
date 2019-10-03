@@ -1,8 +1,8 @@
 import React from 'react';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Card, CardContent } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, Typography, Card, CardContent } from '@material-ui/core';
 import Layout from '~/components/Layout';
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },

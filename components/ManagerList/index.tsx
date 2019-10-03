@@ -56,7 +56,7 @@ const ManagerList: React.FunctionComponent<ManagerListProps> = props => {
         paging: false,
       }}
       isLoading={result.loading}
-      onRowClick={(_, rowData) => {
+      onRowClick={(_, rowData: any) => {
         const url = '/manager?address=' + rowData.id;
         window.open(url, '_self');
       }}

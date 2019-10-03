@@ -157,7 +157,7 @@ const TradeList: React.FunctionComponent<TradeListProps> = props => {
         search: true,
       }}
       isLoading={props.loading}
-      onRowClick={(_, rowData) => {
+      onRowClick={(_, rowData: any) => {
         const url =
           '/' + linkFile + '?address=' + (props.linkPath ? R.path(props.linkPath, rowData) : rowData.trading.fund.id);
         window.open(url, '_self');

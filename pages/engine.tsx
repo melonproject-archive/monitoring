@@ -1,16 +1,7 @@
 import React from 'react';
 
 import * as R from 'ramda';
-import {
-  Grid,
-  withStyles,
-  WithStyles,
-  StyleRulesCallback,
-  Typography,
-  Paper,
-  NoSsr,
-  CircularProgress,
-} from '@material-ui/core';
+import { Grid, withStyles, WithStyles, Typography, Paper, NoSsr, CircularProgress } from '@material-ui/core';
 import { AmguPaymentsQuery, EngineQuery } from '~/queries/EngineDetailsQuery';
 
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
@@ -24,7 +15,7 @@ import { sortBigNumber } from '~/utils/sortBigNumber';
 import LineItem from '~/components/LineItem';
 import TSAreaChart from '~/components/TSAreaChart';
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -120,7 +111,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
               },
               {
                 title: 'Amount',
-                render: rowData => {
+                render: (rowData: any) => {
                   return <TooltipNumber number={rowData.amount} />;
                 },
                 type: 'numeric',
@@ -128,7 +119,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
               },
               {
                 title: 'Asset',
-                render: rowData => {
+                render: (rowData: any) => {
                   return rowData.event === 'Thaw' ? 'ETH' : 'MLN';
                 },
                 sorting: false,
@@ -140,7 +131,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
               paging: false,
               search: false,
             }}
-            onRowClick={(_, rowData) => {
+            onRowClick={(_, rowData: any) => {
               const url = 'https://etherscan.io/tx/' + rowData.id;
               window.open(url, '_blank');
             }}

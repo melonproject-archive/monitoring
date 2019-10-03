@@ -1,6 +1,6 @@
 import React from 'react';
 import * as R from 'ramda';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, Typography, Paper, NoSsr } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 import Layout from '~/components/Layout';
@@ -12,7 +12,7 @@ import EventList from '~/components/EventList';
 import MaterialTable from 'material-table';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -91,7 +91,7 @@ const Contract: React.FunctionComponent<ContractProps> = props => {
             columns={[
               {
                 title: 'Date',
-                render: rowData => {
+                render: (rowData: any) => {
                   return formatDate(rowData.createdAt, true);
                 },
                 customSort: (a, b) => sortBigNumber(a, b, 'createdAt'),

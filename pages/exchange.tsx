@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, Typography, Paper, NoSsr } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 import Layout from '~/components/Layout';
@@ -7,7 +7,7 @@ import ExchangeDetailsQuery from '~/queries/ExchangeDetailsQuery';
 import TradeList from '~/components/TradeList';
 import EtherscanLink from '~/components/EtherscanLink';
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },

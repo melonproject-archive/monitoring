@@ -1,6 +1,6 @@
 import React from 'react';
 import * as R from 'ramda';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, Typography, Paper, NoSsr } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, Typography, Paper, NoSsr } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 import {
@@ -23,7 +23,7 @@ import { moneyMultiple } from '~/utils/moneyMultiple';
 import TooltipNumber from '~/components/TooltipNumber';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -179,7 +179,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
               columns={[
                 {
                   title: 'Date',
-                  render: rowData => {
+                  render: (rowData: any) => {
                     return formatDate(rowData.requestTimestamp, true);
                   },
                 },

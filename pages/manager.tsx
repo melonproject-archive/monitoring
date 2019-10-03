@@ -1,6 +1,6 @@
 import React from 'react';
 import * as R from 'ramda';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, NoSsr } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, NoSsr } from '@material-ui/core';
 import Layout from '~/components/Layout';
 import { useRouter } from 'next/router';
 import { useQuery } from '@apollo/react-hooks';
@@ -10,7 +10,7 @@ import { hexToString } from '~/utils/hexToString';
 import { formatDate } from '~/utils/formatDate';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -52,7 +52,7 @@ const Managers: React.FunctionComponent<ManagerProps> = props => {
               },
               {
                 title: 'Creation date',
-                render: rowData => {
+                render: (rowData: any) => {
                   return formatDate(rowData.createdAt);
                 },
                 customSort: (a, b) => sortBigNumber(a, b, 'createdAt'),
@@ -69,7 +69,7 @@ const Managers: React.FunctionComponent<ManagerProps> = props => {
               search: false,
             }}
             isLoading={result.loading}
-            onRowClick={(_, rowData) => {
+            onRowClick={(_, rowData: any) => {
               const url = '/fund?address=' + rowData.id;
               window.open(url, '_self');
             }}

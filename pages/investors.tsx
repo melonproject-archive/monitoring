@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, NoSsr } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, NoSsr } from '@material-ui/core';
 import { InvestmentHistoryQuery, InvestmentRequestsQuery } from '~/queries/InvestorListQuery';
 
 import Layout from '~/components/Layout';
@@ -11,7 +11,7 @@ import { formatBigNumber } from '~/utils/formatBigNumber';
 import { useQuery } from '@apollo/react-hooks';
 import TooltipNumber from '~/components/TooltipNumber';
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -89,7 +89,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
               },
               {
                 title: 'Amount [ETH]',
-                render: rowData => {
+                render: (rowData: any) => {
                   return formatBigNumber(rowData.amountInDenominationAsset, 18, 3);
                 },
                 type: 'numeric',
@@ -108,7 +108,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
               search: false,
             }}
             isLoading={investmentHistoryResult.loading}
-            onRowClick={(_, rowData) => {
+            onRowClick={(_, rowData: any) => {
               const url = '/investor?address=' + rowData.owner.id;
               window.open(url, '_self');
             }}
@@ -122,7 +122,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
               columns={[
                 {
                   title: 'Date',
-                  render: rowData => {
+                  render: (rowData: any) => {
                     return formatDate(rowData.requestTimestamp, true);
                   },
                   cellStyle: {
@@ -142,14 +142,14 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
                 },
                 {
                   title: 'Shares',
-                  render: rowData => {
+                  render: (rowData: any) => {
                     return <TooltipNumber number={rowData.shares} />;
                   },
                   type: 'numeric',
                 },
                 {
                   title: 'Amount',
-                  render: rowData => {
+                  render: (rowData: any) => {
                     return <TooltipNumber number={rowData.amount} decimals={rowData.asset.decimals} />;
                   },
                   type: 'numeric',

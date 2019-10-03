@@ -42,7 +42,7 @@ const ExchangeList: React.FunctionComponent<AssetListProps> = props => {
         paging: false,
       }}
       isLoading={props.loading}
-      onRowClick={(_, rowData) => {
+      onRowClick={(_, rowData: any) => {
         const url = '/exchange?address=' + rowData.id;
         window.open(url, '_self');
       }}

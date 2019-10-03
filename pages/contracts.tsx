@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, NoSsr } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, NoSsr } from '@material-ui/core';
 import { ContractsQuery } from '~/queries/ContractList';
 import Layout from '~/components/Layout';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
@@ -7,7 +7,7 @@ import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -48,7 +48,7 @@ const Contracts: React.FunctionComponent<ContractsProps> = props => {
               },
               {
                 title: 'Creation date',
-                render: rowData => {
+                render: (rowData: any) => {
                   return formatDate(rowData.createdAt, true);
                 },
                 customSort: (a, b) => sortBigNumber(a, b, 'createdAt'),

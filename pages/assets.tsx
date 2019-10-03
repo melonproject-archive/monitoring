@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, withStyles, WithStyles, StyleRulesCallback, NoSsr } from '@material-ui/core';
+import { Grid, withStyles, WithStyles, NoSsr } from '@material-ui/core';
 import Layout from '~/components/Layout';
 import AssetList from '~/components/AssetList';
 import { fetchCoinApiRates } from '~/utils/coinApi';
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },

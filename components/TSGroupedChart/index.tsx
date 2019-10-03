@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { withStyles } from '@material-ui/styles';
-import { StyleRulesCallback } from '@material-ui/core';
 
 import Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';

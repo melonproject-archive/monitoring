@@ -175,7 +175,7 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
         doubleHorizontalScroll: true,
       }}
       isLoading={props.loading}
-      onRowClick={(_, rowData) => {
+      onRowClick={(_, rowData: any) => {
         const url = '/fund?address=' + rowData.id;
         window.open(url, '_self');
       }}
