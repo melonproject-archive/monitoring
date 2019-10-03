@@ -43,12 +43,10 @@
     "react": "^16.8.3",
     "react-apollo": "^2.5.5",
     "react-dom": "^16.8.3",
-    "subscriptions-transport-ws": "^0.9.16",
-    "web3-eth": "^1.2.1"
+    "subscriptions-transport-ws": "^0.9.16"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^8.0.4-canary.18",
-    "@types/graphql": "^14.2.0",
     "@types/jest": "^24.0.13",
     "@types/next": "^8.0.5",
     "@types/recharts": "^1.1.16",

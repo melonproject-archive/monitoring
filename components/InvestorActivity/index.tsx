@@ -12,13 +12,13 @@ export interface InvestorActivityProps {
   loading: any;
 }
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },
 });
 
-const columns: Column[] = [
+const columns: Column<any>[] = [
   {
     title: 'Date',
     render: rowData => {

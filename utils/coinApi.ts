@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const fetchCoinApiRates = async (base: string = 'ETH') => {
-  const result = await axios('https://coinapi.now.sh/?base=' + base);
+  const result = await axios('https://coinapi.melon.network/?base=' + base);
 
   const r = { WETH: { rate: 1 } };
   result.data.rates.map(rate => {
@@ -11,6 +11,6 @@ export const fetchCoinApiRates = async (base: string = 'ETH') => {
 };
 
 export const fetchSingleCoinApiRate = async (base: string = 'ETH', quote: string = 'USD') => {
-  const result = await axios(`https://coinapi.now.sh/?base=${base}&quote=${quote}`);
+  const result = await axios(`https://coinapi.melon.network/?base=${base}&quote=${quote}`);
   return result.data;
 };

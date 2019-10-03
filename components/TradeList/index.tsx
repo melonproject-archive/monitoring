@@ -3,7 +3,6 @@ import * as R from 'ramda';
 import MaterialTable from 'material-table';
 
 import { withStyles } from '@material-ui/styles';
-import { StyleRulesCallback } from '@material-ui/core';
 import { formatDate } from '~/utils/formatDate';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import { methodSigToName } from '~/utils/methodSigToName';
@@ -19,7 +18,7 @@ export interface TradeListProps {
   linkPath?: string[];
 }
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },

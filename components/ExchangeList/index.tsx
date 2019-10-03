@@ -2,14 +2,13 @@ import React from 'react';
 import MaterialTable from 'material-table';
 
 import { withStyles } from '@material-ui/styles';
-import { StyleRulesCallback } from '@material-ui/core';
 
 export interface AssetListProps {
   data: any;
   loading?: boolean;
 }
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },

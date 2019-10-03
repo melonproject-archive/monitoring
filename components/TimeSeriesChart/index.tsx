@@ -2,7 +2,7 @@ import React from 'react';
 
 import { formatDate } from '~/utils/formatDate';
 import { withStyles } from '@material-ui/styles';
-import { StyleRulesCallback, CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 import { ResponsiveContainer, LineChart, XAxis, YAxis, Line, Tooltip, ReferenceLine } from 'recharts';
 
 export interface TimeSeriesChartProps {
@@ -15,7 +15,7 @@ export interface TimeSeriesChartProps {
   loading?: boolean;
 }
 
-const styles: StyleRulesCallback = theme => ({});
+const styles = theme => ({});
 
 const lineColor = index => {
   const lineColors = ['#00bfff', '#1e90ff', '#87cefa'];

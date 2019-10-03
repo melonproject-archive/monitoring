@@ -4,7 +4,6 @@ import MaterialTable from 'material-table';
 
 import BigNumber from 'bignumber.js';
 import { withStyles } from '@material-ui/styles';
-import { StyleRulesCallback } from '@material-ui/core';
 import { InvestorListQuery } from '~/queries/InvestorListQuery';
 import { formatDate } from '~/utils/formatDate';
 import { sortBigNumber } from '~/utils/sortBigNumber';
@@ -18,7 +17,7 @@ export interface InvestorListProps {
   data?: any;
 }
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },

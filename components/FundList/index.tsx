@@ -3,7 +3,7 @@ import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
 
 import { withStyles } from '@material-ui/styles';
-import { StyleRulesCallback, Tooltip, Typography } from '@material-ui/core';
+import { Tooltip, Typography } from '@material-ui/core';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import TooltipNumber from '../TooltipNumber';
 import { formatBigNumber } from '~/utils/formatBigNumber';
@@ -17,7 +17,7 @@ export interface FundListProps {
   ethusd?: number;
 }
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },

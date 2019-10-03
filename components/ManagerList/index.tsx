@@ -2,7 +2,6 @@ import React from 'react';
 import MaterialTable from 'material-table';
 
 import { withStyles } from '@material-ui/styles';
-import { StyleRulesCallback } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import { ManagerListQuery } from '~/queries/ManagerListQuery';
@@ -12,7 +11,7 @@ export interface ManagerListProps {
   data?: any;
 }
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },

@@ -19,8 +19,8 @@ import { AmguPaymentsQuery, AmguConsumedQuery } from '~/queries/EngineDetailsQue
 import { useQuery } from '@apollo/react-hooks';
 import { formatThousands } from '~/utils/formatThousands';
 import { fetchSingleCoinApiRate, fetchCoinApiRates } from '~/utils/coinApi';
-import Eth from 'web3-eth';
 import EtherscanLink from '~/components/EtherscanLink';
+import { fetchEnsAddresses } from '~/utils/ens';
 
 const styles: StyleRulesCallback = theme => ({
   paper: {
@@ -38,8 +38,6 @@ const styles: StyleRulesCallback = theme => ({
     marginLeft: 'auto',
   },
 });
-
-const eth = new Eth(Eth.givenProvider || 'https://mainnet.melonport.com');
 
 type NetworkProps = WithStyles<typeof styles>;
 
@@ -72,37 +70,11 @@ const getMlnRates = () => {
 };
 
 const getEnsAddresses = () => {
-  const names = [
-    'melontoken',
-    'version',
-    'registry',
-    'fundfactory',
-    'kyberpricefeed',
-    'engine',
-    'engineadapter',
-    'ethfinexadapter',
-    'kyberadapter',
-    'matchingmarketadapter',
-    'zeroexv2adapter',
-    'fundranking',
-    'managementfee',
-    'performancefee',
-  ];
-
   const [addresses, setAddresses] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
-      const adr = await Promise.all(
-        names.map(async name => {
-          const ens = `${name}.melonprotocol.eth`;
-
-          return {
-            ens,
-            address: (await eth.ens.getAddress(ens)).toLowerCase(),
-          };
-        }),
-      );
+      const adr = await fetchEnsAddresses();
       setAddresses(adr);
     };
     fetchData();

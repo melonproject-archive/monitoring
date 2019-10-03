@@ -2,7 +2,7 @@ import React from 'react';
 import * as R from 'ramda';
 
 import { withStyles } from '@material-ui/styles';
-import { StyleRulesCallback, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import { EventListFundQuery, EventListContractQuery } from '~/queries/EventListQuery';
 import MaterialTable from 'material-table';
@@ -15,7 +15,7 @@ export interface EventListProps {
   contract?: string;
 }
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },

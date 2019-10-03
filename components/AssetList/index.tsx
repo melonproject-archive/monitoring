@@ -2,7 +2,6 @@ import React from 'react';
 import MaterialTable from 'material-table';
 
 import { withStyles } from '@material-ui/styles';
-import { StyleRulesCallback } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { AssetListQuery } from '~/queries/AssetListQuery';
 import { sortBigNumber } from '~/utils/sortBigNumber';
@@ -13,7 +12,7 @@ export interface AssetListProps {
   rates?: any;
 }
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -128,7 +127,7 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
         paging: false,
       }}
       isLoading={result.loading}
-      onRowClick={(_, rowData) => {
+      onRowClick={(_, rowData: any) => {
         const url = '/asset?address=' + rowData.id;
         window.open(url, '_self');
       }}

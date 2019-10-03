@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { withStyles } from '@material-ui/styles';
-import { StyleRulesCallback } from '@material-ui/core';
 
 import Highcharts from 'highcharts/highstock';
 
@@ -23,7 +22,7 @@ export interface TSAreaChartProps {
   loading?: boolean;
 }
 
-const styles: StyleRulesCallback = theme => ({});
+const styles = theme => ({});
 
 // const lineColor = index => {
 //   const lineColors = ['#00bfff', '#1e90ff', '#87cefa'];

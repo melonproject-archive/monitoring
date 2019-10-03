@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { withStyles } from '@material-ui/styles';
-import { StyleRulesCallback } from '@material-ui/core';
 
 import Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
@@ -20,7 +19,7 @@ export interface TSChartProps {
   loading?: boolean;
 }
 
-const styles: StyleRulesCallback = theme => ({});
+const styles = theme => ({});
 
 const TSLineChart: React.FunctionComponent<TSChartProps> = props => {
   const options = {

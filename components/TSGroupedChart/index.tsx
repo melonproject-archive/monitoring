@@ -23,7 +23,7 @@ export interface TSGroupedChartProps {
   page?: string;
 }
 
-const styles: StyleRulesCallback = theme => ({});
+const styles = theme => ({});
 
 const TSGroupedChart: React.FunctionComponent<TSGroupedChartProps> = props => {
   const series = props.dataKeys.map(key => {

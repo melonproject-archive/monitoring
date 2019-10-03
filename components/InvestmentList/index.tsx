@@ -2,7 +2,6 @@ import React from 'react';
 import MaterialTable, { Column } from 'material-table';
 
 import { withStyles } from '@material-ui/styles';
-import { StyleRulesCallback } from '@material-ui/core';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import TooltipNumber from '../TooltipNumber';
 
@@ -11,13 +10,13 @@ export interface InvestmentListProps {
   loading: any;
 }
 
-const styles: StyleRulesCallback = theme => ({
+const styles = theme => ({
   paper: {
     padding: theme.spacing(2),
   },
 });
 
-const columns: Column[] = [
+const columns: Column<any>[] = [
   {
     title: 'Fund',
     field: 'fund.name',
