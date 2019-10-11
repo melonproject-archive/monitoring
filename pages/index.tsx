@@ -13,6 +13,7 @@ import { formatThousands } from '~/utils/formatThousands';
 import { fetchSingleCoinApiRate, fetchCoinApiRates } from '~/utils/coinApi';
 import EtherscanLink from '~/components/EtherscanLink';
 import { fetchEnsAddresses } from '~/utils/ens';
+import LineItem from '~/components/LineItem';
 
 const styles = theme => ({
   paper: {
@@ -270,14 +271,9 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
             {ens &&
               ens.map(a => {
                 return (
-                  <>
-                    <Grid item={true} xs={6} sm={6} md={4} key={a.ens}>
-                      {a.ens}
-                    </Grid>
-                    <Grid item={true} xs={6} sm={6} md={8} key={a.address}>
-                      <EtherscanLink address={a.address} />
-                    </Grid>
-                  </>
+                  <LineItem name={a.ens} key={a.address}>
+                    <EtherscanLink address={a.address} />
+                  </LineItem>
                 );
               })}
           </Grid>

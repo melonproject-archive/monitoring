@@ -13,10 +13,22 @@ const styles = {};
 const LineItem: React.FunctionComponent<LineItemProps> = props => {
   return (
     <>
-      <Grid item={true} xs={4} sm={4} md={4}>
+      <Grid
+        item={true}
+        xs={4}
+        sm={4}
+        md={4}
+        style={{ whiteSpace: 'nowrap', width: '250px', overflow: 'hidden', textOverflow: 'ellipsis' }}
+      >
         <Typography variant="caption">{props.name}</Typography>
       </Grid>
-      <Grid item={true} xs={8} sm={8} md={8} style={{ width: '250px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+      <Grid
+        item={true}
+        xs={8}
+        sm={8}
+        md={8}
+        style={{ whiteSpace: 'nowrap', width: '250px', overflow: 'hidden', textOverflow: 'ellipsis' }}
+      >
         {props.children}
         {props.linebreak && <div>&nbsp;</div>}
       </Grid>

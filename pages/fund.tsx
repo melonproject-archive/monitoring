@@ -340,14 +340,9 @@ const Fund: React.FunctionComponent<FundProps> = props => {
             {contractAddresses &&
               contractAddresses.map(a => {
                 return (
-                  <>
-                    <Grid item={true} xs={6} sm={6} md={4} key={a.name}>
-                      {a.name}
-                    </Grid>
-                    <Grid item={true} xs={6} sm={6} md={8} key={a.address}>
-                      <EtherscanLink address={a.address} />
-                    </Grid>
-                  </>
+                  <LineItem name={a.name} key={a.address}>
+                    <EtherscanLink address={a.address} />
+                  </LineItem>
                 );
               })}
           </Grid>
