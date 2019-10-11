@@ -25,11 +25,14 @@ export const ExchangeListQuery = gql`
 export const ExchangeMethodCallListQuery = gql`
   query ExchangeMethodCallListQuery($limit: Int!, $skip: Int!) {
     exchangeMethodCalls(orderBy: timestamp, orderDirection: "desc", first: $limit, skip: $skip) {
+      id
       timestamp
       exchange {
+        id
         name
       }
       trading {
+        id
         fund {
           id
           name

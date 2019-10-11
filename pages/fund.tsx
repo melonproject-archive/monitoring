@@ -20,6 +20,7 @@ import TooltipNumber from '~/components/TooltipNumber';
 import TradeList from '~/components/TradeList';
 import EventList from '~/components/EventList';
 import LineItem from '~/components/LineItem';
+import ShortAddress from '~/components/ShortAddress';
 
 const styles = theme => ({
   paper: {
@@ -496,7 +497,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               },
               {
                 title: 'Investor',
-                field: 'owner.id',
+                render: rowData => <ShortAddress address={rowData.owner.id} />,
               },
               {
                 title: 'Action',
@@ -504,17 +505,22 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               },
               {
                 title: 'Shares',
-                render: (rowData: any) => {
-                  return <TooltipNumber number={rowData.shares} />;
-                },
+                render: (rowData: any) => <TooltipNumber number={rowData.shares} />,
                 type: 'numeric',
               },
               {
                 title: 'Share Price',
-                render: (rowData: any) => {
-                  return <TooltipNumber number={rowData.sharePrice} />;
-                },
+                render: (rowData: any) => <TooltipNumber number={rowData.sharePrice} />,
                 type: 'numeric',
+              },
+              {
+                title: 'Amount',
+                render: (rowData: any) => <TooltipNumber number={rowData.amount} decimals={rowData.asset.decimals} />,
+                type: 'numeric',
+              },
+              {
+                title: 'Asset',
+                field: 'asset.symbol',
               },
               {
                 title: 'Amount in ETH',
@@ -558,20 +564,16 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 },
                 {
                   title: 'Investor',
-                  field: 'owner.id',
+                  render: rowData => <ShortAddress address={rowData.owner.id} />,
                 },
                 {
                   title: 'Shares',
-                  render: rowData => {
-                    return <TooltipNumber number={rowData.shares} />;
-                  },
+                  render: rowData => <TooltipNumber number={rowData.shares} />,
                   type: 'numeric',
                 },
                 {
                   title: 'Amount',
-                  render: rowData => {
-                    return <TooltipNumber number={rowData.amount} decimals={rowData.asset.decimals} />;
-                  },
+                  render: rowData => <TooltipNumber number={rowData.amount} decimals={rowData.asset.decimals} />,
                   type: 'numeric',
                 },
                 {

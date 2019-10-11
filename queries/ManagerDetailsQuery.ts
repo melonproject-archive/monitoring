@@ -10,6 +10,7 @@ export const ManagerDetailsQuery = gql`
         name
         nav
         version {
+          id
           name
         }
       }

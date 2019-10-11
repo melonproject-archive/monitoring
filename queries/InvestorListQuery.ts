@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 export const InvestorCountQuery = gql`
   query InvestorCountQuery($limit: Int!, $skip: Int!) {
     investorCounts(orderBy: timestamp, first: $limit, skip: $skip) {
+      id
       numberOfInvestors
       timestamp
     }
@@ -20,11 +21,13 @@ export const InvestorListQuery = gql`
         nav
       }
       investmentHistory {
+        id
         action
         timestamp
         amountInDenominationAsset
       }
       valuationHistory(first: 1, orderBy: timestamp, orderDirection: desc) {
+        id
         timestamp
         gav
         nav
@@ -36,8 +39,10 @@ export const InvestorListQuery = gql`
 export const InvestmentHistoryQuery = gql`
   query InvestmentHistoryQuery($limit: Int!) {
     investmentHistories(orderBy: timestamp, orderDirection: desc, first: $limit) {
+      id
       timestamp
       fund {
+        id
         name
       }
       owner {
@@ -45,6 +50,12 @@ export const InvestmentHistoryQuery = gql`
       }
       action
       amountInDenominationAsset
+      amount
+      asset {
+        id
+        symbol
+        decimals
+      }
     }
   }
 `;
@@ -55,6 +66,7 @@ export const InvestmentRequestsQuery = gql`
       id
       requestTimestamp
       fund {
+        id
         name
       }
       owner {
@@ -64,6 +76,7 @@ export const InvestmentRequestsQuery = gql`
       amount
       shares
       asset {
+        id
         symbol
         decimals
       }

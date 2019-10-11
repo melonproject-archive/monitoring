@@ -189,16 +189,12 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
                 },
                 {
                   title: 'Shares',
-                  render: rowData => {
-                    return <TooltipNumber number={rowData.shares} />;
-                  },
+                  render: rowData => <TooltipNumber number={rowData.shares} />,
                   type: 'numeric',
                 },
                 {
                   title: 'Amount',
-                  render: rowData => {
-                    return <TooltipNumber number={rowData.amount} decimals={rowData.asset.decimals} />;
-                  },
+                  render: rowData => <TooltipNumber number={rowData.amount} decimals={rowData.asset.decimals} />,
                   type: 'numeric',
                 },
                 {

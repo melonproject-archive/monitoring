@@ -28,6 +28,7 @@ export const InvestorDetailsQuery = gql`
         }
       }
       investmentRequests(orderBy: requestTimestamp) {
+        id
         fund {
           id
           name
@@ -38,6 +39,7 @@ export const InvestorDetailsQuery = gql`
         amount
         updateTimestamp
         asset {
+          id
           symbol
           decimals
         }
@@ -56,6 +58,7 @@ export const InvestorDetailsQuery = gql`
         }
       }
       valuationHistory(orderBy: timestamp) {
+        id
         timestamp
         gav
         nav

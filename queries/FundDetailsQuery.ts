@@ -12,6 +12,7 @@ export const FundDetailsQuery = gql`
         id
       }
       version {
+        id
         name
       }
       gav
@@ -20,6 +21,7 @@ export const FundDetailsQuery = gql`
       sharePrice
 
       investmentHistory(orderBy: timestamp) {
+        id
         action
         timestamp
         shares
@@ -32,9 +34,11 @@ export const FundDetailsQuery = gql`
         asset {
           id
           symbol
+          decimals
         }
       }
       holdingsHistory(orderBy: timestamp) {
+        id
         timestamp
         amount
         assetGav
@@ -44,6 +48,7 @@ export const FundDetailsQuery = gql`
         }
       }
       currentHoldings: holdingsHistory(orderBy: timestamp, orderDirection: desc, first: 12) {
+        id
         timestamp
         amount
         assetGav
@@ -54,6 +59,7 @@ export const FundDetailsQuery = gql`
         }
       }
       investments {
+        id
         shares
         owner {
           id
@@ -62,14 +68,17 @@ export const FundDetailsQuery = gql`
       feeManager {
         id
         managementFee {
+          id
           managementFeeRate
         }
         performanceFee {
+          id
           performanceFeeRate
           performanceFeePeriod
           initializeTime
         }
         feeRewardHistory {
+          id
           timestamp
           shares
         }
@@ -77,13 +86,16 @@ export const FundDetailsQuery = gql`
       policyManager {
         id
         policies {
+          id
           identifier
           position
           identifier
           assetWhiteList {
+            id
             symbol
           }
           assetBlackList {
+            id
             symbol
           }
           maxConcentration
@@ -94,6 +106,7 @@ export const FundDetailsQuery = gql`
       accounting {
         id
         denominationAsset {
+          id
           symbol
         }
       }
@@ -110,16 +123,19 @@ export const FundDetailsQuery = gql`
           name
         }
         calls(orderBy: timestamp, orderDirection: "desc") {
+          id
           timestamp
           exchange {
             id
             name
           }
           orderAddress2 {
+            id
             symbol
             decimals
           }
           orderAddress3 {
+            id
             symbol
             decimals
           }
@@ -148,6 +164,7 @@ export const FundDetailsQuery = gql`
       amount
       updateTimestamp
       asset {
+        id
         symbol
         decimals
       }
@@ -163,6 +180,7 @@ export const FundDetailsQuery = gql`
 export const FundCalculationsHistoryQuery = gql`
   query FundCalculationsHistoryQuery($fund: ID!, $limit: Int!, $skip: Int!) {
     fundCalculationsHistories(where: { fund: $fund }, orderBy: timestamp, first: $limit, skip: $skip) {
+      id
       gav
       nav
       totalSupply
@@ -176,6 +194,7 @@ export const FundCalculationsHistoryQuery = gql`
 export const FundHoldingsHistoryQuery = gql`
   query FundHoldingsHistoryQuery($id: ID!, $limit: Int!, $skip: Int!) {
     fundHoldingsHistories(where: { fund: $id }, orderBy: timestamp, first: $limit, skip: $skip) {
+      id
       timestamp
       amount
       assetGav

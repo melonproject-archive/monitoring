@@ -15,6 +15,7 @@ export const AssetDetailsQuery = gql`
 export const SingleAssetPriceHistoryQuery = gql`
   query SingleAssetPriceHistoryQuery($asset: ID!, $limit: Int!, $skip: Int!) {
     assetPriceHistories(first: $limit, skip: $skip, orderBy: timestamp, where: { asset: $asset }) {
+      id
       price
       timestamp
     }
@@ -24,10 +25,12 @@ export const SingleAssetPriceHistoryQuery = gql`
 export const MelonNetworkAssetHistoryQuery = gql`
   query MelonNetworkAssetHistoryQuery($asset: ID!, $limit: Int!, $skip: Int!) {
     melonNetworkAssetHistories(first: $limit, skip: $skip, orderBy: timestamp, where: { asset: $asset }) {
+      id
       timestamp
       assetGav
       amount
       asset {
+        id
         decimals
       }
     }
@@ -41,6 +44,7 @@ export const AssetFundsQuery = gql`
         id
         name
         holdingsHistory(orderBy: timestamp, orderDirection: desc, first: 11) {
+          id
           amount
           assetGav
           timestamp

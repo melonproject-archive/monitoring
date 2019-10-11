@@ -6,6 +6,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { AssetListQuery } from '~/queries/AssetListQuery';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import TooltipNumber from '../TooltipNumber';
+import ShortAddress from '../ShortAddress';
 
 export interface AssetListProps {
   data?: any;
@@ -38,6 +39,9 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
     {
       title: 'Symbol',
       field: 'symbol',
+      headerStyle: {
+        verticalAlign: 'text-top',
+      },
     },
     {
       title: 'Name',
@@ -47,6 +51,14 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
       },
       headerStyle: {
         whiteSpace: 'nowrap',
+        verticalAlign: 'text-top',
+      },
+    },
+    {
+      title: 'Addres',
+      render: rowData => <ShortAddress address={rowData.id} />,
+      headerStyle: {
+        verticalAlign: 'text-top',
       },
     },
     {
@@ -56,12 +68,9 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
       },
       type: 'numeric',
       customSort: (a, b) => sortBigNumber(a, b, 'lastPrice'),
-      cellStyle: {
-        whiteSpace: 'nowrap',
-      },
-      headerStyle: {
-        whiteSpace: 'nowrap',
-      },
+      // headerStyle: {
+      //   verticalAlign: 'text-top',
+      // },
     },
     {
       title: 'Last price (CoinAPI)',
@@ -69,12 +78,9 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
         return props.rates.hasOwnProperty(rowData.symbol) ? (1 / props.rates[rowData.symbol].rate).toFixed(4) : '';
       },
       type: 'numeric',
-      cellStyle: {
-        whiteSpace: 'nowrap',
-      },
-      headerStyle: {
-        whiteSpace: 'nowrap',
-      },
+      // headerStyle: {
+      //   verticalAlign: 'text-top',
+      // },
     },
     {
       title: '# funds',
@@ -85,6 +91,7 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
       },
       headerStyle: {
         whiteSpace: 'nowrap',
+        verticalAlign: 'text-top',
       },
     },
     {
@@ -99,6 +106,7 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
       },
       headerStyle: {
         whiteSpace: 'nowrap',
+        verticalAlign: 'text-top',
       },
     },
     {
@@ -114,6 +122,7 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
       },
       headerStyle: {
         whiteSpace: 'nowrap',
+        verticalAlign: 'text-top',
       },
     },
   ];

@@ -10,6 +10,7 @@ import { formatDate } from '~/utils/formatDate';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { useQuery } from '@apollo/react-hooks';
 import TooltipNumber from '~/components/TooltipNumber';
+import ShortAddress from '~/components/ShortAddress';
 
 const styles = theme => ({
   paper: {
@@ -71,7 +72,9 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
               },
               {
                 title: 'Investor',
-                field: 'owner.id',
+                render: rowData => {
+                  return <ShortAddress address={rowData.owner.id} />;
+                },
               },
               {
                 title: 'Action',
@@ -86,6 +89,23 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
                 headerStyle: {
                   whiteSpace: 'nowrap',
                 },
+              },
+              {
+                title: 'Amount',
+                render: (rowData: any) => {
+                  return formatBigNumber(rowData.amount, rowData.asset.decimals, 3);
+                },
+                type: 'numeric',
+                cellStyle: {
+                  whiteSpace: 'nowrap',
+                },
+                headerStyle: {
+                  whiteSpace: 'nowrap',
+                },
+              },
+              {
+                title: 'Asset',
+                field: 'asset.symbol',
               },
               {
                 title: 'Amount [ETH]',
@@ -106,6 +126,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
             options={{
               paging: false,
               search: false,
+              doubleHorizontalScroll: true,
             }}
             isLoading={investmentHistoryResult.loading}
             onRowClick={(_, rowData: any) => {
@@ -138,7 +159,9 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
                 },
                 {
                   title: 'Investor',
-                  field: 'owner.id',
+                  render: (rowData: any) => {
+                    return <ShortAddress address={rowData.owner.id} />;
+                  },
                 },
                 {
                   title: 'Shares',

@@ -7,6 +7,7 @@ export const AssetsQuery = gql`
       symbol
       decimals
       priceHistory(orderBy: timestamp) {
+        id
         price
         timestamp
       }
@@ -31,6 +32,7 @@ export const AssetListQuery = gql`
         }
       }
       melonNetworkAssetHistory(orderBy: timestamp, orderDirection: desc, first: 1) {
+        id
         timestamp
         assetGav
         amount

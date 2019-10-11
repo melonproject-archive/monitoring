@@ -9,6 +9,7 @@ export const EventListFundQuery = gql`
       contract
       contractAddress
       params {
+        id
         name
         value
       }
@@ -25,6 +26,7 @@ export const EventListContractQuery = gql`
       contract
       contractAddress
       params {
+        id
         name
         value
       }

@@ -12,6 +12,7 @@ import { robustIRR } from '~/utils/robustIRR';
 import { prepareCashFlows } from '~/utils/prepareCashFlows';
 import { moneyMultiple } from '~/utils/moneyMultiple';
 import TooltipNumber from '../TooltipNumber';
+import ShortAddress from '../ShortAddress';
 
 export interface InvestorListProps {
   data?: any;
@@ -26,13 +27,11 @@ const styles = theme => ({
 const columns = [
   {
     title: 'Address',
-    field: 'id',
+    render: rowData => <ShortAddress address={rowData.id} length={16} />,
   },
   {
     title: 'Investor since',
-    render: rowData => {
-      return formatDate(rowData.createdAt);
-    },
+    render: rowData => formatDate(rowData.createdAt),
     customSort: (a, b) => sortBigNumber(a, b, 'createdAt'),
     cellStyle: {
       whiteSpace: 'nowrap',
@@ -49,9 +48,7 @@ const columns = [
   {
     title: 'AUM [ETH]',
     type: 'numeric',
-    render: rowData => {
-      return <TooltipNumber number={rowData.netAum} />;
-    },
+    render: rowData => <TooltipNumber number={rowData.netAum} />,
     customSort: (a, b) => sortBigNumber(a, b, 'netAum'),
     defaultSort: 'desc',
     cellStyle: {
