@@ -44,15 +44,15 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
   const investor = R.pathOr(undefined, ['data', 'investor'], result);
   const investmentList = R.pathOr([], ['data', 'investor', 'investments'], result);
 
-  // valuation fir invididual investments
+  // valuation for invididual investments
   const investmentValuationHistoryResult = useScrapingQuery(
     [InvestmentValuationHistoryQuery, InvestmentValuationHistoryQuery],
     proceedPaths(['investmentValuationHistories']),
     {
       ssr: false,
-      skip: !(router && router.query.address),
+      skip: !investmentList,
       variables: {
-        ids: investmentList.map(investment => investment.id),
+        ids: investmentList && investmentList.map(investment => investment.id),
       },
     },
   );

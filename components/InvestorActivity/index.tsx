@@ -69,6 +69,25 @@ const columns: Array<Column<any>> = [
     },
   },
   {
+    title: 'Amount',
+    type: 'numeric',
+    render: rowData => {
+      if (rowData.action === 'Redemption') {
+        return '';
+      }
+      return <TooltipNumber number={rowData.amount} decimals={rowData.asset.decimals} />;
+    },
+  },
+  {
+    title: 'Asset',
+    render: (rowData: any) => {
+      if (rowData.action === 'Redemption') {
+        return '(in kind)';
+      }
+      return rowData.asset.symbol;
+    },
+  },
+  {
     title: 'Amount [ETH]',
     type: 'numeric',
     render: rowData => {

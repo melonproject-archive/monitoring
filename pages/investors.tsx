@@ -93,6 +93,9 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
               {
                 title: 'Amount',
                 render: (rowData: any) => {
+                  if (rowData.action === 'Redemption') {
+                    return '';
+                  }
                   return formatBigNumber(rowData.amount, rowData.asset.decimals, 3);
                 },
                 type: 'numeric',
@@ -105,7 +108,12 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
               },
               {
                 title: 'Asset',
-                field: 'asset.symbol',
+                render: (rowData: any) => {
+                  if (rowData.action === 'Redemption') {
+                    return '(in kind)';
+                  }
+                  return rowData.asset.symbol;
+                },
               },
               {
                 title: 'Amount [ETH]',

@@ -50,6 +50,11 @@ export const InvestorDetailsQuery = gql`
         shares
         sharePrice
         amount
+        asset {
+          id
+          symbol
+          decimals
+        }
         amountInDenominationAsset
         timestamp
         fund {

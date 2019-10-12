@@ -3,7 +3,7 @@ import BaseApp, { Container } from 'next/app';
 import { ApolloProvider } from '@apollo/react-hooks';
 import withApollo, { WithApolloProps } from 'next-with-apollo';
 import { ApolloClient } from 'apollo-client';
-import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloLink } from 'apollo-link';
 import { onError } from 'apollo-link-error';
 import { HttpLink } from 'apollo-link-http';
@@ -11,7 +11,6 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import introspection from '~/introspection.json';
 import { theme } from '~/theme';
 import { OperationDefinitionNode } from 'graphql';
 
@@ -83,10 +82,10 @@ const createDataLink = () => {
 
 const createClient = () => {
   const cache = new InMemoryCache({
-    addTypename: true,
-    fragmentMatcher: new IntrospectionFragmentMatcher({
-      introspectionQueryResultData: introspection,
-    }),
+    // addTypename: true,
+    // fragmentMatcher: new IntrospectionFragmentMatcher({
+    //   introspectionQueryResultData: introspection,
+    // }),
   });
 
   const errorLink = createErrorLink();
