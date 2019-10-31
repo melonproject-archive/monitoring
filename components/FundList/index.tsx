@@ -32,9 +32,10 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
       const bnCurrent = new BigNumber(current.sharePrice);
       const bnPrevious = new BigNumber(previous.sharePrice);
 
-      const timeSpan = current.timestamp - previous.timestamp;
       const returnSinceLastPriceUpdate = bnCurrent.dividedBy(bnPrevious).toNumber() - 1;
-      const dailyReturn = 100 * (Math.pow(1 + returnSinceLastPriceUpdate, (24 * 60 * 60) / timeSpan) - 1);
+      // const timeSpan = current.timestamp - previous.timestamp;
+      // const dailyReturn = 100 * (Math.pow(1 + returnSinceLastPriceUpdate, (24 * 60 * 60) / timeSpan) - 1);
+      const dailyReturn = 100 * returnSinceLastPriceUpdate;
 
       const color = dailyReturn > 0 ? 'secondary' : dailyReturn < 0 ? 'error' : 'primary';
       const prefix = dailyReturn > 0 ? '+' : '';

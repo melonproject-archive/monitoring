@@ -73,9 +73,10 @@ const Fund: React.FunctionComponent<FundProps> = props => {
 
   const normalizedNumbers = R.pathOr([], ['data', 'fundCalculationsHistories'], calculationsResult).map(
     (item, index, array) => {
-      const timeSpan = index > 0 ? item.timestamp - array[index - 1].timestamp : 0;
       const returnSinceLastPriceUpdate = index > 0 ? item.sharePrice / array[index - 1].sharePrice - 1 : 0;
-      let dailyReturn = index > 0 ? Math.pow(1 + returnSinceLastPriceUpdate, (24 * 60 * 60) / timeSpan) - 1 : 0;
+      // const timeSpan = index > 0 ? item.timestamp - array[index - 1].timestamp : 0;
+      // let dailyReturn = index > 0 ? Math.pow(1 + returnSinceLastPriceUpdate, (24 * 60 * 60) / timeSpan) - 1 : 0;
+      let dailyReturn = returnSinceLastPriceUpdate;
       if (dailyReturn > 100 || dailyReturn <= -1) {
         dailyReturn = undefined;
       }
