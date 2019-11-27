@@ -69,7 +69,7 @@ const Home: React.FunctionComponent<HomeProps> = props => {
   const historyLoading = historyResult.loading;
 
   const melonNetworkHistories = R.pathOr([], ['data', 'melonNetworkHistories'], historyResult)
-    .filter(item => item.validGav)
+    // .filter(item => item.validGav)
     .map(item => {
       return {
         ...item,

@@ -25,7 +25,7 @@ export const proceedPaths = (paths: string[]) => (current: any, expected: number
 export function useScrapingQuery([query, more]: QueryPair, proceed: ProceedOrNotFn, props?: any) {
   const variables = {
     ...(props && props.variables),
-    limit: (props.variables && props.variables.limit) || 100,
+    limit: (props.variables && props.variables.limit) || 1000,
     skip: (props.variables && props.variables.skip) || 0,
   };
 
