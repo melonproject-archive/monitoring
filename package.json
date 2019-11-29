@@ -30,6 +30,7 @@
     "axios": "^0.19.0",
     "bignumber.js": "^9.0.0",
     "cross-env": "^5.2.0",
+    "dotenv-extended": "^2.5.0",
     "graphql": "^14.3.1",
     "graphql-tag": "^2.10.0",
     "highcharts": "^7.1.2",

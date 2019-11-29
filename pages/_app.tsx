@@ -1,5 +1,6 @@
 import React from 'react';
 import BaseApp, { Container } from 'next/app';
+import getConfig from 'next/config';
 import { ApolloProvider } from '@apollo/react-hooks';
 import withApollo, { WithApolloProps } from 'next-with-apollo';
 import { ApolloClient } from 'apollo-client';
@@ -13,6 +14,8 @@ import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { theme } from '~/theme';
 import { OperationDefinitionNode } from 'graphql';
+
+const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
 
 export type RedirectFn = (target: string, code?: number) => void;
 
@@ -55,16 +58,18 @@ const createErrorLink = () =>
   });
 
 const createDataLink = () => {
+  const httpUri = process.browser ? publicRuntimeConfig.subgraphHttp : serverRuntimeConfig.subgraphHttp;
   const httpLink = new HttpLink({
-    uri: 'https://api.thegraph.com/subgraphs/name/melonproject/melon',
+    uri: httpUri,
   });
 
   if (!process.browser) {
     return httpLink;
   }
 
+  const wsUri = process.browser ? publicRuntimeConfig.subgraphWs : serverRuntimeConfig.subgraphWs;
   const wsLink = new WebSocketLink({
-    uri: 'wss://api.thegraph.com/subgraphs/name/melonproject/melon',
+    uri: wsUri,
     options: {
       reconnect: true,
     },

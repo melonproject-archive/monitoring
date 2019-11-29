@@ -18,3 +18,4 @@ build/
 !.prettierrc
 !.editorconfig
 !.dockerignore
+!.env.defaults

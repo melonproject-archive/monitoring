@@ -1,17 +1,27 @@
+require('dotenv-extended').load();
+
 const path = require('path');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const { PHASE_PRODUCTION_SERVER } = require('next/constants');
 
-module.exports = (phase) => {
+module.exports = phase => {
   const common = {
     target: 'serverless',
-  }
+    serverRuntimeConfig: {
+      subgraphHttp: process.env.SUBGRAPH_HTTP,
+      subgraphWs: process.env.SUBGRAPH_WS,
+    },
+    publicRuntimeConfig: {
+      subgraphHttp: process.env.SUBGRAPH_HTTP_PUBLIC || process.env.SUBGRAPH_HTTP,
+      subgraphWs: process.env.SUBGRAPH_WS_PUBLIC || process.env.SUBGRAPH_WS,
+    },
+  };
 
   if (phase === PHASE_PRODUCTION_SERVER) {
     return common;
   }
 
-  const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  const withBundleAnalyzer = require('@next/bundle-analyzer')({
     enabled: !!JSON.parse(process.env.ANALYZE || 'false'),
   });
 
@@ -22,10 +32,8 @@ module.exports = (phase) => {
         // Easy root level access to our file hierarcy.
         '~': path.join(options.dir),
       });
-      
-      config.plugins = config.plugins.filter(
-        plugin => !(plugin instanceof ForkTsCheckerWebpackPlugin),
-      );
+
+      config.plugins = config.plugins.filter(plugin => !(plugin instanceof ForkTsCheckerWebpackPlugin));
 
       return config;
     },

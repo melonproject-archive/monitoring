@@ -1,0 +1,16 @@
+*
+
+!components
+!pages
+!queries
+!static
+!utils
+!package.json
+!yarn.lock
+!tsconfig.json
+!introspection.json
+!next-env.d.ts
+!next.confi.js
+!theme.ts
+!types.ts
+!.env.defaults
