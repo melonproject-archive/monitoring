@@ -8,12 +8,12 @@ module.exports = phase => {
   const common = {
     target: 'serverless',
     serverRuntimeConfig: {
-      subgraphHttp: process.env.SUBGRAPH_HTTP,
-      subgraphWs: process.env.SUBGRAPH_WS,
+      subgraphHttp: process.env.MELON_SUBGRAPH_HTTP,
+      subgraphWs: process.env.MELON_SUBGRAPH_WS,
     },
     publicRuntimeConfig: {
-      subgraphHttp: process.env.SUBGRAPH_HTTP_PUBLIC || process.env.SUBGRAPH_HTTP,
-      subgraphWs: process.env.SUBGRAPH_WS_PUBLIC || process.env.SUBGRAPH_WS,
+      subgraphHttp: process.env.MELON_SUBGRAPH_HTTP_PUBLIC || process.env.MELON_SUBGRAPH_HTTP,
+      subgraphWs: process.env.MELON_SUBGRAPH_WS_PUBLIC || process.env.MELON_SUBGRAPH_WS,
     },
   };
 
