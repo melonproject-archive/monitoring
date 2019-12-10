@@ -108,7 +108,7 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
   );
 
   const melonNetworkHistories = R.pathOr([], ['data', 'melonNetworkHistories'], historyResult)
-    // .filter(item => item.validGav)
+    .filter(item => item.gav > 0)
     .map(item => {
       return {
         ...item,
