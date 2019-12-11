@@ -1,6 +1,5 @@
 import React from 'react';
 import BaseApp, { Container } from 'next/app';
-import getConfig from 'next/config';
 import { ApolloProvider } from '@apollo/react-hooks';
 import withApollo, { WithApolloProps } from 'next-with-apollo';
 import { ApolloClient } from 'apollo-client';
@@ -8,14 +7,9 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloLink } from 'apollo-link';
 import { onError } from 'apollo-link-error';
 import { HttpLink } from 'apollo-link-http';
-import { WebSocketLink } from 'apollo-link-ws';
-import { getMainDefinition } from 'apollo-utilities';
 import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { theme } from '~/theme';
-import { OperationDefinitionNode } from 'graphql';
-
-const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
 
 export type RedirectFn = (target: string, code?: number) => void;
 
@@ -58,41 +52,16 @@ const createErrorLink = () =>
   });
 
 const createDataLink = () => {
-  const httpUri = process.browser ? publicRuntimeConfig.subgraphHttp : serverRuntimeConfig.subgraphHttp;
+  const httpUri = process.env.MELON_SUBGRAPH;
   const httpLink = new HttpLink({
     uri: httpUri,
   });
 
-  if (!process.browser) {
-    return httpLink;
-  }
-
-  const wsUri = process.browser ? publicRuntimeConfig.subgraphWs : serverRuntimeConfig.subgraphWs;
-  const wsLink = new WebSocketLink({
-    uri: wsUri,
-    options: {
-      reconnect: true,
-    },
-  });
-
-  return ApolloLink.split(
-    op => {
-      const { kind, operation } = getMainDefinition(op.query) as OperationDefinitionNode;
-      return kind === 'OperationDefinition' && operation === 'subscription';
-    },
-    wsLink,
-    httpLink,
-  );
+  return httpLink;
 };
 
 const createClient = () => {
-  const cache = new InMemoryCache({
-    // addTypename: true,
-    // fragmentMatcher: new IntrospectionFragmentMatcher({
-    //   introspectionQueryResultData: introspection,
-    // }),
-  });
-
+  const cache = new InMemoryCache();
   const errorLink = createErrorLink();
   const dataLink = createDataLink();
   const mergedLink = ApolloLink.from([errorLink, dataLink]);
@@ -116,4 +85,6 @@ const createClient = () => {
   return client;
 };
 
-export default withApollo(createClient)(App);
+export default withApollo(createClient, {
+  getDataFromTree: 'never',
+})(App);

@@ -7,13 +7,8 @@ const { PHASE_PRODUCTION_SERVER } = require('next/constants');
 module.exports = phase => {
   const common = {
     target: 'serverless',
-    serverRuntimeConfig: {
-      subgraphHttp: process.env.MELON_SUBGRAPH_HTTP,
-      subgraphWs: process.env.MELON_SUBGRAPH_WS,
-    },
-    publicRuntimeConfig: {
-      subgraphHttp: process.env.MELON_SUBGRAPH_HTTP_PUBLIC || process.env.MELON_SUBGRAPH_HTTP,
-      subgraphWs: process.env.MELON_SUBGRAPH_WS_PUBLIC || process.env.MELON_SUBGRAPH_WS,
+    env: {
+      MELON_SUBGRAPH: process.env.MELON_SUBGRAPH,
     },
   };
 
