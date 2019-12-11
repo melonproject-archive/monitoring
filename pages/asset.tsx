@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
+import * as Rx from 'rxjs';
+import { retryWhen, delay } from 'rxjs/operators';
 import { Grid, withStyles, WithStyles, Typography, Paper, NoSsr } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
@@ -32,13 +34,16 @@ const getRates = () => {
   const [rates, setRates] = useState({});
 
   useEffect(() => {
-    const fetchData = async () => {
-      const r = await fetchCoinApiRates();
-      setRates(r);
-    };
+    const rates$ = Rx.defer(() => fetchCoinApiRates()).pipe(retryWhen(error => error.pipe(delay(10000))));
+    const subscription = rates$.subscribe({
+      next: result => setRates(result),
+    });
 
-    fetchData();
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
+
   return rates;
 };
 

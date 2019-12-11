@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
+import * as Rx from 'rxjs';
 import { Grid, withStyles, WithStyles, Typography, CircularProgress, Paper } from '@material-ui/core';
 import { FundCountQuery, MelonNetworkHistoryQuery } from '~/queries/FundListQuery';
 import Layout from '~/components/Layout';
@@ -14,6 +15,7 @@ import { fetchSingleCoinApiRate, fetchCoinApiRates } from '~/utils/coinApi';
 import EtherscanLink from '~/components/EtherscanLink';
 import { fetchEnsAddresses } from '~/utils/ens';
 import LineItem from '~/components/LineItem';
+import { retryWhen, delay } from 'rxjs/operators';
 
 const styles = theme => ({
   paper: {
@@ -44,13 +46,16 @@ const getEthUsdRate = () => {
   const [rate, setRate] = useState({ rate: 1 });
 
   useEffect(() => {
-    const fetchData = async () => {
-      const r = await fetchSingleCoinApiRate();
-      setRate(r);
-    };
+    const rates$ = Rx.defer(() => fetchSingleCoinApiRate()).pipe(retryWhen(error => error.pipe(delay(10000))));
+    const subscription = rates$.subscribe({
+      next: result => setRate(result),
+    });
 
-    fetchData();
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
+
   return rate;
 };
 
@@ -58,13 +63,16 @@ const getMlnRates = () => {
   const [rates, setRate] = useState();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const r = await fetchCoinApiRates('MLN');
-      setRate(r);
-    };
+    const rates$ = Rx.defer(() => fetchCoinApiRates('MLN')).pipe(retryWhen(error => error.pipe(delay(10000))));
+    const subscription = rates$.subscribe({
+      next: result => setRate(result),
+    });
 
-    fetchData();
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
+
   return rates;
 };
 
@@ -72,12 +80,16 @@ const getEnsAddresses = () => {
   const [addresses, setAddresses] = useState();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const adr = await fetchEnsAddresses();
-      setAddresses(adr);
+    const rates$ = Rx.defer(() => fetchEnsAddresses()).pipe(retryWhen(error => error.pipe(delay(10000))));
+    const subscription = rates$.subscribe({
+      next: result => setAddresses(result),
+    });
+
+    return () => {
+      subscription.unsubscribe();
     };
-    fetchData();
   }, []);
+
   return addresses;
 };
 
@@ -88,7 +100,7 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
   const ens = getEnsAddresses();
 
   const fxRates = {
-    MLNETH: mlnRates && mlnRates.ETH.rate.toFixed(4),
+    MLNETH: mlnRates && mlnRates.ETH && mlnRates.ETH.rate.toFixed(4),
     MLNUSD: mlnRates && mlnRates.USD && mlnRates.USD.rate.toFixed(4),
     ETHUSD: ethUsdRate && ethUsdRate.rate.toFixed(4),
   };

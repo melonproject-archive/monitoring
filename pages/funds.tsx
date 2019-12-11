@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
+import * as Rx from 'rxjs';
 import { Grid, withStyles, WithStyles, Card, CardContent, Typography, CircularProgress } from '@material-ui/core';
 import { FundListQuery, FundCountQuery, MelonNetworkHistoryQuery } from '~/queries/FundListQuery';
 import FundList from '~/components/FundList';
@@ -9,6 +10,7 @@ import { hexToString } from '~/utils/hexToString';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { fetchSingleCoinApiRate } from '~/utils/coinApi';
 import { formatThousands } from '~/utils/formatThousands';
+import { delay, retryWhen } from 'rxjs/operators';
 
 const styles = theme => ({
   paper: {
@@ -24,13 +26,16 @@ const getUSDRate = () => {
   const [rate, setRate] = useState({ rate: 1 });
 
   useEffect(() => {
-    const fetchData = async () => {
-      const r = await fetchSingleCoinApiRate();
-      setRate(r);
-    };
+    const rates$ = Rx.defer(() => fetchSingleCoinApiRate()).pipe(retryWhen(error => error.pipe(delay(10000))));
+    const subscription = rates$.subscribe({
+      next: result => setRate(result),
+    });
 
-    fetchData();
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
+
   return rate;
 };
 
