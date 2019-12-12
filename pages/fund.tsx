@@ -163,6 +163,9 @@ const Fund: React.FunctionComponent<FundProps> = props => {
     { name: 'Shares', field: 'share' },
     { name: 'Trading', field: 'trading' },
     { name: 'Vault', field: 'vault' },
+    { name: 'Registry', field: 'registry' },
+    { name: 'Version', field: 'version' },
+    { name: 'PriceSource', field: 'priceSource' },
   ];
 
   const contractAddresses =
@@ -341,9 +344,16 @@ const Fund: React.FunctionComponent<FundProps> = props => {
             {contractAddresses &&
               contractAddresses.map(a => {
                 return (
-                  <LineItem name={a.name} key={a.address}>
-                    <EtherscanLink address={a.address} />
-                  </LineItem>
+                  <>
+                    {a.name === 'Registry' && (
+                      <LineItem name="" key="emptyLine">
+                        &nbsp;
+                      </LineItem>
+                    )}
+                    <LineItem name={a.name} key={a.name}>
+                      <EtherscanLink address={a.address} />
+                    </LineItem>
+                  </>
                 );
               })}
           </Grid>

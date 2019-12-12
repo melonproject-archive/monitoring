@@ -15,6 +15,12 @@ export const FundDetailsQuery = gql`
         id
         name
       }
+      registry {
+        id
+      }
+      priceSource {
+        id
+      }
       gav
       nav
       totalSupply
