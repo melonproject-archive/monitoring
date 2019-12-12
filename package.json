@@ -4,7 +4,7 @@
     "prebuild": "rimraf build",
     "build": "cross-env NODE_ENV=production next build",
     "analyze": "cross-env ANALYZE=true yarn build",
-    "dev": "cross-env NODE_ENV=development next dev",
+    "dev": "cross-env NODE_ENV=development next dev --port 3030",
     "clean": "rimraf coverage build",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "lint": "tslint -p tsconfig.json && prettier --check \"**/*.{ts,tsx}\"",
