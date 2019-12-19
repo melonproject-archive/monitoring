@@ -26,7 +26,7 @@ export const FundDetailsQuery = gql`
       totalSupply
       sharePrice
 
-      investmentHistory(orderBy: timestamp) {
+      investmentHistory(orderBy: timestamp, where: { action_not: "Fee allocation" }) {
         id
         action
         timestamp

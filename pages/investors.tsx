@@ -23,7 +23,11 @@ type InvestorsProps = WithStyles<typeof styles>;
 const Investors: React.FunctionComponent<InvestorsProps> = props => {
   const investmentHistoryResult = useQuery(InvestmentHistoryQuery, { ssr: false, variables: { limit: 10 } });
 
-  const investmentHistory = (investmentHistoryResult.data && investmentHistoryResult.data.investmentHistories) || [];
+  const investmentHistory =
+    (investmentHistoryResult.data &&
+      investmentHistoryResult.data.investmentHistories &&
+      investmentHistoryResult.data.investmentHistories) ||
+    [];
 
   const investmentRequestsResult = useScrapingQuery(
     [InvestmentRequestsQuery, InvestmentRequestsQuery],

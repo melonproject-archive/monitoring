@@ -20,7 +20,7 @@ export const InvestorListQuery = gql`
         gav
         nav
       }
-      investmentHistory {
+      investmentHistory(where: { action_not: "Fee allocation" }) {
         id
         action
         timestamp
@@ -38,7 +38,12 @@ export const InvestorListQuery = gql`
 
 export const InvestmentHistoryQuery = gql`
   query InvestmentHistoryQuery($limit: Int!) {
-    investmentHistories(orderBy: timestamp, orderDirection: desc, first: $limit) {
+    investmentHistories(
+      orderBy: timestamp
+      orderDirection: desc
+      first: $limit
+      where: { action_not: "Fee allocation" }
+    ) {
       id
       timestamp
       fund {
