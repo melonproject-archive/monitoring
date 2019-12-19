@@ -24,7 +24,7 @@ export const MelonNetworkHistoryQuery = gql`
 
 export const FundListQuery = gql`
   query FundListQuery($limit: Int!, $skip: Int!) {
-    funds(orderBy: name, first: $limit, skip: $skip) {
+    funds(orderBy: name, first: $limit, skip: $skip, where: { id_not: "0x1e3ef9a8fe3cf5b3440b0df8347f1888484b8dc2" }) {
       id
       name
       gav
