@@ -56,7 +56,7 @@ const TSAreaChart: React.FunctionComponent<TSAreaChartProps> = props => {
       liveRedraw: false,
     },
     rangeSelector: {
-      selected: 3,
+      selected: 5,
     },
     xAxis: {
       type: 'datetime',
