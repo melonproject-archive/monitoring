@@ -1,4 +1,5 @@
 import React from 'react';
+import NoSsr from 'react-no-ssr';
 import BaseApp, { Container } from 'next/app';
 import { ApolloProvider } from '@apollo/react-hooks';
 import withApollo, { WithApolloProps } from 'next-with-apollo';
@@ -23,12 +24,14 @@ class App extends BaseApp<AppProps> {
 
     return (
       <Container>
-        <ThemeProvider theme={theme}>
-          <ApolloProvider client={this.props.apollo}>
-            <CssBaseline />
-            <Component {...this.props.pageProps} />
-          </ApolloProvider>
-        </ThemeProvider>
+        <NoSsr>
+          <ThemeProvider theme={theme}>
+            <ApolloProvider client={this.props.apollo}>
+              <CssBaseline />
+              <Component {...this.props.pageProps} />
+            </ApolloProvider>
+          </ThemeProvider>
+        </NoSsr>
       </Container>
     );
   }
