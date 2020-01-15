@@ -283,7 +283,7 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
             {ens &&
               ens.map(a => {
                 return (
-                  <LineItem name={a.ens} key={a.address}>
+                  <LineItem name={a.ens} key={a.ens}>
                     <EtherscanLink address={a.address} />
                   </LineItem>
                 );
