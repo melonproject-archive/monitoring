@@ -1,5 +1,9 @@
 {
   "version": 2,
-  "builds": [{ "src": "next.config.js", "use": "@now/next" }],
-  "alias": ["melon-subgraph.now.sh", "monitoring.melon.network"]
+  "alias": ["monitoring.melon.network"],
+  "build": {
+    "env": {
+      "MELON_SUBGRAPH": "https://api.thegraph.com/subgraphs/name/melonproject/melon"
+    }
+  }
 }
