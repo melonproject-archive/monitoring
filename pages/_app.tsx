@@ -55,7 +55,7 @@ const createErrorLink = () =>
   });
 
 const createDataLink = () => {
-  const httpUri = 'https://api.thegraph.com/subgraphs/name/melonproject/melon-dev';
+  const httpUri = process.env.MELON_SUBGRAPH;
   const httpLink = new HttpLink({
     uri: httpUri,
   });
