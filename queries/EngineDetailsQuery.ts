@@ -41,13 +41,14 @@ export const EngineQuery = gql`
         mlnTotalSupply
         premiumPercent
         lastUpdate
-        etherEvents(orderBy: timestamp) {
-          id
-          timestamp
-          event
-          amount
-        }
       }
+    }
+
+    engineEtherEvents(orderBy: timestamp) {
+      id
+      timestamp
+      event
+      amount
     }
 
     amguPayments(orderBy: timestamp, first: $limit) {

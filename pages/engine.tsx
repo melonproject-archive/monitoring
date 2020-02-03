@@ -38,6 +38,8 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
 
   const engineQuantities = R.pathOr({}, ['data', 'state', 'currentEngine'], result) as any;
 
+  const engineEtherEvents = R.pathOr([], ['data', 'engineEtherEvents'], result) as any;
+
   return (
     <Layout title="Melon Engine" page="engine">
       <Grid item={true} xs={12} sm={12} md={12}>
@@ -125,7 +127,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
                 sorting: false,
               },
             ]}
-            data={engineQuantities && engineQuantities.etherEvents}
+            data={engineEtherEvents}
             title="Engine events"
             options={{
               paging: false,
