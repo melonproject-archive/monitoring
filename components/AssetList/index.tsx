@@ -30,8 +30,16 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
     return {
       ...asset,
       numberOfFunds: asset.fundAccountings.filter(fA => fA.fund),
-      aggregateAmount: asset.melonNetworkAssetHistory && asset.melonNetworkAssetHistory[0].amount,
-      aggregateAmountInEth: asset.melonNetworkAssetHistory && asset.melonNetworkAssetHistory[0].assetGav,
+      aggregateAmount:
+        (asset.melonNetworkAssetHistory &&
+          asset.melonNetworkAssetHistory[0] &&
+          asset.melonNetworkAssetHistory[0].amount) ||
+        0,
+      aggregateAmountInEth:
+        (asset.melonNetworkAssetHistory &&
+          asset.melonNetworkAssetHistory[0] &&
+          asset.melonNetworkAssetHistory[0].assetGav) ||
+        0,
     };
   });
 
