@@ -4,15 +4,14 @@ import * as R from 'ramda';
 import { withStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
-import { EventListFundQuery, EventListContractQuery } from '~/queries/EventListQuery';
 import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import EtherscanLink from '../EtherscanLink';
+import { ContractEventsQuery } from '~/queries/ContractEventsQuery';
 
 export interface EventListProps {
-  fund?: string;
-  contract?: string;
+  contracts: string[];
 }
 
 const styles = theme => ({
@@ -34,33 +33,34 @@ const columns = [
     },
   },
   {
-    title: 'Contract',
-    field: 'contract',
-  },
-  {
     title: 'Address',
     render: rowData => {
-      return <EtherscanLink address={rowData.contractAddress} short={true} />;
+      return <EtherscanLink address={rowData.contract.id} short={true} />;
+    },
+  },
+  {
+    title: 'Sender',
+    render: rowData => {
+      return <EtherscanLink address={rowData.from} short={true} />;
     },
   },
   {
     title: 'Tx hash',
     render: rowData => {
-      const hash = rowData.id.substring(0, 66);
-      return <EtherscanLink tx={hash} short={true} />;
+      return <EtherscanLink tx={rowData.hash} short={true} />;
     },
   },
 
   {
     title: 'Event',
-    field: 'event',
+    field: 'name',
   },
   {
     title: 'Parameters',
     render: rowData => {
       return (
         <pre>
-          {rowData.params
+          {rowData.parameters
             .map(p => {
               return `${p.name}: ${p.value}`;
             })
@@ -72,22 +72,23 @@ const columns = [
 ];
 
 const EventList: React.FunctionComponent<EventListProps> = props => {
-  const query = props.fund ? EventListFundQuery : EventListContractQuery;
+  const query = ContractEventsQuery;
 
-  const eventListResult = useScrapingQuery([query, query], proceedPaths(['eventHistories']), {
+  const eventListResult = useScrapingQuery([query, query], proceedPaths(['events']), {
     ssr: false,
     variables: {
-      address: props.fund || props.contract,
+      contracts: props.contracts,
     },
+    skip: !props.contracts,
   });
 
-  const fundEvents = R.pathOr([], ['data', 'eventHistories'], eventListResult);
+  const events = R.pathOr([], ['data', 'events'], eventListResult);
 
   return (
     <Grid item={true} xs={12} sm={12} md={12}>
       <MaterialTable
         columns={columns as any}
-        data={fundEvents}
+        data={events}
         title="Events"
         options={{
           paging: false,

@@ -129,7 +129,7 @@ const Contract: React.FunctionComponent<ContractProps> = props => {
           />
         </NoSsr>
       </Grid>
-      <EventList contract={router.query.address} />
+      <EventList contracts={[router.query.address]} />
     </Layout>
   );
 };

@@ -649,7 +649,18 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           </Link>
         </Grid>
       )}
-      {router && router.query.debug === '1' && <EventList fund={router.query.address} />}
+      {router && router.query.debug === '1' && fund && (
+        <EventList
+          contracts={[
+            router.query.address,
+            fund.accounting.id,
+            fund.participation.id,
+            fund.policyManager.id,
+            fund.trading.id,
+            fund.share.id,
+          ]}
+        />
+      )}
     </Layout>
   );
 };
