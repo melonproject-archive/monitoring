@@ -23,7 +23,7 @@ export const AmguConsumedQuery = gql`
 `;
 
 export const EngineQuery = gql`
-  query EngineQuery($limit: Int!) {
+  query EngineQuery {
     state(id: "0x") {
       id
       lastPriceUpdate
@@ -43,18 +43,16 @@ export const EngineQuery = gql`
         lastUpdate
       }
     }
+  }
+`;
 
-    engineEtherEvents(orderBy: timestamp) {
+export const EngineEtherEventsQuery = gql`
+  query EngineEtherEventsQuery {
+    engineEtherEvents(orderBy: timestamp, first: 1000) {
       id
       timestamp
       event
       amount
-    }
-
-    amguPayments(orderBy: timestamp, first: $limit) {
-      id
-      amount
-      timestamp
     }
   }
 `;

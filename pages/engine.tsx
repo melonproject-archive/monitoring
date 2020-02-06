@@ -2,7 +2,7 @@ import React from 'react';
 
 import * as R from 'ramda';
 import { Grid, withStyles, WithStyles, Typography, Paper, NoSsr, CircularProgress } from '@material-ui/core';
-import { AmguPaymentsQuery, EngineQuery } from '~/queries/EngineDetailsQuery';
+import { AmguPaymentsQuery, EngineQuery, EngineEtherEventsQuery } from '~/queries/EngineDetailsQuery';
 
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import Layout from '~/components/Layout';
@@ -14,6 +14,8 @@ import TooltipNumber from '~/components/TooltipNumber';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import LineItem from '~/components/LineItem';
 import TSAreaChart from '~/components/TSAreaChart';
+import { useQuery } from '@apollo/react-hooks';
+import BigNumber from 'bignumber.js';
 
 const styles = theme => ({
   paper: {
@@ -24,11 +26,14 @@ const styles = theme => ({
 type EngineProps = WithStyles<typeof styles>;
 
 const Engine: React.FunctionComponent<EngineProps> = props => {
-  const result = useScrapingQuery([EngineQuery, AmguPaymentsQuery], proceedPaths(['amguPayments']), {
+  const stateResult = useQuery(EngineQuery, { ssr: false });
+  const etherEventsResult = useQuery(EngineEtherEventsQuery, { ssr: false });
+
+  const amguResult = useScrapingQuery([AmguPaymentsQuery, AmguPaymentsQuery], proceedPaths(['amguPayments']), {
     ssr: false,
   });
 
-  const amguPayments = (result.data && result.data.amguPayments) || [];
+  const amguPayments = R.pathOr([], ['data', 'amguPayments'], amguResult) || [];
 
   const amguCumulative: any[] = [];
   amguPayments.reduce((carry, item) => {
@@ -36,9 +41,13 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
     return carry + parseInt(item.amount, 10);
   }, 0);
 
-  const engineQuantities = R.pathOr({}, ['data', 'state', 'currentEngine'], result) as any;
+  const engineQuantities = R.pathOr({}, ['data', 'state', 'currentEngine'], stateResult) as any;
 
-  const engineEtherEvents = R.pathOr([], ['data', 'engineEtherEvents'], result) as any;
+  const engineEtherEvents = R.pathOr([], ['data', 'engineEtherEvents'], etherEventsResult) as any;
+
+  const totalMlnBurnt = engineEtherEvents
+    .filter(event => event.event === 'Burn')
+    .reduce((carry, item) => carry.plus(new BigNumber(item.amount)), new BigNumber(0));
 
   return (
     <Layout title="Melon Engine" page="engine">
@@ -48,19 +57,16 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
           <br />
           <Grid container={true}>
             <LineItem name="Total Amgu Consumed">
-              {engineQuantities && formatThousands(engineQuantities.totalAmguConsumed)}
+              {amguCumulative && R.last(amguCumulative) && formatThousands(R.last(amguCumulative).cumulativeAmount)}
             </LineItem>
             <LineItem name="Amgu Price">
               {engineQuantities && formatBigNumber(engineQuantities.amguPrice, 18, 7)} MLN
             </LineItem>
             <LineItem name="MLN burned">
-              <TooltipNumber number={engineQuantities.totalMlnBurned} digits={0} /> MLN
+              {totalMlnBurnt && <TooltipNumber number={totalMlnBurnt} digits={0} />} MLN
             </LineItem>
             <LineItem name="Total MLN supply">
               {engineQuantities && formatThousands(formatBigNumber(engineQuantities.mlnTotalSupply, 18, 0))}
-            </LineItem>
-            <LineItem name="ETH consumed">
-              <TooltipNumber number={engineQuantities.totalEtherConsumed} /> ETH
             </LineItem>
             <LineItem name="Engine premium" linebreak={true}>
               {engineQuantities && engineQuantities.premiumPercent}%
@@ -82,7 +88,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
       <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Amgu consumed</Typography>
-          {(result.loading && <CircularProgress />) || (
+          {(amguResult.loading && <CircularProgress />) || (
             <>
               <TSAreaChart data={amguCumulative} dataKeys={['cumulativeAmount']} />
             </>
