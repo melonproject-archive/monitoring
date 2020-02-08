@@ -131,10 +131,9 @@ const Home: React.FunctionComponent<HomeProps> = props => {
         <Card>
           <CardContent>
             <Typography variant="body1">
-              To set up a fund on the melon network or to invest into a fund, please download the latest Melon manager
-              interface from{' '}
-              <a href="https://github.com/melonproject/melon-lab/releases" className={props.classes.aStyle}>
-                https://github.com/melonproject/melon-lab/releases
+              To set up a fund on the melon network or to invest into a fund, please visit
+              <a href="https://melon.avantgarde.finance/" className={props.classes.aStyle}>
+                https://melon.avantgarde.finance/
               </a>
             </Typography>
           </CardContent>
