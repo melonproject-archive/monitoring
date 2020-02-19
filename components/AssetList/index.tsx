@@ -29,7 +29,6 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
   const assets = ((data && data.assets) || []).map(asset => {
     return {
       ...asset,
-      numberOfFunds: asset.fundAccountings.filter(fA => fA.fund),
       aggregateAmount:
         (asset.melonNetworkAssetHistory &&
           asset.melonNetworkAssetHistory[0] &&
@@ -89,18 +88,6 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
       // headerStyle: {
       //   verticalAlign: 'text-top',
       // },
-    },
-    {
-      title: '# funds',
-      field: 'numberOfFunds.length',
-      type: 'numeric',
-      cellStyle: {
-        whiteSpace: 'nowrap',
-      },
-      headerStyle: {
-        whiteSpace: 'nowrap',
-        verticalAlign: 'text-top',
-      },
     },
     {
       title: 'Amount',
