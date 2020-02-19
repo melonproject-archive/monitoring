@@ -149,6 +149,7 @@ export const FundDetailsQuery = gql`
           orderValue1
           orderValue6
           methodSignature
+          methodName
         }
       }
       vault {
