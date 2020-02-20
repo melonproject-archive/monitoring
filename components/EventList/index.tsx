@@ -1,17 +1,15 @@
 import React from 'react';
-import * as R from 'ramda';
 
 import { withStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
-import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import EtherscanLink from '../EtherscanLink';
-import { ContractEventsQuery } from '~/queries/ContractEventsQuery';
 
 export interface EventListProps {
-  contracts: string[];
+  events: any;
+  loading: boolean;
 }
 
 const styles = theme => ({
@@ -72,28 +70,18 @@ const columns = [
 ];
 
 const EventList: React.FunctionComponent<EventListProps> = props => {
-  const query = ContractEventsQuery;
-
-  const eventListResult = useScrapingQuery([query, query], proceedPaths(['events']), {
-    ssr: false,
-    variables: {
-      contracts: props.contracts,
-    },
-    skip: !props.contracts,
-  });
-
-  const events = R.pathOr([], ['data', 'events'], eventListResult);
-
   return (
     <Grid item={true} xs={12} sm={12} md={12}>
       <MaterialTable
         columns={columns as any}
-        data={events}
+        data={props.events}
         title="Events"
         options={{
-          paging: false,
+          paging: true,
+          pageSize: 50,
+          doubleHorizontalScroll: true,
         }}
-        isLoading={eventListResult.loading}
+        isLoading={props.loading}
       />
     </Grid>
   );

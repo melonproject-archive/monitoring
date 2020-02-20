@@ -20,6 +20,7 @@ import TradeList from '~/components/TradeList';
 import EventList from '~/components/EventList';
 import LineItem from '~/components/LineItem';
 import ShortAddress from '~/components/ShortAddress';
+import { ContractEventsQuery } from '~/queries/ContractEventsQuery';
 
 const styles = theme => ({
   paper: {
@@ -69,6 +70,24 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       },
     },
   );
+
+  const eventListResult = useScrapingQuery([ContractEventsQuery, ContractEventsQuery], proceedPaths(['events']), {
+    ssr: false,
+    variables: {
+      contracts: [
+        router.query.address,
+        fund && fund.accounting && fund.accounting.id,
+        fund && fund.feeManager && fund.feeManager.id,
+        fund && fund.participation && fund.participation.id,
+        fund && fund.policyManager && fund.policyManager.id,
+        fund && fund.trading && fund.trading.id,
+        fund && fund.share && fund.share.id,
+      ],
+    },
+    skip: !router.query.address || !fund,
+  });
+
+  const events = R.pathOr([], ['data', 'events'], eventListResult);
 
   const normalizedNumbers = R.pathOr([], ['data', 'fundCalculationsHistories'], calculationsResult).map(
     (item, index, array) => {
@@ -648,18 +667,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           </Link>
         </Grid>
       )}
-      {router && router.query.debug === '1' && fund && (
-        <EventList
-          contracts={[
-            router.query.address,
-            fund.accounting.id,
-            fund.participation.id,
-            fund.policyManager.id,
-            fund.trading.id,
-            fund.share.id,
-          ]}
-        />
-      )}
+      {router && router.query.debug === '1' && fund && <EventList events={events} loading={eventListResult.loading} />}
     </Layout>
   );
 };
