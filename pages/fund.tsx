@@ -10,7 +10,6 @@ import { formatDate } from '../utils/formatDate';
 import Layout from '~/components/Layout';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import BigNumber from 'bignumber.js';
-import { hexToString } from '~/utils/hexToString';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import FundHoldingsChart from '~/components/FundHoldingsChart';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
@@ -196,7 +195,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           <br />
           <Grid container={true}>
             <LineItem name="Fund name">{fund && fund.name}</LineItem>
-            <LineItem name="Protocol version">{fund && hexToString(fund.version.name)}</LineItem>
+            <LineItem name="Protocol version">{fund && fund.version.name}</LineItem>
             <LineItem name="Fund address">
               <EtherscanLink address={fund && fund.id} />
             </LineItem>

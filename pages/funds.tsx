@@ -6,7 +6,6 @@ import { FundListQuery, FundCountQuery, MelonNetworkHistoryQuery } from '~/queri
 import FundList from '~/components/FundList';
 import Layout from '~/components/Layout';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
-import { hexToString } from '~/utils/hexToString';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { fetchSingleCoinApiRate } from '~/utils/coinApi';
 import { formatThousands } from '~/utils/formatThousands';
@@ -48,12 +47,7 @@ const Home: React.FunctionComponent<HomeProps> = props => {
     ssr: false,
   });
 
-  const funds = R.pathOr([], ['data', 'funds'], fundListResult).map(fund => {
-    return {
-      ...fund,
-      versionName: hexToString(fund.version.name),
-    };
-  });
+  const funds = R.pathOr([], ['data', 'funds'], fundListResult);
 
   const result = useScrapingQuery([FundCountQuery, FundCountQuery], proceedPaths(['fundCounts']), {
     ssr: false,
