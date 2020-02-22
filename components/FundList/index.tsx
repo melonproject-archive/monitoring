@@ -146,7 +146,7 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
     },
     {
       title: 'Protocol',
-      field: 'versionName',
+      field: 'version.name',
       headerStyle: {
         whiteSpace: 'nowrap',
       },

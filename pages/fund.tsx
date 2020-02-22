@@ -10,7 +10,6 @@ import { formatDate } from '../utils/formatDate';
 import Layout from '~/components/Layout';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import BigNumber from 'bignumber.js';
-import { hexToString } from '~/utils/hexToString';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import FundHoldingsChart from '~/components/FundHoldingsChart';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
@@ -21,6 +20,7 @@ import TradeList from '~/components/TradeList';
 import EventList from '~/components/EventList';
 import LineItem from '~/components/LineItem';
 import ShortAddress from '~/components/ShortAddress';
+import { ContractEventsQuery } from '~/queries/ContractEventsQuery';
 
 const styles = theme => ({
   paper: {
@@ -70,6 +70,24 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       },
     },
   );
+
+  const eventListResult = useScrapingQuery([ContractEventsQuery, ContractEventsQuery], proceedPaths(['events']), {
+    ssr: false,
+    variables: {
+      contracts: [
+        router.query.address,
+        fund && fund.accounting && fund.accounting.id,
+        fund && fund.feeManager && fund.feeManager.id,
+        fund && fund.participation && fund.participation.id,
+        fund && fund.policyManager && fund.policyManager.id,
+        fund && fund.trading && fund.trading.id,
+        fund && fund.share && fund.share.id,
+      ],
+    },
+    skip: !router.query.address || !fund,
+  });
+
+  const events = R.pathOr([], ['data', 'events'], eventListResult);
 
   const normalizedNumbers = R.pathOr([], ['data', 'fundCalculationsHistories'], calculationsResult).map(
     (item, index, array) => {
@@ -196,7 +214,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           <br />
           <Grid container={true}>
             <LineItem name="Fund name">{fund && fund.name}</LineItem>
-            <LineItem name="Protocol version">{fund && hexToString(fund.version.name)}</LineItem>
+            <LineItem name="Protocol version">{fund && fund.version.name}</LineItem>
             <LineItem name="Fund address">
               <EtherscanLink address={fund && fund.id} />
             </LineItem>
@@ -649,7 +667,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           </Link>
         </Grid>
       )}
-      {router && router.query.debug === '1' && <EventList fund={router.query.address} />}
+      {router && router.query.debug === '1' && fund && <EventList events={events} loading={eventListResult.loading} />}
     </Layout>
   );
 };

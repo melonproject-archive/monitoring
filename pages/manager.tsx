@@ -6,7 +6,6 @@ import { useRouter } from 'next/router';
 import { useQuery } from '@apollo/react-hooks';
 import { ManagerDetailsQuery } from '~/queries/ManagerDetailsQuery';
 import MaterialTable from 'material-table';
-import { hexToString } from '~/utils/hexToString';
 import { formatDate } from '~/utils/formatDate';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 
@@ -30,15 +29,7 @@ const Managers: React.FunctionComponent<ManagerProps> = props => {
 
   const manager = R.pathOr([], ['data', 'fundManager'], result) as any;
 
-  const funds =
-    manager &&
-    manager.funds &&
-    manager.funds.map(fund => {
-      return {
-        ...fund,
-        versionName: hexToString(fund.version.name),
-      };
-    });
+  const funds = manager && manager.funds;
 
   return (
     <Layout title="Fund Manager" page="manager">
@@ -59,7 +50,7 @@ const Managers: React.FunctionComponent<ManagerProps> = props => {
               },
               {
                 title: 'Protocol version',
-                field: 'versionName',
+                field: 'version.name',
               },
             ]}
             data={funds}

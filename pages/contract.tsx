@@ -11,6 +11,8 @@ import { formatDate } from '~/utils/formatDate';
 import EventList from '~/components/EventList';
 import MaterialTable from 'material-table';
 import { sortBigNumber } from '~/utils/sortBigNumber';
+import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
+import { ContractEventsQuery } from '~/queries/ContractEventsQuery';
 
 const styles = theme => ({
   paper: {
@@ -35,6 +37,16 @@ const Contract: React.FunctionComponent<ContractProps> = props => {
   });
 
   const contract = R.pathOr(undefined, ['data', 'contract'], result);
+
+  const eventListResult = useScrapingQuery([ContractEventsQuery, ContractEventsQuery], proceedPaths(['events']), {
+    ssr: false,
+    variables: {
+      contracts: [router.query.address],
+    },
+    skip: !router.query.address,
+  });
+
+  const events = R.pathOr([], ['data', 'events'], eventListResult);
 
   return (
     <Layout title="Contract" page="contract">
@@ -129,7 +141,7 @@ const Contract: React.FunctionComponent<ContractProps> = props => {
           />
         </NoSsr>
       </Grid>
-      <EventList contract={router.query.address} />
+      <EventList events={events} loading={eventListResult.loading} />
     </Layout>
   );
 };

@@ -6,7 +6,6 @@ import { FundListQuery, FundCountQuery, MelonNetworkHistoryQuery } from '~/queri
 import FundList from '~/components/FundList';
 import Layout from '~/components/Layout';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
-import { hexToString } from '~/utils/hexToString';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { fetchSingleCoinApiRate } from '~/utils/coinApi';
 import { formatThousands } from '~/utils/formatThousands';
@@ -48,12 +47,7 @@ const Home: React.FunctionComponent<HomeProps> = props => {
     ssr: false,
   });
 
-  const funds = R.pathOr([], ['data', 'funds'], fundListResult).map(fund => {
-    return {
-      ...fund,
-      versionName: hexToString(fund.version.name),
-    };
-  });
+  const funds = R.pathOr([], ['data', 'funds'], fundListResult);
 
   const result = useScrapingQuery([FundCountQuery, FundCountQuery], proceedPaths(['fundCounts']), {
     ssr: false,
@@ -131,10 +125,9 @@ const Home: React.FunctionComponent<HomeProps> = props => {
         <Card>
           <CardContent>
             <Typography variant="body1">
-              To set up a fund on the melon network or to invest into a fund, please download the latest Melon manager
-              interface from{' '}
-              <a href="https://github.com/melonproject/melon-lab/releases" className={props.classes.aStyle}>
-                https://github.com/melonproject/melon-lab/releases
+              To set up a fund on the melon network or to invest into a fund, please visit{' '}
+              <a href="https://melon.avantgarde.finance/" className={props.classes.aStyle}>
+                https://melon.avantgarde.finance/
               </a>
             </Typography>
           </CardContent>

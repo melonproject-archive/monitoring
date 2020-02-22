@@ -39,6 +39,7 @@ export const ExchangeMethodCallListQuery = gql`
         }
       }
       methodSignature
+      methodName
       orderAddress0
       orderAddress1
       orderAddress2 {

@@ -25,12 +25,6 @@ export const AssetListQuery = gql`
       lastPrice
       lastPriceUpdate
       lastPriceValid
-      fundAccountings {
-        id
-        fund {
-          id
-        }
-      }
       melonNetworkAssetHistory(orderBy: timestamp, orderDirection: desc, first: 1) {
         id
         timestamp

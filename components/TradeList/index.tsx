@@ -5,7 +5,6 @@ import MaterialTable from 'material-table';
 import { withStyles } from '@material-ui/styles';
 import { formatDate } from '~/utils/formatDate';
 import { sortBigNumber } from '~/utils/sortBigNumber';
-import { methodSigToName } from '~/utils/methodSigToName';
 import TooltipNumber from '../TooltipNumber';
 
 export interface TradeListProps {
@@ -127,9 +126,7 @@ const TradeList: React.FunctionComponent<TradeListProps> = props => {
     },
     {
       title: 'Method Signature',
-      render: rowData => {
-        return methodSigToName(rowData.methodSignature);
-      },
+      field: 'methodName',
       cellStyle: {
         whiteSpace: 'nowrap',
       },
