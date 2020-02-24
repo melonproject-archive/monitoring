@@ -25,6 +25,7 @@ export const AssetListQuery = gql`
       lastPrice
       lastPriceUpdate
       lastPriceValid
+      removedFromRegistry
       melonNetworkAssetHistory(orderBy: timestamp, orderDirection: desc, first: 1) {
         id
         timestamp

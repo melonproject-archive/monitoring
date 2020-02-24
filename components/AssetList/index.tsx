@@ -26,21 +26,23 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
 
   const data = result.data || {};
 
-  const assets = ((data && data.assets) || []).map(asset => {
-    return {
-      ...asset,
-      aggregateAmount:
-        (asset.melonNetworkAssetHistory &&
-          asset.melonNetworkAssetHistory[0] &&
-          asset.melonNetworkAssetHistory[0].amount) ||
-        0,
-      aggregateAmountInEth:
-        (asset.melonNetworkAssetHistory &&
-          asset.melonNetworkAssetHistory[0] &&
-          asset.melonNetworkAssetHistory[0].assetGav) ||
-        0,
-    };
-  });
+  const assets = ((data && data.assets) || [])
+    .filter(asset => !asset.removedFromRegistry)
+    .map(asset => {
+      return {
+        ...asset,
+        aggregateAmount:
+          (asset.melonNetworkAssetHistory &&
+            asset.melonNetworkAssetHistory[0] &&
+            asset.melonNetworkAssetHistory[0].amount) ||
+          0,
+        aggregateAmountInEth:
+          (asset.melonNetworkAssetHistory &&
+            asset.melonNetworkAssetHistory[0] &&
+            asset.melonNetworkAssetHistory[0].assetGav) ||
+          0,
+      };
+    });
 
   const columns = [
     {
