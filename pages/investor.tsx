@@ -50,7 +50,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
     proceedPaths(['investmentValuationHistories']),
     {
       ssr: false,
-      skip: !investmentList,
+      skip: !investmentList.length,
       variables: {
         ids: investmentList && investmentList.map(investment => investment.id),
       },
