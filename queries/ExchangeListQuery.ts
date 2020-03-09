@@ -69,3 +69,42 @@ export const ExchangeMethodCallListQuery = gql`
     }
   }
 `;
+
+export const TradeListQuery = gql`
+  query TradeListQuery($limit: Int!, $skip: Int!) {
+    trades(orderBy: timestamp, orderDirection: "desc", first: $limit, skip: $skip, where: { methodName: "takeOrder" }) {
+      id
+      timestamp
+      exchange {
+        id
+        name
+      }
+      trading {
+        id
+        fund {
+          id
+          name
+        }
+      }
+      id
+      timestamp
+      methodName
+      exchange {
+        id
+        name
+      }
+      assetBought {
+        id
+        symbol
+        decimals
+      }
+      amountBought
+      assetSold {
+        id
+        symbol
+        decimals
+      }
+      amountSold
+    }
+  }
+`;

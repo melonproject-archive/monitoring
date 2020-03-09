@@ -151,6 +151,27 @@ export const FundDetailsQuery = gql`
           methodSignature
           methodName
         }
+        trades {
+          id
+          timestamp
+          methodName
+          exchange {
+            id
+            name
+          }
+          assetBought {
+            id
+            symbol
+            decimals
+          }
+          amountBought
+          assetSold {
+            id
+            symbol
+            decimals
+          }
+          amountSold
+        }
       }
       vault {
         id

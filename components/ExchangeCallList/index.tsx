@@ -7,7 +7,7 @@ import { formatDate } from '~/utils/formatDate';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import TooltipNumber from '../TooltipNumber';
 
-export interface TradeListProps {
+export interface ExchangeCallListProps {
   data: any;
   hideFund?: boolean;
   hideExchange?: boolean;
@@ -23,7 +23,7 @@ const styles = theme => ({
   },
 });
 
-const TradeList: React.FunctionComponent<TradeListProps> = props => {
+const ExchangeCallList: React.FunctionComponent<ExchangeCallListProps> = props => {
   const columns = [
     {
       title: 'Date',
@@ -48,8 +48,8 @@ const TradeList: React.FunctionComponent<TradeListProps> = props => {
       },
     },
     {
-      title: 'Asset bought',
-      field: 'assetBought.symbol',
+      title: 'Maker asset',
+      field: 'orderAddress2.symbol',
       cellStyle: {
         whiteSpace: 'nowrap',
       },
@@ -58,8 +58,8 @@ const TradeList: React.FunctionComponent<TradeListProps> = props => {
       },
     },
     {
-      title: 'Asset sold',
-      field: 'assetSold.symbol',
+      title: 'Taker asset',
+      field: 'orderAddress3.symbol',
       cellStyle: {
         whiteSpace: 'nowrap',
       },
@@ -68,12 +68,31 @@ const TradeList: React.FunctionComponent<TradeListProps> = props => {
       },
     },
     {
-      title: 'Asset bought',
+      title: 'Maker asset qty',
       render: rowData => {
         return (
           <TooltipNumber
-            number={rowData.amountBought}
-            decimals={(rowData.assetBought && rowData.assetBought.decimals) || 18}
+            number={rowData.orderValue0}
+            decimals={(rowData.orderAddress2 && rowData.orderAddress2.decimals) || 18}
+          />
+        );
+      },
+      customSort: (a, b) => sortBigNumber(a, b, 'orderValue0'),
+      type: 'numeric',
+      cellStyle: {
+        whiteSpace: 'nowrap',
+      },
+      headerStyle: {
+        whiteSpace: 'nowrap',
+      },
+    },
+    {
+      title: 'Taker asset qty',
+      render: rowData => {
+        return (
+          <TooltipNumber
+            number={rowData.orderValue1}
+            decimals={(rowData.orderAddress3 && rowData.orderAddress3.decimals) || 18}
           />
         );
       },
@@ -87,16 +106,16 @@ const TradeList: React.FunctionComponent<TradeListProps> = props => {
       },
     },
     {
-      title: 'Amount sold',
+      title: 'Taker asset qty traded',
       render: rowData => {
         return (
           <TooltipNumber
-            number={rowData.amountSold}
-            decimals={(rowData.assetSold && rowData.assetSold.decimals) || 18}
+            number={rowData.orderValue6}
+            decimals={(rowData.orderAddress3 && rowData.orderAddress3.decimals) || 18}
           />
         );
       },
-      customSort: (a, b) => sortBigNumber(a, b, 'orderValue0'),
+      customSort: (a, b) => sortBigNumber(a, b, 'orderValue6'),
       type: 'numeric',
       cellStyle: {
         whiteSpace: 'nowrap',
@@ -144,4 +163,4 @@ const TradeList: React.FunctionComponent<TradeListProps> = props => {
   );
 };
 
-export default withStyles(styles)(TradeList);
+export default withStyles(styles)(ExchangeCallList);

@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 import Layout from '~/components/Layout';
 import ExchangeDetailsQuery from '~/queries/ExchangeDetailsQuery';
-import TradeList from '~/components/TradeList';
+import ExchangeCallList from '~/components/ExchangeCallList';
 import EtherscanLink from '~/components/EtherscanLink';
 
 const styles = theme => ({
@@ -50,7 +50,7 @@ const Exchange: React.FunctionComponent<ExchangeProps> = props => {
 
       <Grid item={true} xs={12} sm={12} md={12}>
         <NoSsr>
-          <TradeList data={calls} loading={result.loading} hideExchange={true} />
+          <ExchangeCallList data={calls} loading={result.loading} hideExchange={true} />
         </NoSsr>
       </Grid>
       {/* <Grid item={true} xs={12} sm={12} md={12}>

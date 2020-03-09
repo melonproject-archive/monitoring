@@ -3,9 +3,10 @@ import { Grid, withStyles, WithStyles, NoSsr } from '@material-ui/core';
 import Layout from '~/components/Layout';
 import ExchangeList from '~/components/ExchangeList';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
-import { ExchangeListQuery, ExchangeMethodCallListQuery } from '~/queries/ExchangeListQuery';
-import TradeList from '~/components/TradeList';
+import { ExchangeListQuery, ExchangeMethodCallListQuery, TradeListQuery } from '~/queries/ExchangeListQuery';
+import ExchangeCallList from '~/components/ExchangeCallList';
 import { useQuery } from '@apollo/react-hooks';
+import TradeList from '~/components/TradeList';
 
 const styles = theme => ({
   paper: {
@@ -43,7 +44,12 @@ const Exchanges: React.FunctionComponent<ExchangesProps> = props => {
     },
   );
 
+  const tradeResult = useScrapingQuery([TradeListQuery, TradeListQuery], proceedPaths(['trades']), {
+    ssr: false,
+  });
+
   const trading = (exchangeMethodCallResult.data && exchangeMethodCallResult.data.exchangeMethodCalls) || [];
+  const trades = (tradeResult.data && tradeResult.data.trades) || [];
 
   return (
     <Layout title="Exchanges" page="exchanges">
@@ -52,9 +58,14 @@ const Exchanges: React.FunctionComponent<ExchangesProps> = props => {
           <ExchangeList data={exchanges} loading={result.loading} />
         </NoSsr>
       </Grid>
-      <Grid item={true} xs={12} sm={12} md={12}>
+      <Grid item={true} xs={12} sm={12} md={6}>
         <NoSsr>
-          <TradeList data={trading} loading={result.loading} hideExchange={false} paging={true} />
+          <ExchangeCallList data={trading} loading={result.loading} hideExchange={false} paging={true} />
+        </NoSsr>
+      </Grid>
+      <Grid item={true} xs={12} sm={12} md={6}>
+        <NoSsr>
+          <TradeList data={trades} loading={result.loading} hideExchange={false} paging={true} />
         </NoSsr>
       </Grid>
     </Layout>
