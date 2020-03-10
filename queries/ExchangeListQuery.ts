@@ -72,7 +72,7 @@ export const ExchangeMethodCallListQuery = gql`
 
 export const TradeListQuery = gql`
   query TradeListQuery($limit: Int!, $skip: Int!) {
-    trades(orderBy: timestamp, orderDirection: "desc", first: $limit, skip: $skip, where: { methodName: "takeOrder" }) {
+    trades(orderBy: timestamp, orderDirection: "desc", first: $limit, skip: $skip) {
       id
       timestamp
       exchange {
