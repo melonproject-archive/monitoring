@@ -77,7 +77,7 @@ const TradeList: React.FunctionComponent<TradeListProps> = props => {
           />
         );
       },
-      customSort: (a, b) => sortBigNumber(a, b, 'orderValue1'),
+      customSort: (a, b) => sortBigNumber(a, b, 'amountBought'),
       type: 'numeric',
       cellStyle: {
         whiteSpace: 'nowrap',
@@ -96,7 +96,7 @@ const TradeList: React.FunctionComponent<TradeListProps> = props => {
           />
         );
       },
-      customSort: (a, b) => sortBigNumber(a, b, 'orderValue0'),
+      customSort: (a, b) => sortBigNumber(a, b, 'amountSold'),
       type: 'numeric',
       cellStyle: {
         whiteSpace: 'nowrap',
