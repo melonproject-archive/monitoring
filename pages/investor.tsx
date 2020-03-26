@@ -23,7 +23,7 @@ import { moneyMultiple } from '~/utils/moneyMultiple';
 import TooltipNumber from '~/components/TooltipNumber';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -31,7 +31,7 @@ const styles = theme => ({
 
 type InvestorProps = WithStyles<typeof styles>;
 
-const Investor: React.FunctionComponent<InvestorProps> = props => {
+const Investor: React.FunctionComponent<InvestorProps> = (props) => {
   const router = useRouter();
   const result = useQuery(InvestorDetailsQuery, {
     ssr: false,
@@ -52,15 +52,15 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
       ssr: false,
       skip: !investmentList.length,
       variables: {
-        ids: investmentList && investmentList.map(investment => investment.id),
+        ids: investmentList && investmentList.map((investment) => investment.id),
       },
     },
   );
 
-  const investments = investmentList.map(inv => {
+  const investments = investmentList.map((inv) => {
     const valuationHist = R.pathOr([], ['data', 'investmentValuationHistories'], investmentValuationHistoryResult)
-      .filter(h => h.investment.id === inv.id)
-      .map(vals => {
+      .filter((h) => h.investment.id === inv.id)
+      .map((vals) => {
         return {
           ...vals,
           nav: vals.nav ? formatBigNumber(vals.nav, 18, 3) : 0,
@@ -71,7 +71,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
     return {
       ...inv,
       valuationHistory: valuationHist,
-      maxValuation: Math.max(...valuationHist.map(item => item.nav), 0),
+      maxValuation: Math.max(...valuationHist.map((item) => item.nav), 0),
       investedAmount: inv.history.reduce((carry, item) => {
         if (item.action === 'Investment') {
           return new BigNumber(carry).plus(new BigNumber(item.amountInDenominationAsset));
@@ -105,7 +105,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
   );
 
   const valuationHistory = R.pathOr([], ['data', 'investorValuationHistories'], investorValuationHistoryResult).map(
-    valuation => {
+    (valuation) => {
       return {
         ...valuation,
         nav: valuation.nav ? formatBigNumber(valuation.nav, 18, 3) : 0,
@@ -114,12 +114,12 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
     },
   );
 
-  const maxValuation = valuationHistory && Math.max(...valuationHistory.map(item => item.nav), 0);
+  const maxValuation = valuationHistory && Math.max(...valuationHistory.map((item) => item.nav), 0);
 
   const investmentHistory = (investor && investor.investmentHistory) || [];
   const investmentRequests = ((investor && investor.investmentRequests) || [])
-    .filter(item => item.status === 'PENDING')
-    .map(item => {
+    .filter((item) => item.status === 'PENDING')
+    .map((item) => {
       let expires = parseInt(item.requestTimestamp, 10) + 24 * 60 * 60;
       let status = item.status;
       if (new Date().getTime() > new Date(expires * 1000).getTime()) {
@@ -160,7 +160,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
       </Grid>
 
       {investments &&
-        investments.map(item => (
+        investments.map((item) => (
           <Grid item={true} xs={12} sm={12} md={6} key={item.id}>
             <Paper className={props.classes.paper}>
               <Typography variant="h6">{item.fund && item.fund.name}</Typography>
@@ -189,12 +189,12 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
                 },
                 {
                   title: 'Shares',
-                  render: rowData => <TooltipNumber number={rowData.shares} />,
+                  render: (rowData) => <TooltipNumber number={rowData.shares} />,
                   type: 'numeric',
                 },
                 {
                   title: 'Amount',
-                  render: rowData => <TooltipNumber number={rowData.amount} decimals={rowData.asset.decimals} />,
+                  render: (rowData) => <TooltipNumber number={rowData.amount} decimals={rowData.asset.decimals} />,
                   type: 'numeric',
                 },
                 {
@@ -207,7 +207,7 @@ const Investor: React.FunctionComponent<InvestorProps> = props => {
                 },
                 {
                   title: 'Expires',
-                  render: rowData => {
+                  render: (rowData) => {
                     return rowData.expires && formatDate(rowData.expires, true);
                   },
                 },

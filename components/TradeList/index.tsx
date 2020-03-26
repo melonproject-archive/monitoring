@@ -17,17 +17,17 @@ export interface TradeListProps {
   linkPath?: string[];
 }
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
 });
 
-const TradeList: React.FunctionComponent<TradeListProps> = props => {
+const TradeList: React.FunctionComponent<TradeListProps> = (props) => {
   const columns = [
     {
       title: 'Date',
-      render: rowData => {
+      render: (rowData) => {
         return formatDate(rowData.timestamp, true);
       },
       customSort: (a, b) => sortBigNumber(a, b, 'timestamp'),
@@ -69,7 +69,7 @@ const TradeList: React.FunctionComponent<TradeListProps> = props => {
     },
     {
       title: 'Asset bought',
-      render: rowData => {
+      render: (rowData) => {
         return (
           <TooltipNumber
             number={rowData.amountBought}
@@ -88,7 +88,7 @@ const TradeList: React.FunctionComponent<TradeListProps> = props => {
     },
     {
       title: 'Amount sold',
-      render: rowData => {
+      render: (rowData) => {
         return (
           <TooltipNumber
             number={rowData.amountSold}

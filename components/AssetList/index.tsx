@@ -13,13 +13,13 @@ export interface AssetListProps {
   rates?: any;
 }
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
 });
 
-const AssetList: React.FunctionComponent<AssetListProps> = props => {
+const AssetList: React.FunctionComponent<AssetListProps> = (props) => {
   const result = useQuery(AssetListQuery, {
     ssr: false,
   });
@@ -27,8 +27,8 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
   const data = result.data || {};
 
   const assets = ((data && data.assets) || [])
-    .filter(asset => !asset.removedFromRegistry)
-    .map(asset => {
+    .filter((asset) => !asset.removedFromRegistry)
+    .map((asset) => {
       return {
         ...asset,
         aggregateAmount:
@@ -65,14 +65,14 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
     },
     {
       title: 'Addres',
-      render: rowData => <ShortAddress address={rowData.id} />,
+      render: (rowData) => <ShortAddress address={rowData.id} />,
       headerStyle: {
         verticalAlign: 'text-top',
       },
     },
     {
       title: 'Last price (pricefeed)',
-      render: rowData => {
+      render: (rowData) => {
         return <TooltipNumber number={rowData.lastPrice} />;
       },
       type: 'numeric',
@@ -83,7 +83,7 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
     },
     {
       title: 'Last price (CoinAPI)',
-      render: rowData => {
+      render: (rowData) => {
         return props.rates.hasOwnProperty(rowData.symbol) ? (1 / props.rates[rowData.symbol].rate).toFixed(4) : '';
       },
       type: 'numeric',
@@ -94,7 +94,7 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
     {
       title: 'Amount',
       type: 'numeric',
-      render: rowData => {
+      render: (rowData) => {
         return <TooltipNumber number={rowData.aggregateAmount} decimals={rowData.decimals} />;
       },
       customSort: (a, b) => sortBigNumber(a, b, 'aggregateAmount'),
@@ -110,7 +110,7 @@ const AssetList: React.FunctionComponent<AssetListProps> = props => {
       title: 'Amount in ETH',
       type: 'numeric',
       defaultSort: 'desc',
-      render: rowData => {
+      render: (rowData) => {
         return <TooltipNumber number={rowData.aggregateAmountInEth} />;
       },
       customSort: (a, b) => sortBigNumber(a, b, 'aggregateAmountInEth'),

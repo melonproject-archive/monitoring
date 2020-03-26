@@ -11,7 +11,7 @@ export interface ManagerListProps {
   data?: any;
 }
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -25,7 +25,7 @@ const columns = [
   },
   {
     title: 'Active since',
-    render: rowData => {
+    render: (rowData) => {
       return formatDate(rowData.createdAt);
     },
     type: 'numeric',
@@ -38,7 +38,7 @@ const columns = [
   },
 ];
 
-const ManagerList: React.FunctionComponent<ManagerListProps> = props => {
+const ManagerList: React.FunctionComponent<ManagerListProps> = (props) => {
   const result = useQuery(ManagerListQuery, {
     ssr: false,
   });

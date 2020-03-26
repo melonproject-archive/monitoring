@@ -10,7 +10,7 @@ export interface LineItemProps {
 
 const styles = {};
 
-const LineItem: React.FunctionComponent<LineItemProps> = props => {
+const LineItem: React.FunctionComponent<LineItemProps> = (props) => {
   return (
     <>
       <Grid

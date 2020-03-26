@@ -39,7 +39,7 @@ const menuItems = [
 
 const drawerWidth = 240;
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     display: 'flex',
   },
@@ -97,7 +97,7 @@ class Layout extends React.Component<LayoutProps> {
 
   public handleDrawerToggle = () => {
     // @ts-ignore
-    this.setState(state => ({ mobileOpen: !state.mobileOpen }));
+    this.setState((state) => ({ mobileOpen: !state.mobileOpen }));
   };
 
   public render() {

@@ -8,7 +8,7 @@ import ExchangeCallList from '~/components/ExchangeCallList';
 import { useQuery } from '@apollo/react-hooks';
 import TradeList from '~/components/TradeList';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -20,7 +20,7 @@ const styles = theme => ({
 
 type ExchangesProps = WithStyles<typeof styles>;
 
-const Exchanges: React.FunctionComponent<ExchangesProps> = props => {
+const Exchanges: React.FunctionComponent<ExchangesProps> = (props) => {
   const result = useQuery(ExchangeListQuery, {
     ssr: false,
   });
@@ -28,13 +28,13 @@ const Exchanges: React.FunctionComponent<ExchangesProps> = props => {
   const data = result.data || {};
 
   const exchanges = ((data && data.exchanges) || [])
-    .map(exchange => {
+    .map((exchange) => {
       return {
         ...exchange,
-        tradings: exchange.tradings.filter(t => t.fund),
+        tradings: exchange.tradings.filter((t) => t.fund),
       };
     })
-    .filter(exchange => exchange.tradings.length);
+    .filter((exchange) => exchange.tradings.length);
 
   const exchangeMethodCallResult = useScrapingQuery(
     [ExchangeMethodCallListQuery, ExchangeMethodCallListQuery],

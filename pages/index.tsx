@@ -11,13 +11,13 @@ import { InvestorCountQuery } from '~/queries/InvestorListQuery';
 import { AmguPaymentsQuery, AmguConsumedQuery } from '~/queries/EngineDetailsQuery';
 import { useQuery } from '@apollo/react-hooks';
 import { formatThousands } from '~/utils/formatThousands';
-import { fetchSingleCoinApiRate, fetchCoinApiRates } from '~/utils/coinApi';
+import { fetchSingleCoinApiRate, fetchCoinApiRates, CoinApiRates, SingleCoinApiRate } from '~/utils/coinApi';
 import EtherscanLink from '~/components/EtherscanLink';
-import { fetchEnsAddresses } from '~/utils/ens';
+import { fetchEnsAddresses, EnsData } from '~/utils/ens';
 import LineItem from '~/components/LineItem';
 import { retryWhen, delay } from 'rxjs/operators';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -43,12 +43,12 @@ const styles = theme => ({
 type NetworkProps = WithStyles<typeof styles>;
 
 const getEthUsdRate = () => {
-  const [rate, setRate] = useState({ rate: 1 });
+  const [rate, setRate] = useState<SingleCoinApiRate>();
 
   useEffect(() => {
-    const rates$ = Rx.defer(() => fetchSingleCoinApiRate()).pipe(retryWhen(error => error.pipe(delay(10000))));
+    const rates$ = Rx.defer(() => fetchSingleCoinApiRate()).pipe(retryWhen((error) => error.pipe(delay(10000))));
     const subscription = rates$.subscribe({
-      next: result => setRate(result),
+      next: (result) => setRate(result),
     });
 
     return () => {
@@ -60,12 +60,12 @@ const getEthUsdRate = () => {
 };
 
 const getMlnRates = () => {
-  const [rates, setRate] = useState();
+  const [rates, setRate] = useState<CoinApiRates>();
 
   useEffect(() => {
-    const rates$ = Rx.defer(() => fetchCoinApiRates('MLN')).pipe(retryWhen(error => error.pipe(delay(10000))));
+    const rates$ = Rx.defer(() => fetchCoinApiRates('MLN')).pipe(retryWhen((error) => error.pipe(delay(10000))));
     const subscription = rates$.subscribe({
-      next: result => setRate(result),
+      next: (result) => setRate(result),
     });
 
     return () => {
@@ -77,12 +77,12 @@ const getMlnRates = () => {
 };
 
 const getEnsAddresses = () => {
-  const [addresses, setAddresses] = useState();
+  const [addresses, setAddresses] = useState<EnsData[]>();
 
   useEffect(() => {
-    const rates$ = Rx.defer(() => fetchEnsAddresses()).pipe(retryWhen(error => error.pipe(delay(10000))));
+    const rates$ = Rx.defer(() => fetchEnsAddresses()).pipe(retryWhen((error) => error.pipe(delay(10000))));
     const subscription = rates$.subscribe({
-      next: result => setAddresses(result),
+      next: (result) => setAddresses(result),
     });
 
     return () => {
@@ -93,16 +93,16 @@ const getEnsAddresses = () => {
   return addresses;
 };
 
-const Network: React.FunctionComponent<NetworkProps> = props => {
+const Network: React.FunctionComponent<NetworkProps> = (props) => {
   const ethUsdRate = getEthUsdRate();
   const mlnRates = getMlnRates();
 
   const ens = getEnsAddresses();
 
   const fxRates = {
-    MLNETH: mlnRates && mlnRates.ETH && mlnRates.ETH.rate.toFixed(4),
-    MLNUSD: mlnRates && mlnRates.USD && mlnRates.USD.rate.toFixed(4),
-    ETHUSD: ethUsdRate && ethUsdRate.rate.toFixed(4),
+    MLNETH: mlnRates?.ETH?.rate.toFixed(4),
+    MLNUSD: mlnRates?.USD?.rate.toFixed(4),
+    ETHUSD: ethUsdRate?.rate.toFixed(4),
   };
 
   const result = useScrapingQuery([FundCountQuery, FundCountQuery], proceedPaths(['fundCounts']), {
@@ -120,8 +120,8 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
   );
 
   const melonNetworkHistories = R.pathOr([], ['data', 'melonNetworkHistories'], historyResult)
-    .filter(item => item.gav > 0)
-    .map(item => {
+    .filter((item) => item.gav > 0)
+    .map((item) => {
       return {
         ...item,
         gav: formatBigNumber(item.gav, 18, 0),
@@ -280,14 +280,13 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
           <Typography variant="h5">Contract addresses</Typography>
           <br />
           <Grid container={true}>
-            {ens &&
-              ens.map(a => {
-                return (
-                  <LineItem name={a.ens} key={a.ens}>
-                    <EtherscanLink address={a.address} />
-                  </LineItem>
-                );
-              })}
+            {ens?.map((a) => {
+              return (
+                <LineItem name={a.ens} key={a.ens}>
+                  <EtherscanLink address={a.address} />
+                </LineItem>
+              );
+            })}
           </Grid>
         </Paper>
       </Grid>

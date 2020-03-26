@@ -17,7 +17,7 @@ import TSAreaChart from '~/components/TSAreaChart';
 import { useQuery } from '@apollo/react-hooks';
 import BigNumber from 'bignumber.js';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -25,7 +25,7 @@ const styles = theme => ({
 
 type EngineProps = WithStyles<typeof styles>;
 
-const Engine: React.FunctionComponent<EngineProps> = props => {
+const Engine: React.FunctionComponent<EngineProps> = (props) => {
   const stateResult = useQuery(EngineQuery, { ssr: false });
   const etherEventsResult = useQuery(EngineEtherEventsQuery, { ssr: false });
 
@@ -46,7 +46,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
   const engineEtherEvents = R.pathOr([], ['data', 'engineEtherEvents'], etherEventsResult) as any;
 
   const totalMlnBurnt = engineEtherEvents
-    .filter(event => event.event === 'Burn')
+    .filter((event) => event.event === 'Burn')
     .reduce((carry, item) => carry.plus(new BigNumber(item.amount)), new BigNumber(0));
 
   return (
@@ -101,7 +101,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
             columns={[
               {
                 title: 'Time',
-                render: rowData => {
+                render: (rowData) => {
                   return formatDate(rowData.timestamp, true);
                 },
                 customSort: (a, b) => sortBigNumber(a, b, 'timestamp'),

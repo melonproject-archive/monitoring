@@ -9,7 +9,7 @@ import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -17,7 +17,7 @@ const styles = theme => ({
 
 type ManagerProps = WithStyles<typeof styles>;
 
-const Managers: React.FunctionComponent<ManagerProps> = props => {
+const Managers: React.FunctionComponent<ManagerProps> = (props) => {
   const router = useRouter();
   const result = useQuery(ManagerDetailsQuery, {
     ssr: false,

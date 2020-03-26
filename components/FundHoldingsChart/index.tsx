@@ -13,9 +13,9 @@ export interface FundHoldingsChartProps {
   yMax: number;
 }
 
-const styles = theme => ({});
+const styles = (theme) => ({});
 
-const FundHoldingsChart: React.FunctionComponent<FundHoldingsChartProps> = props => {
+const FundHoldingsChart: React.FunctionComponent<FundHoldingsChartProps> = (props) => {
   const result =
     props.assets &&
     useScrapingQuery([FundHoldingsHistoryQuery, FundHoldingsHistoryQuery], proceedPaths(['fundHoldingsHistories']), {

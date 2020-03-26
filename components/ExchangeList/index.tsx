@@ -8,7 +8,7 @@ export interface AssetListProps {
   loading?: boolean;
 }
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -32,7 +32,7 @@ const columns = [
   },
 ];
 
-const ExchangeList: React.FunctionComponent<AssetListProps> = props => {
+const ExchangeList: React.FunctionComponent<AssetListProps> = (props) => {
   return (
     <MaterialTable
       columns={columns as any}

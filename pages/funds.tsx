@@ -11,7 +11,7 @@ import { fetchSingleCoinApiRate } from '~/utils/coinApi';
 import { formatThousands } from '~/utils/formatThousands';
 import { delay, retryWhen } from 'rxjs/operators';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -25,9 +25,9 @@ const getUSDRate = () => {
   const [rate, setRate] = useState({ rate: 1 });
 
   useEffect(() => {
-    const rates$ = Rx.defer(() => fetchSingleCoinApiRate()).pipe(retryWhen(error => error.pipe(delay(10000))));
+    const rates$ = Rx.defer(() => fetchSingleCoinApiRate()).pipe(retryWhen((error) => error.pipe(delay(10000))));
     const subscription = rates$.subscribe({
-      next: result => setRate(result),
+      next: (result) => setRate(result),
     });
 
     return () => {
@@ -40,7 +40,7 @@ const getUSDRate = () => {
 
 type HomeProps = WithStyles<typeof styles>;
 
-const Home: React.FunctionComponent<HomeProps> = props => {
+const Home: React.FunctionComponent<HomeProps> = (props) => {
   const rate = getUSDRate();
 
   const fundListResult = useScrapingQuery([FundListQuery, FundListQuery], proceedPaths(['funds']), {
@@ -68,8 +68,8 @@ const Home: React.FunctionComponent<HomeProps> = props => {
   const historyLoading = historyResult.loading;
 
   const melonNetworkHistories = R.pathOr([], ['data', 'melonNetworkHistories'], historyResult)
-    .filter(item => item.gav > 0)
-    .map(item => {
+    .filter((item) => item.gav > 0)
+    .map((item) => {
       return {
         ...item,
         gav: formatBigNumber(item.gav, 18, 0),

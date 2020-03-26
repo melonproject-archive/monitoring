@@ -7,7 +7,7 @@ import ExchangeDetailsQuery from '~/queries/ExchangeDetailsQuery';
 import ExchangeCallList from '~/components/ExchangeCallList';
 import EtherscanLink from '~/components/EtherscanLink';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -15,7 +15,7 @@ const styles = theme => ({
 
 type ExchangeProps = WithStyles<typeof styles>;
 
-const Exchange: React.FunctionComponent<ExchangeProps> = props => {
+const Exchange: React.FunctionComponent<ExchangeProps> = (props) => {
   const router = useRouter();
   const result = useQuery(ExchangeDetailsQuery, {
     ssr: false,

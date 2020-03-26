@@ -23,7 +23,7 @@ import ShortAddress from '~/components/ShortAddress';
 import { ContractEventsQuery } from '~/queries/ContractEventsQuery';
 import TradeList from '~/components/TradeList';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -45,7 +45,7 @@ const styles = theme => ({
 
 type FundProps = WithStyles<typeof styles>;
 
-const Fund: React.FunctionComponent<FundProps> = props => {
+const Fund: React.FunctionComponent<FundProps> = (props) => {
   const router = useRouter();
   const result = useQuery(FundDetailsQuery, {
     ssr: false,
@@ -129,11 +129,11 @@ const Fund: React.FunctionComponent<FundProps> = props => {
   const nextPeriodStart =
     fund && secondsNow + (fund.feeManager.performanceFee.performanceFeePeriod - secondsSinceLastPeriod);
 
-  const maxSharePrice = Math.max(...normalizedNumbers.map(item => item.sharePrice));
-  const minSharePrice = Math.min(...normalizedNumbers.map(item => item.sharePrice));
+  const maxSharePrice = Math.max(...normalizedNumbers.map((item) => item.sharePrice));
+  const minSharePrice = Math.min(...normalizedNumbers.map((item) => item.sharePrice));
 
-  const maxNav = Math.max(...normalizedNumbers.map(item => item.nav), 0);
-  const maxGav = Math.max(...normalizedNumbers.map(item => item.gav), 0);
+  const maxNav = Math.max(...normalizedNumbers.map((item) => item.nav), 0);
+  const maxGav = Math.max(...normalizedNumbers.map((item) => item.gav), 0);
   // const maxSupply = Math.max(...normalizedNumbers.map(item => item.totalSupply), 0);
 
   const returnSinceInception =
@@ -149,7 +149,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       100;
 
   const volatility =
-    normalizedNumbers && standardDeviation(normalizedNumbers.map(item => item.logReturn)) * 100 * Math.sqrt(365.25);
+    normalizedNumbers && standardDeviation(normalizedNumbers.map((item) => item.logReturn)) * 100 * Math.sqrt(365.25);
 
   const investmentHistory = fund && fund.investmentHistory;
 
@@ -166,7 +166,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
   const policies =
     fund &&
     fund.policyManager &&
-    fund.policyManager.policies.map(policy => {
+    fund.policyManager.policies.map((policy) => {
       const category =
         policy.identifier === 'UserWhitelist' || policy.identifier === 'UserBlackList'
           ? 'Compliance'
@@ -189,11 +189,11 @@ const Fund: React.FunctionComponent<FundProps> = props => {
 
   const contractAddresses =
     fund &&
-    contractNames.map(contract => {
+    contractNames.map((contract) => {
       return { ...contract, address: fund[contract.field] && fund[contract.field].id };
     });
 
-  const investmentRequests = R.pathOr([], ['data', 'investmentRequests'], result).map(item => {
+  const investmentRequests = R.pathOr([], ['data', 'investmentRequests'], result).map((item) => {
     let expires = parseInt(item.requestTimestamp, 10) + 24 * 60 * 60;
     let status = item.status;
     if (new Date().getTime() > new Date(expires * 1000).getTime()) {
@@ -265,7 +265,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
             <LineItem name="Authorized exchanges">
               {fund &&
                 fund.trading.exchanges
-                  .map(exchange => {
+                  .map((exchange) => {
                     return exchange.name;
                   })
                   .join(', ')}
@@ -298,7 +298,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                       return rowData.maxPositions;
                     case 'Asset whitelist':
                       return rowData.assetWhiteList
-                        .map(asset => asset.symbol)
+                        .map((asset) => asset.symbol)
                         .sort()
                         .join(', ');
                   }
@@ -361,7 +361,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           <br />
           <Grid container={true}>
             {contractAddresses &&
-              contractAddresses.map(a => {
+              contractAddresses.map((a) => {
                 return (
                   <>
                     {a.name === 'Registry' && (
@@ -423,8 +423,8 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Fund holdings</Typography>
           <FundHoldingsChart
-            fundAddres={router && router.query.address}
-            assets={assets.map(item => item.symbol)}
+            fundAddres={router?.query.address as string}
+            assets={assets.map((item) => item.symbol)}
             yMax={fund && maxGav}
           />
         </Paper>
@@ -436,7 +436,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
             columns={[
               {
                 title: 'Time',
-                render: rowData => {
+                render: (rowData) => {
                   return formatDate(rowData.timestamp, true);
                 },
                 cellStyle: {
@@ -449,7 +449,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               {
                 title: 'Shares',
                 type: 'numeric',
-                render: rowData => {
+                render: (rowData) => {
                   return <TooltipNumber number={rowData.shares} />;
                 },
               },
@@ -510,7 +510,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               {
                 title: 'Time',
                 field: 'timestamp',
-                render: rowData => {
+                render: (rowData) => {
                   return formatDate(rowData.timestamp, true);
                 },
                 cellStyle: {
@@ -522,7 +522,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               },
               {
                 title: 'Investor',
-                render: rowData => <ShortAddress address={rowData.owner.id} />,
+                render: (rowData) => <ShortAddress address={rowData.owner.id} />,
               },
               {
                 title: 'Action',
@@ -541,7 +541,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               {
                 title: 'Amount',
                 type: 'numeric',
-                render: rowData => {
+                render: (rowData) => {
                   if (rowData.action === 'Redemption') {
                     return '';
                   }
@@ -587,7 +587,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               columns={[
                 {
                   title: 'Date',
-                  render: rowData => {
+                  render: (rowData) => {
                     return formatDate(rowData.requestTimestamp, true);
                   },
                   cellStyle: {
@@ -599,16 +599,16 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 },
                 {
                   title: 'Investor',
-                  render: rowData => <ShortAddress address={rowData.owner.id} />,
+                  render: (rowData) => <ShortAddress address={rowData.owner.id} />,
                 },
                 {
                   title: 'Shares',
-                  render: rowData => <TooltipNumber number={rowData.shares} />,
+                  render: (rowData) => <TooltipNumber number={rowData.shares} />,
                   type: 'numeric',
                 },
                 {
                   title: 'Amount',
-                  render: rowData => <TooltipNumber number={rowData.amount} decimals={rowData.asset.decimals} />,
+                  render: (rowData) => <TooltipNumber number={rowData.amount} decimals={rowData.asset.decimals} />,
                   type: 'numeric',
                 },
                 {
@@ -621,7 +621,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 },
                 {
                   title: 'Expires',
-                  render: rowData => {
+                  render: (rowData) => {
                     return rowData.expires && formatDate(rowData.expires, true);
                   },
                   cellStyle: {

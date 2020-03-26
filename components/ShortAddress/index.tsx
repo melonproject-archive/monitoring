@@ -10,7 +10,7 @@ export interface SortAddressProps {
 
 const styles = {};
 
-const ShortAddress: React.FunctionComponent<SortAddressProps> = props => {
+const ShortAddress: React.FunctionComponent<SortAddressProps> = (props) => {
   return (
     <Tooltip title={props.address} placement="right">
       <span>{props.address.substr(0, props.length || 8)}...</span>

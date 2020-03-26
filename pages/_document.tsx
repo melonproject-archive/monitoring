@@ -10,7 +10,7 @@ export default class Document extends BaseDocument {
 
     context.renderPage = () => {
       return renderPage({
-        enhanceApp: App => props => sheets.collect(<App {...props} />),
+        enhanceApp: (App) => (props) => sheets.collect(<App {...props} />),
       });
     };
 

@@ -17,17 +17,17 @@ export interface ExchangeCallListProps {
   linkPath?: string[];
 }
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
 });
 
-const ExchangeCallList: React.FunctionComponent<ExchangeCallListProps> = props => {
+const ExchangeCallList: React.FunctionComponent<ExchangeCallListProps> = (props) => {
   const columns = [
     {
       title: 'Date',
-      render: rowData => {
+      render: (rowData) => {
         return formatDate(rowData.timestamp, true);
       },
       customSort: (a, b) => sortBigNumber(a, b, 'timestamp'),
@@ -69,7 +69,7 @@ const ExchangeCallList: React.FunctionComponent<ExchangeCallListProps> = props =
     },
     {
       title: 'Maker asset qty',
-      render: rowData => {
+      render: (rowData) => {
         return (
           <TooltipNumber
             number={rowData.orderValue0}
@@ -88,7 +88,7 @@ const ExchangeCallList: React.FunctionComponent<ExchangeCallListProps> = props =
     },
     {
       title: 'Taker asset qty',
-      render: rowData => {
+      render: (rowData) => {
         return (
           <TooltipNumber
             number={rowData.orderValue1}
@@ -107,7 +107,7 @@ const ExchangeCallList: React.FunctionComponent<ExchangeCallListProps> = props =
     },
     {
       title: 'Taker asset qty traded',
-      render: rowData => {
+      render: (rowData) => {
         return (
           <TooltipNumber
             number={rowData.orderValue6}

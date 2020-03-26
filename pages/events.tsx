@@ -7,7 +7,7 @@ import EventList from '~/components/EventList';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import { EventsQuery } from '~/queries/EventsQuery';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -19,7 +19,7 @@ const styles = theme => ({
 
 type EventProps = WithStyles<typeof styles>;
 
-const Events: React.FunctionComponent<EventProps> = props => {
+const Events: React.FunctionComponent<EventProps> = (props) => {
   const eventListResult = useScrapingQuery([EventsQuery, EventsQuery], proceedPaths(['events']), {
     ssr: false,
   });

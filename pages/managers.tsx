@@ -3,7 +3,7 @@ import { Grid, withStyles, WithStyles, NoSsr } from '@material-ui/core';
 import Layout from '~/components/Layout';
 import ManagerList from '~/components/ManagerList';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -15,7 +15,7 @@ const styles = theme => ({
 
 type ManagersProps = WithStyles<typeof styles>;
 
-const Managers: React.FunctionComponent<ManagersProps> = props => {
+const Managers: React.FunctionComponent<ManagersProps> = (props) => {
   return (
     <Layout title="Managers" page="managers">
       <Grid item={true} xs={12} sm={12} md={12}>

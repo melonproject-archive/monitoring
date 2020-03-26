@@ -14,7 +14,7 @@ import { sortBigNumber } from '~/utils/sortBigNumber';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import { ContractEventsQuery } from '~/queries/ContractEventsQuery';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -26,7 +26,7 @@ const styles = theme => ({
 
 type ContractProps = WithStyles<typeof styles>;
 
-const Contract: React.FunctionComponent<ContractProps> = props => {
+const Contract: React.FunctionComponent<ContractProps> = (props) => {
   const router = useRouter();
   const result = useQuery(ContractDetailsQuery, {
     ssr: false,
