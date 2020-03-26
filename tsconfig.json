@@ -3,7 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "lib": [
-      "esnext",
+      "ES2020",
       "dom"
     ],
     "jsx": "preserve",
@@ -26,7 +26,7 @@
         "*"
       ]
     },
-    "target": "es5",
+    "target": "ES2020",
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
     "moduleResolution": "node",
