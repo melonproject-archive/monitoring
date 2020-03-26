@@ -9,7 +9,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { MonthlyInvestorCountQuery, MonthlyInvestmentCountQuery } from '~/queries/MonthlyQuery';
 
 interface MonthlyQuantity {
-  active: number;
+  value: number;
   change: number;
 }
 
@@ -39,6 +39,17 @@ type KPIProps = WithStyles<typeof styles>;
 
 const startOfMonth = (month: number, year: number) => new Date(year, month, 1).getTime() / 1000;
 
+const renderCell = (rowData, key) => {
+  if (!rowData[key].value) {
+    return <></>;
+  }
+
+  return (
+    <>
+      {rowData[key].value} ({rowData[key].change})
+    </>
+  );
+};
 const KPI: React.FunctionComponent<KPIProps> = () => {
   const [year, setYear] = useState(2020);
 
@@ -52,7 +63,7 @@ const KPI: React.FunctionComponent<KPIProps> = () => {
   const investorData = investorResult?.data;
   const investorMonthly = R.range(1, 13)
     .map((r) => ({
-      active: investorData?.[`m${r}`]?.[0]?.active,
+      value: investorData?.[`m${r}`]?.[0]?.active,
       change: investorData?.[`m${r}`]?.[0]?.active - investorData?.[`m${r - 1}`]?.[0]?.active,
     }))
     .reduce((acc, item, index) => ({ ...acc, [`m${index + 1}`]: item }), {});
@@ -64,7 +75,7 @@ const KPI: React.FunctionComponent<KPIProps> = () => {
   const investmentData = investmentResult?.data;
   const investmentMonthly = R.range(1, 13)
     .map((r) => ({
-      active: investmentData?.[`m${r}`]?.[0]?.active,
+      value: investmentData?.[`m${r}`]?.[0]?.active,
       change: investmentData?.[`m${r}`]?.[0]?.active - investmentData?.[`m${r - 1}`]?.[0]?.active,
     }))
     .reduce((acc, item, index) => ({ ...acc, [`m${index + 1}`]: item }), {});
@@ -94,111 +105,49 @@ const KPI: React.FunctionComponent<KPIProps> = () => {
             },
             {
               title: 'Jan',
-              field: 'm1.active',
-              render: (rowData) => (
-                <>
-                  {rowData.m1.active} ({rowData.m1.change})
-                </>
-              ),
+              render: (rowData) => renderCell(rowData, 'm1'),
             },
             {
               title: 'Feb',
-              field: 'm2.active',
-              render: (rowData) => (
-                <>
-                  {rowData.m2.active} ({rowData.m2.change})
-                </>
-              ),
+              render: (rowData) => renderCell(rowData, 'm1'),
             },
             {
               title: 'Mar',
-              field: 'm3.active',
-              render: (rowData) => (
-                <>
-                  {rowData.m3.active} ({rowData.m3.change})
-                </>
-              ),
+              render: (rowData) => renderCell(rowData, 'm1'),
             },
             {
               title: 'Apr',
-              field: 'm4.active',
-              render: (rowData) => (
-                <>
-                  {rowData.m4.active} ({rowData.m4.change})
-                </>
-              ),
+              render: (rowData) => renderCell(rowData, 'm1'),
             },
             {
               title: 'May',
-              field: 'm5.active',
-              render: (rowData) => (
-                <>
-                  {rowData.m5.active} ({rowData.m5.change})
-                </>
-              ),
             },
             {
               title: 'Jun',
-              field: 'm6.active',
-              render: (rowData) => (
-                <>
-                  {rowData.m6.active} ({rowData.m6.change})
-                </>
-              ),
+              render: (rowData) => renderCell(rowData, 'm1'),
             },
             {
               title: 'Jul',
-              field: 'm7.active',
-              render: (rowData) => (
-                <>
-                  {rowData.m7.active} ({rowData.m7.change})
-                </>
-              ),
+              render: (rowData) => renderCell(rowData, 'm1'),
             },
             {
               title: 'Aug',
-              field: 'm8.active',
-              render: (rowData) => (
-                <>
-                  {rowData.m8.active} ({rowData.m8.change})
-                </>
-              ),
             },
             {
               title: 'Sep',
-              field: 'm9.active',
-              render: (rowData) => (
-                <>
-                  {rowData.m9.active} ({rowData.m9.change})
-                </>
-              ),
+              render: (rowData) => renderCell(rowData, 'm1'),
             },
             {
               title: 'Oct',
-              field: 'm10.active',
-              render: (rowData) => (
-                <>
-                  {rowData.m10.active} ({rowData.m10.change})
-                </>
-              ),
+              render: (rowData) => renderCell(rowData, 'm1'),
             },
             {
               title: 'Nov',
-              field: 'm11.active',
-              render: (rowData) => (
-                <>
-                  {rowData.m11.active} ({rowData.m11.change})
-                </>
-              ),
+              render: (rowData) => renderCell(rowData, 'm1'),
             },
             {
               title: 'Dec',
-              field: 'm12.active',
-              render: (rowData) => (
-                <>
-                  {rowData.m12.active} ({rowData.m12.change})
-                </>
-              ),
+              render: (rowData) => renderCell(rowData, 'm1'),
             },
           ]}
           data={list}
@@ -214,8 +163,12 @@ const KPI: React.FunctionComponent<KPIProps> = () => {
             window.open(url, '_self');
           }}
         />
-        <button onClick={() => setYear(year - 1)}>Previous year</button>
-        <button onClick={() => setYear(year + 1)}>Next year</button>
+        <button onClick={() => setYear(year - 1)} disabled={year === 2019}>
+          Previous year
+        </button>
+        <button onClick={() => setYear(year + 1)} disabled={year === 2020}>
+          Next year
+        </button>
       </Grid>
     </Layout>
   );
