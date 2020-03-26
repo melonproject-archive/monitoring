@@ -26,7 +26,7 @@ const AssetList: React.FunctionComponent<AssetListProps> = (props) => {
 
   const data = result.data || {};
 
-  const assets = ((data && data.assets) || [])
+  const assets = (data?.assets || [])
     .filter((asset) => !asset.removedFromRegistry)
     .map((asset) => {
       return {

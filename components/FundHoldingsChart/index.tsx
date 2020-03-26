@@ -24,7 +24,7 @@ const FundHoldingsChart: React.FunctionComponent<FundHoldingsChartProps> = (prop
     });
 
   const holdingsHistory = R.pathOr([], ['data', 'fundHoldingsHistories'], result);
-  const holdingsLength = holdingsHistory && holdingsHistory.length;
+  const holdingsLength = holdingsHistory?.length;
 
   const groupedHoldingsHistory: any[] = [];
   let ts = 0;

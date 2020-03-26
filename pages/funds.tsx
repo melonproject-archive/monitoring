@@ -91,11 +91,10 @@ const Home: React.FunctionComponent<HomeProps> = (props) => {
               <>
                 <br />
                 <Typography variant="body1" align="right">
-                  {fundCounts &&
-                    parseInt(fundCounts[fundCounts.length - 1].active, 10) +
-                      parseInt(fundCounts[fundCounts.length - 1].nonActive, 10)}{' '}
-                  funds <br />({fundCounts[fundCounts.length - 1].active} active,{' '}
-                  {fundCounts && fundCounts[fundCounts.length - 1].nonActive} not active)
+                  {parseInt(fundCounts?.[fundCounts.length - 1].active, 10) +
+                    parseInt(fundCounts?.[fundCounts.length - 1].nonActive, 10)}{' '}
+                  funds <br />({fundCounts?.[fundCounts.length - 1].active} active,{' '}
+                  {fundCounts?.[fundCounts.length - 1].nonActive} not active)
                 </Typography>
               </>
             )}

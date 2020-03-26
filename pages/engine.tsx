@@ -69,7 +69,7 @@ const Engine: React.FunctionComponent<EngineProps> = (props) => {
               {engineQuantities && formatThousands(formatBigNumber(engineQuantities.mlnTotalSupply, 18, 0))}
             </LineItem>
             <LineItem name="Engine premium" linebreak={true}>
-              {engineQuantities && engineQuantities.premiumPercent}%
+              {engineQuantities?.premiumPercent}%
             </LineItem>
 
             <LineItem name="Frozen ETH">
@@ -79,9 +79,7 @@ const Engine: React.FunctionComponent<EngineProps> = (props) => {
               <TooltipNumber number={engineQuantities.liquidEther} /> ETH
             </LineItem>
             <LineItem name="Last thaw">{engineQuantities && formatDate(engineQuantities.lastThaw, true)}</LineItem>
-            <LineItem name="Thawing delay">
-              {engineQuantities && engineQuantities.thawingDelay / (24 * 3600)} days
-            </LineItem>
+            <LineItem name="Thawing delay">{engineQuantities?.thawingDelay / (24 * 3600)} days</LineItem>
           </Grid>
         </Paper>
       </Grid>

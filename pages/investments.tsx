@@ -34,7 +34,7 @@ const Investments: React.FunctionComponent<InvestmentsProps> = () => {
       active: !new BigNumber(investment.shares).isZero(),
     }));
 
-  const loading = result && result.loading;
+  const loading = result?.loading;
 
   return (
     <Layout title="Investments" page="investments">

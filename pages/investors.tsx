@@ -35,10 +35,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = () => {
     { ssr: false },
   );
 
-  const investmentRequests = (
-    (investmentRequestsResult.data && investmentRequestsResult.data.investmentRequests) ||
-    []
-  ).map((item) => {
+  const investmentRequests = (investmentRequestsResult.data?.investmentRequests || []).map((item) => {
     let expires = parseInt(item.requestTimestamp, 10) + 24 * 60 * 60;
     let status = item.status;
     if (new Date().getTime() > new Date(expires * 1000).getTime()) {

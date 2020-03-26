@@ -20,7 +20,7 @@ const Contracts: React.FunctionComponent<ContractsProps> = () => {
     ssr: false,
   });
 
-  const contracts = (contractResult.data && contractResult.data.contracts) || [];
+  const contracts = contractResult.data?.contracts || [];
 
   return (
     <Layout title="Contracts" page="contracts">

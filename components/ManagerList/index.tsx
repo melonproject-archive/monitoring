@@ -45,7 +45,7 @@ const ManagerList: React.FunctionComponent<ManagerListProps> = () => {
 
   const data = result.data || {};
 
-  const managers = (data && data.fundManagers) || [];
+  const managers = data?.fundManagers || [];
 
   return (
     <MaterialTable

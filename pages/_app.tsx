@@ -40,7 +40,7 @@ const createErrorLink = () =>
     if (graphQLErrors) {
       graphQLErrors.forEach(({ message, locations, path }) => {
         // tslint:disable-next-line:no-console
-        console.log('[GQL ERROR]: Message: %s, Path: %s, Locations: %o', message, path && path.join('.'), locations);
+        console.log('[GQL ERROR]: Message: %s, Path: %s, Locations: %o', message, path?.join('.'), locations);
       });
     }
 

@@ -19,13 +19,13 @@ const Exchange: React.FunctionComponent<ExchangeProps> = (props) => {
   const router = useRouter();
   const result = useQuery(ExchangeDetailsQuery, {
     ssr: false,
-    skip: !(router && router.query.address),
+    skip: !router?.query.address,
     variables: {
-      exchange: router && router.query.address,
+      exchange: router?.query.address,
     },
   });
 
-  const exchange = result.data && result.data.exchange;
+  const exchange = result.data?.exchange;
 
   const trades = exchange?.trades;
 
@@ -33,14 +33,14 @@ const Exchange: React.FunctionComponent<ExchangeProps> = (props) => {
     <Layout title="Exchange" page="exchange">
       <Grid item={true} xs={12} sm={6} md={6}>
         <Paper className={props.classes.paper}>
-          <Typography variant="h5">{exchange && exchange.name}&nbsp;</Typography>
+          <Typography variant="h5">{exchange?.name}&nbsp;</Typography>
           <div>
-            Address: <EtherscanLink address={exchange && exchange.id} />
+            Address: <EtherscanLink address={exchange?.id} />
           </div>
           <div>
-            Adapter: <EtherscanLink address={exchange && exchange.adapter.id} />
+            Adapter: <EtherscanLink address={exchange?.adapter.id} />
           </div>
-          <div>Takes custody: {exchange && (exchange.adapter.takesCustody ? 'Yes' : 'No')}</div>
+          <div>Takes custody: {exchange?.adapter.takesCustody ? 'Yes' : 'No'}</div>
 
           <div>&nbsp;</div>
         </Paper>

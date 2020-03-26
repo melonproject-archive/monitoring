@@ -35,9 +35,9 @@ const Investor: React.FunctionComponent<InvestorProps> = (props) => {
   const router = useRouter();
   const result = useQuery(InvestorDetailsQuery, {
     ssr: false,
-    skip: !(router && router.query.address),
+    skip: !router?.query.address,
     variables: {
-      investor: router && router.query.address,
+      investor: router?.query.address,
     },
   });
 
@@ -52,7 +52,7 @@ const Investor: React.FunctionComponent<InvestorProps> = (props) => {
       ssr: false,
       skip: !investmentList.length,
       variables: {
-        ids: investmentList && investmentList.map((investment) => investment.id),
+        ids: investmentList?.map((investment) => investment.id),
       },
     },
   );
@@ -97,9 +97,9 @@ const Investor: React.FunctionComponent<InvestorProps> = (props) => {
     proceedPaths(['investorValuationHistories']),
     {
       ssr: false,
-      skip: !(router && router.query.address),
+      skip: !router?.query.address,
       variables: {
-        id: router && router.query.address,
+        id: router?.query.address,
       },
     },
   );

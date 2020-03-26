@@ -70,12 +70,7 @@ const ExchangeCallList: React.FunctionComponent<ExchangeCallListProps> = (props)
     {
       title: 'Maker asset qty',
       render: (rowData) => {
-        return (
-          <TooltipNumber
-            number={rowData.orderValue0}
-            decimals={(rowData.orderAddress2 && rowData.orderAddress2.decimals) || 18}
-          />
-        );
+        return <TooltipNumber number={rowData.orderValue0} decimals={rowData.orderAddress2?.decimals || 18} />;
       },
       customSort: (a, b) => sortBigNumber(a, b, 'orderValue0'),
       type: 'numeric',
@@ -89,12 +84,7 @@ const ExchangeCallList: React.FunctionComponent<ExchangeCallListProps> = (props)
     {
       title: 'Taker asset qty',
       render: (rowData) => {
-        return (
-          <TooltipNumber
-            number={rowData.orderValue1}
-            decimals={(rowData.orderAddress3 && rowData.orderAddress3.decimals) || 18}
-          />
-        );
+        return <TooltipNumber number={rowData.orderValue1} decimals={rowData.orderAddress3?.decimals || 18} />;
       },
       customSort: (a, b) => sortBigNumber(a, b, 'orderValue1'),
       type: 'numeric',
@@ -108,12 +98,7 @@ const ExchangeCallList: React.FunctionComponent<ExchangeCallListProps> = (props)
     {
       title: 'Taker asset qty traded',
       render: (rowData) => {
-        return (
-          <TooltipNumber
-            number={rowData.orderValue6}
-            decimals={(rowData.orderAddress3 && rowData.orderAddress3.decimals) || 18}
-          />
-        );
+        return <TooltipNumber number={rowData.orderValue6} decimals={rowData.orderAddress3?.decimals || 18} />;
       },
       customSort: (a, b) => sortBigNumber(a, b, 'orderValue6'),
       type: 'numeric',

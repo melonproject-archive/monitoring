@@ -17,10 +17,10 @@ const Addresses: React.FunctionComponent<AddressesProps> = (props) => {
     ssr: false,
   });
 
-  const contracts = (contractResult.data && contractResult.data.contracts) || [];
+  const contracts = contractResult.data?.contracts || [];
   const graphData = { nodes: [] as any, links: [] as any[] };
   contracts.map((item) => {
-    if (item.parent && item.parent.id) {
+    if (item.parent?.id) {
       graphData.links.push({ source: item.parent.id, target: item.id });
       graphData.nodes.push({ id: item.id, name: item.name });
     }

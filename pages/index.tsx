@@ -158,7 +158,7 @@ const Network: React.FunctionComponent<NetworkProps> = (props) => {
   };
 
   const ethAum = melonNetworkHistories.length && melonNetworkHistories[melonNetworkHistories.length - 1].gav;
-  const usdAum = formatThousands((ethAum && ethAum * ethUsdRate.rate).toFixed(0));
+  const usdAum = formatThousands((ethAum * ethUsdRate?.rate).toFixed(0));
 
   return (
     <Layout title="Network overview" page="/">
@@ -215,7 +215,7 @@ const Network: React.FunctionComponent<NetworkProps> = (props) => {
                   parseInt(fundCounts[fundCounts.length - 1].active, 10) +
                     parseInt(fundCounts[fundCounts.length - 1].nonActive, 10)}{' '}
                 funds ({fundCounts[fundCounts.length - 1].active} active,{' '}
-                {fundCounts && fundCounts[fundCounts.length - 1].nonActive} not active)
+                {fundCounts?.[fundCounts?.length - 1].nonActive} not active)
               </Typography>
               <br />
               <TSAreaChart data={fundCounts} dataKeys={['active', 'nonActive']} />

@@ -26,7 +26,7 @@ const Exchanges: React.FunctionComponent<ExchangesProps> = () => {
 
   const data = result.data || {};
 
-  const exchanges = ((data && data.exchanges) || [])
+  const exchanges = (data?.exchanges || [])
     .map((exchange) => {
       return {
         ...exchange,
@@ -39,7 +39,7 @@ const Exchanges: React.FunctionComponent<ExchangesProps> = () => {
     ssr: false,
   });
 
-  const trades = (tradeResult.data && tradeResult.data.trades) || [];
+  const trades = tradeResult.data?.trades || [];
 
   return (
     <Layout title="Exchanges" page="exchanges">

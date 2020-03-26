@@ -92,10 +92,7 @@ const InvestorList: React.FunctionComponent<InvestorListProps> = () => {
   const investorsInclAum =
     investors &&
     investors.map((investor) => {
-      const cashflows = prepareCashFlows(
-        investor.investmentHistory,
-        (investor.valuationHistory[0] && investor.valuationHistory[0].nav) || 0,
-      );
+      const cashflows = prepareCashFlows(investor.investmentHistory, investor.valuationHistory[0]?.nav || 0);
       return {
         ...investor,
         netAum: investor.investments.reduce((carry, item) => {

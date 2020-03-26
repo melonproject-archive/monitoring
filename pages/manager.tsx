@@ -21,15 +21,15 @@ const Managers: React.FunctionComponent<ManagerProps> = () => {
   const router = useRouter();
   const result = useQuery(ManagerDetailsQuery, {
     ssr: false,
-    skip: !(router && router.query.address),
+    skip: !router?.query.address,
     variables: {
-      manager: router && router.query.address,
+      manager: router?.query.address,
     },
   });
 
   const manager = R.pathOr([], ['data', 'fundManager'], result) as any;
 
-  const funds = manager && manager.funds;
+  const funds = manager?.funds;
 
   return (
     <Layout title="Fund Manager" page="manager">

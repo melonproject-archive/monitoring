@@ -53,9 +53,9 @@ const Asset: React.FunctionComponent<AssetProps> = (props) => {
 
   const result = useQuery(AssetDetailsQuery, {
     ssr: false,
-    skip: !(router && router.query.address),
+    skip: !router?.query.address,
     variables: {
-      asset: router && router.query.address,
+      asset: router?.query.address,
     },
   });
 
@@ -72,9 +72,9 @@ const Asset: React.FunctionComponent<AssetProps> = (props) => {
     proceedPaths(['assetPriceHistories']),
     {
       ssr: false,
-      skip: !(router && router.query.address),
+      skip: !router?.query.address,
       variables: {
-        asset: router && router.query.address,
+        asset: router?.query.address,
       },
     },
   );
@@ -84,9 +84,9 @@ const Asset: React.FunctionComponent<AssetProps> = (props) => {
     proceedPaths(['melonNetworkAssetHistories']),
     {
       ssr: false,
-      skip: !(router && router.query.address),
+      skip: !router?.query.address,
       variables: {
-        asset: router && router.query.address,
+        asset: router?.query.address,
       },
     },
   );
@@ -133,21 +133,19 @@ const Asset: React.FunctionComponent<AssetProps> = (props) => {
     <Layout title="Asset" page="asset">
       <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
-          <Typography variant="h5">{asset && asset.symbol && asset.symbol + ' - ' + asset.name}&nbsp;</Typography>
+          <Typography variant="h5">{asset?.symbol + ' - ' + asset?.name}&nbsp;</Typography>
           <br />
           <Grid container={true}>
             <LineItem name="Address">
-              <EtherscanLink address={asset && asset.id} />
+              <EtherscanLink address={asset?.id} />
             </LineItem>
             <LineItem name="Decimals" linebreak={true}>
-              {asset && asset.decimals}
+              {asset?.decimals}
             </LineItem>
             <LineItem name="Price (Pricefeed)">
-              <TooltipNumber number={asset && asset.lastPrice} /> ETH
+              <TooltipNumber number={asset?.lastPrice} /> ETH
             </LineItem>
-            <LineItem name="Price (CoinAPI)">
-              {rates && asset && rates[asset.symbol] && (1 / rates[asset.symbol].rate).toFixed(4)} ETH
-            </LineItem>
+            <LineItem name="Price (CoinAPI)">{(1 / rates?.[asset.symbol]?.rate).toFixed(4)} ETH</LineItem>
           </Grid>
         </Paper>
       </Grid>
@@ -205,7 +203,7 @@ const Asset: React.FunctionComponent<AssetProps> = (props) => {
               },
             ]}
             data={funds}
-            title={`Funds with ${asset && asset.symbol} in their portfolio`}
+            title={`Funds with ${asset?.symbol} in their portfolio`}
             options={{
               paging: true,
               pageSize: 10,

@@ -70,12 +70,7 @@ const TradeList: React.FunctionComponent<TradeListProps> = (props) => {
     {
       title: 'Asset bought',
       render: (rowData) => {
-        return (
-          <TooltipNumber
-            number={rowData.amountBought}
-            decimals={(rowData.assetBought && rowData.assetBought.decimals) || 18}
-          />
-        );
+        return <TooltipNumber number={rowData.amountBought} decimals={rowData.assetBought?.decimals || 18} />;
       },
       customSort: (a, b) => sortBigNumber(a, b, 'amountBought'),
       type: 'numeric',
@@ -89,12 +84,7 @@ const TradeList: React.FunctionComponent<TradeListProps> = (props) => {
     {
       title: 'Amount sold',
       render: (rowData) => {
-        return (
-          <TooltipNumber
-            number={rowData.amountSold}
-            decimals={(rowData.assetSold && rowData.assetSold.decimals) || 18}
-          />
-        );
+        return <TooltipNumber number={rowData.amountSold} decimals={rowData.assetSold?.decimals || 18} />;
       },
       customSort: (a, b) => sortBigNumber(a, b, 'amountSold'),
       type: 'numeric',
