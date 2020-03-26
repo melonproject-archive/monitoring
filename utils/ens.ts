@@ -5,7 +5,7 @@ export interface EnsData {
   address: string;
 }
 
-export const fetchEnsAddresses = async (base: string = 'ETH') => {
+export const fetchEnsAddresses = async () => {
   const result = await axios('https://ens.melon.network/');
   return result.data as EnsData[];
 };

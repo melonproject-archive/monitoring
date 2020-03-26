@@ -82,7 +82,7 @@ const columns = [
   },
 ];
 
-const InvestorList: React.FunctionComponent<InvestorListProps> = (props) => {
+const InvestorList: React.FunctionComponent<InvestorListProps> = () => {
   const result = useScrapingQuery([InvestorListQuery, InvestorListQuery], proceedPaths(['investors']), {
     ssr: false,
   });

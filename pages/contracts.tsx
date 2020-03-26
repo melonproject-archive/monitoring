@@ -15,7 +15,7 @@ const styles = (theme) => ({
 
 type ContractsProps = WithStyles<typeof styles>;
 
-const Contracts: React.FunctionComponent<ContractsProps> = (props) => {
+const Contracts: React.FunctionComponent<ContractsProps> = () => {
   const contractResult = useScrapingQuery([ContractsQuery, ContractsQuery], proceedPaths(['contracts']), {
     ssr: false,
   });

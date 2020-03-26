@@ -19,7 +19,7 @@ export interface TSChartProps {
   loading?: boolean;
 }
 
-const styles = (theme) => ({});
+const styles = () => ({});
 
 const TSLineChart: React.FunctionComponent<TSChartProps> = (props) => {
   const options = {

@@ -22,7 +22,7 @@ export interface TSAreaChartProps {
   loading?: boolean;
 }
 
-const styles = (theme) => ({});
+const styles = () => ({});
 
 // const lineColor = index => {
 //   const lineColors = ['#00bfff', '#1e90ff', '#87cefa'];

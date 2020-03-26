@@ -19,7 +19,7 @@ const styles = (theme) => ({
 
 type InvestmentsProps = WithStyles<typeof styles>;
 
-const Investments: React.FunctionComponent<InvestmentsProps> = (props) => {
+const Investments: React.FunctionComponent<InvestmentsProps> = () => {
   const result = useScrapingQuery([InvestmentListQuery, InvestmentListQuery], proceedPaths(['investors']), {
     ssr: false,
   });

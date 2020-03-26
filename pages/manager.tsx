@@ -17,7 +17,7 @@ const styles = (theme) => ({
 
 type ManagerProps = WithStyles<typeof styles>;
 
-const Managers: React.FunctionComponent<ManagerProps> = (props) => {
+const Managers: React.FunctionComponent<ManagerProps> = () => {
   const router = useRouter();
   const result = useQuery(ManagerDetailsQuery, {
     ssr: false,

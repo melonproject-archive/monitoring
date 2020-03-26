@@ -20,7 +20,7 @@ const styles = (theme) => ({
 
 type InvestorsProps = WithStyles<typeof styles>;
 
-const Investors: React.FunctionComponent<InvestorsProps> = (props) => {
+const Investors: React.FunctionComponent<InvestorsProps> = () => {
   const investmentHistoryResult = useQuery(InvestmentHistoryQuery, { ssr: false, variables: { limit: 10 } });
 
   const investmentHistory =

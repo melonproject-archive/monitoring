@@ -13,7 +13,7 @@ export interface FundHoldingsChartProps {
   yMax: number;
 }
 
-const styles = (theme) => ({});
+const styles = () => ({});
 
 const FundHoldingsChart: React.FunctionComponent<FundHoldingsChartProps> = (props) => {
   const result =

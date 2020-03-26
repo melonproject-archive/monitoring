@@ -19,7 +19,7 @@ const styles = (theme) => ({
 
 type EventProps = WithStyles<typeof styles>;
 
-const Events: React.FunctionComponent<EventProps> = (props) => {
+const Events: React.FunctionComponent<EventProps> = () => {
   const eventListResult = useScrapingQuery([EventsQuery, EventsQuery], proceedPaths(['events']), {
     ssr: false,
   });

@@ -155,7 +155,7 @@ const Fund: React.FunctionComponent<FundProps> = (props) => {
   const currentHoldings =
     fund &&
     fund.currentHoldings.filter(
-      (holding, index, array) => holding.timestamp === array[0].timestamp && !new BigNumber(holding.amount).isZero(),
+      (holding, _, array) => holding.timestamp === array[0].timestamp && !new BigNumber(holding.amount).isZero(),
     );
 
   const investments = fund && fund.investments;

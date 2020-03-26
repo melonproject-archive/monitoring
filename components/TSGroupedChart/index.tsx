@@ -22,7 +22,7 @@ export interface TSGroupedChartProps {
   page?: string;
 }
 
-const styles = (theme) => ({});
+const styles = () => ({});
 
 const TSGroupedChart: React.FunctionComponent<TSGroupedChartProps> = (props) => {
   const series = props.dataKeys.map((key) => {

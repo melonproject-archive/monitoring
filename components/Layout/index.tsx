@@ -116,7 +116,7 @@ class Layout extends React.Component<LayoutProps> {
           </Link>
           <Divider />
           <List>
-            {menuItems.map((item, index) => (
+            {menuItems.map((item) => (
               <Link key={item.title} href={item.link}>
                 <ListItem button={true} component="a" selected={this.props.page === item.link}>
                   <ListItemText primary={item.title} />

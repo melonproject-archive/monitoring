@@ -19,7 +19,7 @@ const styles = (theme) => ({
 
 type ExchangesProps = WithStyles<typeof styles>;
 
-const Exchanges: React.FunctionComponent<ExchangesProps> = (props) => {
+const Exchanges: React.FunctionComponent<ExchangesProps> = () => {
   const result = useQuery(ExchangeListQuery, {
     ssr: false,
   });

@@ -38,7 +38,7 @@ const columns = [
   },
 ];
 
-const ManagerList: React.FunctionComponent<ManagerListProps> = (props) => {
+const ManagerList: React.FunctionComponent<ManagerListProps> = () => {
   const result = useQuery(ManagerListQuery, {
     ssr: false,
   });

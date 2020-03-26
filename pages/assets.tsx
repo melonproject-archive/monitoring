@@ -35,7 +35,7 @@ const getRates = () => {
   return rates;
 };
 
-const Assets: React.FunctionComponent<AssetsProps> = (props) => {
+const Assets: React.FunctionComponent<AssetsProps> = () => {
   const rates = getRates();
   return (
     <Layout title="Asset Universe" page="assets">

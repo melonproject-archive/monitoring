@@ -22,7 +22,7 @@ export interface TSChartProps {
   page?: string;
 }
 
-const styles = (theme) => ({});
+const styles = () => ({});
 
 const TSLineChart: React.FunctionComponent<TSChartProps> = (props) => {
   const series = props.dataKeys.map((key) => {
