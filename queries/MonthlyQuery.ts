@@ -167,3 +167,87 @@ export const MonthlyInvestmentCountQuery = gql`
     }
   }
 `;
+
+export const MonthlyAumQuery = gql`
+  query MonthlyInvestmentQuery(
+    $d0: BigInt!
+    $d1: BigInt!
+    $d2: BigInt!
+    $d3: BigInt!
+    $d4: BigInt!
+    $d5: BigInt!
+    $d6: BigInt!
+    $d7: BigInt!
+    $d8: BigInt!
+    $d9: BigInt!
+    $d10: BigInt!
+    $d11: BigInt!
+    $d12: BigInt!
+  ) {
+    m0: melonNetworkHistories(where: { timestamp_lt: $d0 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      id
+      gav
+      timestamp
+    }
+    m1: melonNetworkHistories(where: { timestamp_lt: $d1 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      id
+      gav
+      timestamp
+    }
+    m2: melonNetworkHistories(where: { timestamp_lt: $d2 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      id
+      gav
+      timestamp
+    }
+    m3: melonNetworkHistories(where: { timestamp_lt: $d3 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      id
+      gav
+      timestamp
+    }
+    m4: melonNetworkHistories(where: { timestamp_lt: $d4 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      id
+      gav
+      timestamp
+    }
+    m5: melonNetworkHistories(where: { timestamp_lt: $d5 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      id
+      gav
+      timestamp
+    }
+    m6: melonNetworkHistories(where: { timestamp_lt: $d6 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      id
+      gav
+      timestamp
+    }
+    m7: melonNetworkHistories(where: { timestamp_lt: $d7 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      id
+      gav
+      timestamp
+    }
+    m8: melonNetworkHistories(where: { timestamp_lt: $d8 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      id
+      gav
+      timestamp
+    }
+    m9: melonNetworkHistories(where: { timestamp_lt: $d9 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      id
+      gav
+      timestamp
+    }
+    m10: melonNetworkHistories(where: { timestamp_lt: $d10 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      id
+      gav
+      timestamp
+    }
+    m11: melonNetworkHistories(where: { timestamp_lt: $d11 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      id
+      gav
+      timestamp
+    }
+    m12: melonNetworkHistories(where: { timestamp_lt: $d12 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      id
+      gav
+      timestamp
+    }
+  }
+`;

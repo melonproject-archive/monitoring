@@ -6,7 +6,9 @@ import { Grid, withStyles, WithStyles } from '@material-ui/core';
 import Layout from '~/components/Layout';
 import MaterialTable from 'material-table';
 import { useQuery } from '@apollo/react-hooks';
-import { MonthlyInvestorCountQuery, MonthlyInvestmentCountQuery } from '~/queries/MonthlyQuery';
+import { MonthlyInvestorCountQuery, MonthlyInvestmentCountQuery, MonthlyAumQuery } from '~/queries/MonthlyQuery';
+import { formatBigNumber } from '~/utils/formatBigNumber';
+import BigNumber from 'bignumber.js';
 
 interface MonthlyQuantity {
   value: number;
@@ -40,22 +42,24 @@ type KPIProps = WithStyles<typeof styles>;
 const startOfMonth = (month: number, year: number) => new Date(year, month, 1).getTime() / 1000;
 
 const renderCell = (rowData, key) => {
-  if (!rowData[key].value) {
+  if (!rowData[key].value || isNaN(rowData[key].value)) {
     return <></>;
   }
 
   return (
     <>
-      {rowData[key].value} ({rowData[key].change})
+      {rowData[key].value} {!isNaN(rowData[key].change) && `(${rowData[key].change})`}
     </>
   );
 };
 const KPI: React.FunctionComponent<KPIProps> = () => {
-  const [year, setYear] = useState(2020);
+  const currentYear = new Date().getUTCFullYear();
+  const [year, setYear] = useState(currentYear);
 
   const timestamps = R.range(0, 13).map((r) => startOfMonth(r, year));
   const queryVariables = timestamps.reduce((acc, item, index) => ({ ...acc, ['d' + index]: item }), {});
 
+  // investors
   const investorResult = useQuery(MonthlyInvestorCountQuery, {
     ssr: false,
     variables: queryVariables,
@@ -64,10 +68,13 @@ const KPI: React.FunctionComponent<KPIProps> = () => {
   const investorMonthly = R.range(1, 13)
     .map((r) => ({
       value: investorData?.[`m${r}`]?.[0]?.active,
-      change: investorData?.[`m${r}`]?.[0]?.active - investorData?.[`m${r - 1}`]?.[0]?.active,
+      change:
+        investorData?.[`m${r}`]?.[0]?.active -
+        (!isNaN(investorData?.[`m${r - 1}`]?.[0]?.active) ? investorData?.[`m${r - 1}`]?.[0]?.active : 0),
     }))
     .reduce((acc, item, index) => ({ ...acc, [`m${index + 1}`]: item }), {});
 
+  // investments
   const investmentResult = useQuery(MonthlyInvestmentCountQuery, {
     ssr: false,
     variables: queryVariables,
@@ -76,7 +83,25 @@ const KPI: React.FunctionComponent<KPIProps> = () => {
   const investmentMonthly = R.range(1, 13)
     .map((r) => ({
       value: investmentData?.[`m${r}`]?.[0]?.active,
-      change: investmentData?.[`m${r}`]?.[0]?.active - investmentData?.[`m${r - 1}`]?.[0]?.active,
+      change:
+        investmentData?.[`m${r}`]?.[0]?.active -
+        (!isNaN(investmentData?.[`m${r - 1}`]?.[0]?.active) ? investmentData?.[`m${r - 1}`]?.[0]?.active : 0),
+    }))
+    .reduce((acc, item, index) => ({ ...acc, [`m${index + 1}`]: item }), {});
+
+  // AUM
+  const aumResult = useQuery(MonthlyAumQuery, {
+    ssr: false,
+    variables: queryVariables,
+  });
+  const aumData = aumResult?.data;
+  const aumMonthly = R.range(1, 13)
+    .map((r) => ({
+      value: formatBigNumber(aumData?.[`m${r}`]?.[0]?.gav, 18, 0),
+      change: new BigNumber(aumData?.[`m${r}`]?.[0]?.gav)
+        .minus(new BigNumber(aumData?.[`m${r - 1}`]?.[0]?.gav || 0))
+        .dividedBy('1e18')
+        .integerValue(),
     }))
     .reduce((acc, item, index) => ({ ...acc, [`m${index + 1}`]: item }), {});
 
@@ -86,6 +111,7 @@ const KPI: React.FunctionComponent<KPIProps> = () => {
       ...investorMonthly,
     },
     { quantity: 'Investments', ...investmentMonthly },
+    { quantity: 'AUM', ...aumMonthly },
   ] as AnnualQuantityList[];
 
   return (
@@ -109,45 +135,47 @@ const KPI: React.FunctionComponent<KPIProps> = () => {
             },
             {
               title: 'Feb',
-              render: (rowData) => renderCell(rowData, 'm1'),
+              render: (rowData) => renderCell(rowData, 'm2'),
             },
             {
               title: 'Mar',
-              render: (rowData) => renderCell(rowData, 'm1'),
+              render: (rowData) => renderCell(rowData, 'm3'),
             },
             {
               title: 'Apr',
-              render: (rowData) => renderCell(rowData, 'm1'),
+              render: (rowData) => renderCell(rowData, 'm4'),
             },
             {
               title: 'May',
+              render: (rowData) => renderCell(rowData, 'm5'),
             },
             {
               title: 'Jun',
-              render: (rowData) => renderCell(rowData, 'm1'),
+              render: (rowData) => renderCell(rowData, 'm6'),
             },
             {
               title: 'Jul',
-              render: (rowData) => renderCell(rowData, 'm1'),
+              render: (rowData) => renderCell(rowData, 'm7'),
             },
             {
               title: 'Aug',
+              render: (rowData) => renderCell(rowData, 'm8'),
             },
             {
               title: 'Sep',
-              render: (rowData) => renderCell(rowData, 'm1'),
+              render: (rowData) => renderCell(rowData, 'm9'),
             },
             {
               title: 'Oct',
-              render: (rowData) => renderCell(rowData, 'm1'),
+              render: (rowData) => renderCell(rowData, 'm10'),
             },
             {
               title: 'Nov',
-              render: (rowData) => renderCell(rowData, 'm1'),
+              render: (rowData) => renderCell(rowData, 'm11'),
             },
             {
               title: 'Dec',
-              render: (rowData) => renderCell(rowData, 'm1'),
+              render: (rowData) => renderCell(rowData, 'm12'),
             },
           ]}
           data={list}
@@ -166,7 +194,7 @@ const KPI: React.FunctionComponent<KPIProps> = () => {
         <button onClick={() => setYear(year - 1)} disabled={year === 2019}>
           Previous year
         </button>
-        <button onClick={() => setYear(year + 1)} disabled={year === 2020}>
+        <button onClick={() => setYear(year + 1)} disabled={year === currentYear}>
           Next year
         </button>
       </Grid>
