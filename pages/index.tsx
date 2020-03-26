@@ -7,7 +7,7 @@ import Layout from '~/components/Layout';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import TSAreaChart from '~/components/TSAreaChart';
-import { InvestorCountQuery } from '~/queries/InvestorListQuery';
+import { InvestorCountQuery, InvestmentCountQuery } from '~/queries/InvestorListQuery';
 import { AmguPaymentsQuery, AmguConsumedQuery } from '~/queries/EngineDetailsQuery';
 import { useQuery } from '@apollo/react-hooks';
 import { formatThousands } from '~/utils/formatThousands';
@@ -128,10 +128,18 @@ const Network: React.FunctionComponent<NetworkProps> = (props) => {
       };
     });
 
+  const investmentResult = useScrapingQuery(
+    [InvestmentCountQuery, InvestmentCountQuery],
+    proceedPaths(['investorCounts']),
+    {
+      ssr: false,
+    },
+  );
+  const investmentCounts = R.pathOr([], ['data', 'investmentCounts'], investmentResult);
+
   const investorResult = useScrapingQuery([InvestorCountQuery, InvestorCountQuery], proceedPaths(['investorCounts']), {
     ssr: false,
   });
-
   const investorCounts = R.pathOr([], ['data', 'investorCounts'], investorResult);
 
   const amguResult = useScrapingQuery([AmguPaymentsQuery, AmguPaymentsQuery], proceedPaths(['amguPayments']), {
@@ -214,8 +222,7 @@ const Network: React.FunctionComponent<NetworkProps> = (props) => {
                 {fundCounts &&
                   parseInt(fundCounts[fundCounts.length - 1].active, 10) +
                     parseInt(fundCounts[fundCounts.length - 1].nonActive, 10)}{' '}
-                funds ({fundCounts[fundCounts.length - 1].active} active,{' '}
-                {fundCounts?.[fundCounts?.length - 1].nonActive} not active)
+                funds
               </Typography>
               <br />
               <TSAreaChart data={fundCounts} dataKeys={['active', 'nonActive']} />
@@ -242,12 +249,30 @@ const Network: React.FunctionComponent<NetworkProps> = (props) => {
       </Grid>
       <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
+          <Typography variant="h5">Investments</Typography>
+          {(historyResult.loading && <CircularProgress />) || (
+            <>
+              <br />
+              <Typography variant="body1" align="right">
+                {investmentCounts.length && investmentCounts[investmentCounts.length - 1].all} investments
+              </Typography>
+              <br />
+              <TSAreaChart data={investmentCounts} dataKeys={['all', 'active', 'nonActive']} />
+            </>
+          )}
+        </Paper>
+      </Grid>
+      <Grid item={true} xs={12} sm={12} md={6}>
+        <Paper className={props.classes.paper}>
           <Typography variant="h5">Investors</Typography>
           {(historyResult.loading && <CircularProgress />) || (
             <>
               <br />
               <Typography variant="body1" align="right">
-                {investorCounts.length && investorCounts[investorCounts.length - 1].numberOfInvestors} investors
+                {investorCounts.length &&
+                  parseInt(investorCounts[investorCounts.length - 1].active, 10) +
+                    parseInt(investorCounts[investorCounts.length - 1].nonActive)}{' '}
+                investors
               </Typography>
               <br />
               <TSAreaChart data={investorCounts} dataKeys={['active', 'nonActive']} />
@@ -270,7 +295,7 @@ const Network: React.FunctionComponent<NetworkProps> = (props) => {
           )}
         </Paper>
       </Grid>
-      <Grid item={true} xs={12} sm={12} md={12}>
+      <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Contract addresses</Typography>
           <br />
