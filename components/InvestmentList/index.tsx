@@ -16,7 +16,7 @@ const styles = (theme) => ({
   },
 });
 
-const columns: Array<Column<any>> = [
+const columns: Column<any>[] = [
   {
     title: 'Fund',
     field: 'fund.name',

@@ -17,7 +17,7 @@ const styles = (theme) => ({
   },
 });
 
-const columns: Array<Column<any>> = [
+const columns: Column<any>[] = [
   {
     title: 'Date',
     render: (rowData) => {
