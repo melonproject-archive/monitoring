@@ -4,7 +4,8 @@ export const InvestorCountQuery = gql`
   query InvestorCountQuery($limit: Int!, $skip: Int!) {
     investorCounts(orderBy: timestamp, first: $limit, skip: $skip) {
       id
-      numberOfInvestors
+      active
+      nonActive
       timestamp
     }
   }

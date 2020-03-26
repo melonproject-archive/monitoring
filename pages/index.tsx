@@ -153,8 +153,8 @@ const Network: React.FunctionComponent<NetworkProps> = (props) => {
   const mlnSetupCosts = 17500000 * parseFloat(formatBigNumber(amguPrice, 18, 7));
   const setupCosts = {
     MLN: mlnSetupCosts.toFixed(4),
-    ETH: mlnRates && mlnRates.ETH && (mlnSetupCosts * mlnRates.ETH.rate).toFixed(4),
-    USD: mlnRates && mlnRates.USD && (mlnSetupCosts * mlnRates.USD.rate).toFixed(4),
+    ETH: (mlnSetupCosts * mlnRates?.ETH?.rate).toFixed(4),
+    USD: (mlnSetupCosts * mlnRates?.USD?.rate).toFixed(4),
   };
 
   const ethAum = melonNetworkHistories.length && melonNetworkHistories[melonNetworkHistories.length - 1].gav;
@@ -255,7 +255,7 @@ const Network: React.FunctionComponent<NetworkProps> = (props) => {
                 {investorCounts.length && investorCounts[investorCounts.length - 1].numberOfInvestors} investors
               </Typography>
               <br />
-              <TSAreaChart data={investorCounts} dataKeys={['numberOfInvestors']} />
+              <TSAreaChart data={investorCounts} dataKeys={['active', 'nonActive']} />
             </>
           )}
         </Paper>
