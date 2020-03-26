@@ -4,8 +4,8 @@ import { useQuery } from '@apollo/react-hooks';
 import { useRouter } from 'next/router';
 import Layout from '~/components/Layout';
 import ExchangeDetailsQuery from '~/queries/ExchangeDetailsQuery';
-import ExchangeCallList from '~/components/ExchangeCallList';
 import EtherscanLink from '~/components/EtherscanLink';
+import TradeList from '~/components/TradeList';
 
 const styles = (theme) => ({
   paper: {
@@ -27,9 +27,7 @@ const Exchange: React.FunctionComponent<ExchangeProps> = (props) => {
 
   const exchange = result.data && result.data.exchange;
 
-  // const tradings = exchange && exchange.tradings.filter(trading => trading.fund && trading.fund.id);
-
-  const calls = exchange && exchange.calls;
+  const trades = exchange?.trades;
 
   return (
     <Layout title="Exchange" page="exchange">
@@ -50,33 +48,9 @@ const Exchange: React.FunctionComponent<ExchangeProps> = (props) => {
 
       <Grid item={true} xs={12} sm={12} md={12}>
         <NoSsr>
-          <ExchangeCallList data={calls} loading={result.loading} hideExchange={true} />
+          <TradeList data={trades} loading={result.loading} hideExchange={false} paging={true} />
         </NoSsr>
       </Grid>
-      {/* <Grid item={true} xs={12} sm={12} md={12}>
-        <NoSsr>
-          <MaterialTable
-            columns={[
-              {
-                title: 'Fund',
-                field: 'fund.name',
-                defaultSort: 'asc',
-              },
-            ]}
-            data={tradings}
-            title={'Funds registered for exchange'}
-            options={{
-              paging: false,
-              search: false,
-            }}
-            isLoading={result.loading}
-            onRowClick={(_, rowData) => {
-              const url = '/fund?address=' + rowData.fund.id;
-              window.open(url, '_self');
-            }}
-          />
-        </NoSsr>
-      </Grid> */}
     </Layout>
   );
 };

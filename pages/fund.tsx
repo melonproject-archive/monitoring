@@ -16,7 +16,6 @@ import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import EtherscanLink from '~/components/EtherscanLink';
 import TSLineChart from '~/components/TSLineChart';
 import TooltipNumber from '~/components/TooltipNumber';
-import ExchangeCallList from '~/components/ExchangeCallList';
 import EventList from '~/components/EventList';
 import LineItem from '~/components/LineItem';
 import ShortAddress from '~/components/ShortAddress';
@@ -648,20 +647,7 @@ const Fund: React.FunctionComponent<FundProps> = (props) => {
         </Grid>
       )}
 
-      <Grid item={true} xs={12} sm={12} md={6}>
-        <NoSsr>
-          <ExchangeCallList
-            data={fund && fund.trading.calls}
-            loading={result.loading}
-            hideFund={true}
-            hideExchange={false}
-            linkFile="exchange"
-            linkPath={['exchange', 'id']}
-          />
-        </NoSsr>
-      </Grid>
-
-      <Grid item={true} xs={12} sm={12} md={6}>
+      <Grid item={true} xs={12} sm={12} md={12}>
         <NoSsr>
           <TradeList
             data={fund && fund.trading.trades}

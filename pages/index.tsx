@@ -169,12 +169,7 @@ const Network: React.FunctionComponent<NetworkProps> = (props) => {
               Melon network monitoring tool - your friendly companion into the Melon ecosystem
             </Typography>
             <div className={props.classes.logoDiv}>
-              <img
-                src="https://github.com/melonproject/branding/raw/master/melon/11_Melon_icon.png"
-                alt="MLN logo"
-                width="50"
-                height="50"
-              />
+              <img src="/static/icon.png" alt="MLN logo" width="50" height="50" />
             </div>
           </div>
         </Paper>

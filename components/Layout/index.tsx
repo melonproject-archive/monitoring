@@ -109,12 +109,7 @@ class Layout extends React.Component<LayoutProps> {
           <Link href="/">
             <a className={classes.aStyle}>
               <div className={classes.topDrawer}>
-                <img
-                  src="https://github.com/melonproject/branding/raw/master/melon/11_Melon_icon.png"
-                  alt="MLN logo"
-                  width="50"
-                  height="50"
-                />{' '}
+                <img src="/static/icon.png" alt="MLN logo" width="50" height="50" />{' '}
                 <Typography variant="h6">&nbsp;Melon Network</Typography>
               </div>
             </a>
@@ -143,9 +138,7 @@ class Layout extends React.Component<LayoutProps> {
 
     return (
       <>
-        {/* <Head>
-          <title>Melon Network - {this.props.title}</title>
-        </Head> */}
+        <title>Melon Network - {this.props.title}</title>
 
         <div className={classes.root}>
           <AppBar position="fixed" className={classes.appBar}>
