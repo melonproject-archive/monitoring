@@ -251,3 +251,100 @@ export const MonthlyAumQuery = gql`
     }
   }
 `;
+
+export const MonthlyTradeCountQuery = gql`
+  query MonthlyTradeCountQuery(
+    $d0: BigInt!
+    $d1: BigInt!
+    $d2: BigInt!
+    $d3: BigInt!
+    $d4: BigInt!
+    $d5: BigInt!
+    $d6: BigInt!
+    $d7: BigInt!
+    $d8: BigInt!
+    $d9: BigInt!
+    $d10: BigInt!
+    $d11: BigInt!
+    $d12: BigInt!
+  ) {
+    m0: tradeCounts(where: { timestamp_lt: $d0 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      all
+      make
+      take
+      cancel
+    }
+    m1: tradeCounts(where: { timestamp_lt: $d1 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      all
+      make
+      take
+      cancel
+    }
+    m2: tradeCounts(where: { timestamp_lt: $d2 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      all
+      make
+      take
+      cancel
+    }
+    m3: tradeCounts(where: { timestamp_lt: $d3 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      all
+      make
+      take
+      cancel
+    }
+    m4: tradeCounts(where: { timestamp_lt: $d4 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      all
+      make
+      take
+      cancel
+    }
+    m5: tradeCounts(where: { timestamp_lt: $d5 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      all
+      make
+      take
+      cancel
+    }
+    m6: tradeCounts(where: { timestamp_lt: $d6 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      all
+      make
+      take
+      cancel
+    }
+    m7: tradeCounts(where: { timestamp_lt: $d7 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      all
+      make
+      take
+      cancel
+    }
+    m8: tradeCounts(where: { timestamp_lt: $d8 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      all
+      make
+      take
+      cancel
+    }
+    m9: tradeCounts(where: { timestamp_lt: $d9 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      all
+      make
+      take
+      cancel
+    }
+    m10: tradeCounts(where: { timestamp_lt: $d10 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      all
+      make
+      take
+      cancel
+    }
+    m11: tradeCounts(where: { timestamp_lt: $d11 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      all
+      make
+      take
+      cancel
+    }
+    m12: tradeCounts(where: { timestamp_lt: $d12 }, orderBy: timestamp, orderDirection: desc, first: 1) {
+      all
+      make
+      take
+      cancel
+    }
+  }
+`;

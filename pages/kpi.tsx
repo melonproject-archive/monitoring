@@ -6,7 +6,12 @@ import { Grid, withStyles, WithStyles } from '@material-ui/core';
 import Layout from '~/components/Layout';
 import MaterialTable from 'material-table';
 import { useQuery } from '@apollo/react-hooks';
-import { MonthlyInvestorCountQuery, MonthlyInvestmentCountQuery, MonthlyAumQuery } from '~/queries/MonthlyQuery';
+import {
+  MonthlyInvestorCountQuery,
+  MonthlyInvestmentCountQuery,
+  MonthlyAumQuery,
+  MonthlyTradeCountQuery,
+} from '~/queries/MonthlyQuery';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import BigNumber from 'bignumber.js';
 
@@ -40,20 +45,24 @@ const styles = (theme) => ({
 type KPIProps = WithStyles<typeof styles>;
 
 const startOfMonth = (month: number, year: number) => new Date(year, month, 1).getTime() / 1000;
+const currentYear = new Date().getUTCFullYear();
+const currentMonth = new Date().getMonth();
 
-const renderCell = (rowData, key) => {
-  if (!rowData[key].value || isNaN(rowData[key].value)) {
+const renderCell = (rowData, year, month) => {
+  if (year === currentYear && month > currentMonth + 1) {
+    return <></>;
+  }
+  if (!rowData[`m${month}`].value || isNaN(rowData[`m${month}`].value)) {
     return <></>;
   }
 
   return (
     <>
-      {rowData[key].value} {!isNaN(rowData[key].change) && `(${rowData[key].change})`}
+      {rowData[`m${month}`].value} {!isNaN(rowData[`m${month}`].change) && `(${rowData[`m${month}`].change})`}
     </>
   );
 };
 const KPI: React.FunctionComponent<KPIProps> = () => {
-  const currentYear = new Date().getUTCFullYear();
   const [year, setYear] = useState(currentYear);
 
   const timestamps = R.range(0, 13).map((r) => startOfMonth(r, year));
@@ -105,6 +114,21 @@ const KPI: React.FunctionComponent<KPIProps> = () => {
     }))
     .reduce((acc, item, index) => ({ ...acc, [`m${index + 1}`]: item }), {});
 
+  // Trades
+  const tradeResult = useQuery(MonthlyTradeCountQuery, {
+    ssr: false,
+    variables: queryVariables,
+  });
+  const tradeData = tradeResult?.data;
+  const tradeMonthly = R.range(1, 13)
+    .map((r) => ({
+      value: tradeData?.[`m${r}`]?.[0]?.all,
+      change:
+        tradeData?.[`m${r}`]?.[0]?.all -
+        (!isNaN(tradeData?.[`m${r - 1}`]?.[0]?.all) ? tradeData?.[`m${r - 1}`]?.[0]?.all : 0),
+    }))
+    .reduce((acc, item, index) => ({ ...acc, [`m${index + 1}`]: item }), {});
+
   const list = [
     {
       quantity: 'Investors',
@@ -112,6 +136,7 @@ const KPI: React.FunctionComponent<KPIProps> = () => {
     },
     { quantity: 'Investments', ...investmentMonthly },
     { quantity: 'AUM', ...aumMonthly },
+    { quantity: 'Trades', ...tradeMonthly },
   ] as AnnualQuantityList[];
 
   return (
@@ -131,51 +156,51 @@ const KPI: React.FunctionComponent<KPIProps> = () => {
             },
             {
               title: 'Jan',
-              render: (rowData) => renderCell(rowData, 'm1'),
+              render: (rowData) => renderCell(rowData, year, '1'),
             },
             {
               title: 'Feb',
-              render: (rowData) => renderCell(rowData, 'm2'),
+              render: (rowData) => renderCell(rowData, year, '2'),
             },
             {
               title: 'Mar',
-              render: (rowData) => renderCell(rowData, 'm3'),
+              render: (rowData) => renderCell(rowData, year, '3'),
             },
             {
               title: 'Apr',
-              render: (rowData) => renderCell(rowData, 'm4'),
+              render: (rowData) => renderCell(rowData, year, '4'),
             },
             {
               title: 'May',
-              render: (rowData) => renderCell(rowData, 'm5'),
+              render: (rowData) => renderCell(rowData, year, '5'),
             },
             {
               title: 'Jun',
-              render: (rowData) => renderCell(rowData, 'm6'),
+              render: (rowData) => renderCell(rowData, year, '6'),
             },
             {
               title: 'Jul',
-              render: (rowData) => renderCell(rowData, 'm7'),
+              render: (rowData) => renderCell(rowData, year, '7'),
             },
             {
               title: 'Aug',
-              render: (rowData) => renderCell(rowData, 'm8'),
+              render: (rowData) => renderCell(rowData, year, '8'),
             },
             {
               title: 'Sep',
-              render: (rowData) => renderCell(rowData, 'm9'),
+              render: (rowData) => renderCell(rowData, year, '9'),
             },
             {
               title: 'Oct',
-              render: (rowData) => renderCell(rowData, 'm10'),
+              render: (rowData) => renderCell(rowData, year, '10'),
             },
             {
               title: 'Nov',
-              render: (rowData) => renderCell(rowData, 'm11'),
+              render: (rowData) => renderCell(rowData, year, '11'),
             },
             {
               title: 'Dec',
-              render: (rowData) => renderCell(rowData, 'm12'),
+              render: (rowData) => renderCell(rowData, year, '12'),
             },
           ]}
           data={list}

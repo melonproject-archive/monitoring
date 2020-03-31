@@ -271,7 +271,7 @@ const Network: React.FunctionComponent<NetworkProps> = (props) => {
               <Typography variant="body1" align="right">
                 {investorCounts.length &&
                   parseInt(investorCounts[investorCounts.length - 1].active, 10) +
-                    parseInt(investorCounts[investorCounts.length - 1].nonActive)}{' '}
+                    parseInt(investorCounts[investorCounts.length - 1].nonActive, 10)}{' '}
                 investors
               </Typography>
               <br />
