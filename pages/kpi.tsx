@@ -122,21 +122,21 @@ const KPI: React.FunctionComponent<KPIProps> = () => {
   const tradeData = tradeResult?.data;
   const tradeMonthly = R.range(1, 13)
     .map((r) => ({
-      value: tradeData?.[`m${r}`]?.[0]?.all,
-      change:
+      value:
         tradeData?.[`m${r}`]?.[0]?.all -
         (!isNaN(tradeData?.[`m${r - 1}`]?.[0]?.all) ? tradeData?.[`m${r - 1}`]?.[0]?.all : 0),
+      change: undefined,
     }))
     .reduce((acc, item, index) => ({ ...acc, [`m${index + 1}`]: item }), {});
 
   const list = [
     {
-      quantity: 'Investors',
+      quantity: '# Investors',
       ...investorMonthly,
     },
-    { quantity: 'Investments', ...investmentMonthly },
-    { quantity: 'AUM', ...aumMonthly },
-    { quantity: 'Trades', ...tradeMonthly },
+    { quantity: '# Investments', ...investmentMonthly },
+    { quantity: 'AUM [ETH]', ...aumMonthly },
+    { quantity: '# Trades', ...tradeMonthly },
   ] as AnnualQuantityList[];
 
   return (
