@@ -1,7 +1,7 @@
 export function standardDeviation(values) {
   const avg = average(values);
 
-  const squareDiffs = values.map(value => {
+  const squareDiffs = values.map((value) => {
     const diff = value - avg;
     const sqrDiff = diff * diff;
     return sqrDiff;

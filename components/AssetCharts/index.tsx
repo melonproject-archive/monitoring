@@ -19,9 +19,9 @@ export interface TSChartProps {
   loading?: boolean;
 }
 
-const styles = theme => ({});
+const styles = () => ({});
 
-const TSLineChart: React.FunctionComponent<TSChartProps> = props => {
+const TSLineChart: React.FunctionComponent<TSChartProps> = (props) => {
   const options = {
     chart: {
       type: 'spline',
@@ -84,20 +84,20 @@ const TSLineChart: React.FunctionComponent<TSChartProps> = props => {
     series: [
       {
         name: 'Price',
-        data: props.data.priceHistory.map(d => {
+        data: props.data.priceHistory.map((d) => {
           return [parseInt(d.timestamp, 10) * 1000, parseFloat(d.price)];
         }),
       },
       {
         name: 'Daily change',
-        data: props.data.priceHistory.map(d => {
+        data: props.data.priceHistory.map((d) => {
           return [parseInt(d.timestamp, 10) * 1000, parseFloat(d.dailyReturn)];
         }),
         yAxis: 1,
       },
       {
         name: 'Aggregate value',
-        data: props.data.networkValues.map(d => {
+        data: props.data.networkValues.map((d) => {
           return [parseInt(d.timestamp, 10) * 1000, parseFloat(d.amount)];
         }),
         yAxis: 2,

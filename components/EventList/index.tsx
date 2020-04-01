@@ -12,7 +12,7 @@ export interface EventListProps {
   loading: boolean;
 }
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -21,7 +21,7 @@ const styles = theme => ({
 const columns = [
   {
     title: 'Date',
-    render: rowData => {
+    render: (rowData) => {
       return formatDate(rowData.timestamp, true);
     },
     type: 'numeric',
@@ -32,19 +32,19 @@ const columns = [
   },
   {
     title: 'Address',
-    render: rowData => {
+    render: (rowData) => {
       return <EtherscanLink address={rowData.contract.id} short={true} />;
     },
   },
   {
     title: 'Sender',
-    render: rowData => {
+    render: (rowData) => {
       return <EtherscanLink address={rowData.from} short={true} />;
     },
   },
   {
     title: 'Tx hash',
-    render: rowData => {
+    render: (rowData) => {
       return <EtherscanLink tx={rowData.hash} short={true} />;
     },
   },
@@ -55,11 +55,11 @@ const columns = [
   },
   {
     title: 'Parameters',
-    render: rowData => {
+    render: (rowData) => {
       return (
         <pre>
           {rowData.parameters
-            .map(p => {
+            .map((p) => {
               return `${p.name}: ${p.value}`;
             })
             .join('\n')}
@@ -69,7 +69,7 @@ const columns = [
   },
 ];
 
-const EventList: React.FunctionComponent<EventListProps> = props => {
+const EventList: React.FunctionComponent<EventListProps> = (props) => {
   return (
     <Grid item={true} xs={12} sm={12} md={12}>
       <MaterialTable

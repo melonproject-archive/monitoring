@@ -17,7 +17,7 @@ import TSAreaChart from '~/components/TSAreaChart';
 import { useQuery } from '@apollo/react-hooks';
 import BigNumber from 'bignumber.js';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -25,7 +25,7 @@ const styles = theme => ({
 
 type EngineProps = WithStyles<typeof styles>;
 
-const Engine: React.FunctionComponent<EngineProps> = props => {
+const Engine: React.FunctionComponent<EngineProps> = (props) => {
   const stateResult = useQuery(EngineQuery, { ssr: false });
   const etherEventsResult = useQuery(EngineEtherEventsQuery, { ssr: false });
 
@@ -46,7 +46,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
   const engineEtherEvents = R.pathOr([], ['data', 'engineEtherEvents'], etherEventsResult) as any;
 
   const totalMlnBurnt = engineEtherEvents
-    .filter(event => event.event === 'Burn')
+    .filter((event) => event.event === 'Burn')
     .reduce((carry, item) => carry.plus(new BigNumber(item.amount)), new BigNumber(0));
 
   return (
@@ -69,7 +69,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
               {engineQuantities && formatThousands(formatBigNumber(engineQuantities.mlnTotalSupply, 18, 0))}
             </LineItem>
             <LineItem name="Engine premium" linebreak={true}>
-              {engineQuantities && engineQuantities.premiumPercent}%
+              {engineQuantities?.premiumPercent}%
             </LineItem>
 
             <LineItem name="Frozen ETH">
@@ -79,9 +79,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
               <TooltipNumber number={engineQuantities.liquidEther} /> ETH
             </LineItem>
             <LineItem name="Last thaw">{engineQuantities && formatDate(engineQuantities.lastThaw, true)}</LineItem>
-            <LineItem name="Thawing delay">
-              {engineQuantities && engineQuantities.thawingDelay / (24 * 3600)} days
-            </LineItem>
+            <LineItem name="Thawing delay">{engineQuantities?.thawingDelay / (24 * 3600)} days</LineItem>
           </Grid>
         </Paper>
       </Grid>
@@ -101,7 +99,7 @@ const Engine: React.FunctionComponent<EngineProps> = props => {
             columns={[
               {
                 title: 'Time',
-                render: rowData => {
+                render: (rowData) => {
                   return formatDate(rowData.timestamp, true);
                 },
                 customSort: (a, b) => sortBigNumber(a, b, 'timestamp'),

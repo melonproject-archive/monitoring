@@ -1,6 +1,6 @@
 import React from 'react';
 import NoSsr from 'react-no-ssr';
-import BaseApp, { Container } from 'next/app';
+import BaseApp from 'next/app';
 import { ApolloProvider } from '@apollo/react-hooks';
 import withApollo, { WithApolloProps } from 'next-with-apollo';
 import { ApolloClient } from 'apollo-client';
@@ -23,16 +23,14 @@ class App extends BaseApp<AppProps> {
     const Component = this.props.Component;
 
     return (
-      <Container>
-        <NoSsr>
-          <ThemeProvider theme={theme}>
-            <ApolloProvider client={this.props.apollo}>
-              <CssBaseline />
-              <Component {...this.props.pageProps} />
-            </ApolloProvider>
-          </ThemeProvider>
-        </NoSsr>
-      </Container>
+      <NoSsr>
+        <ThemeProvider theme={theme}>
+          <ApolloProvider client={this.props.apollo}>
+            <CssBaseline />
+            <Component {...this.props.pageProps} />
+          </ApolloProvider>
+        </ThemeProvider>
+      </NoSsr>
     );
   }
 }
@@ -42,7 +40,7 @@ const createErrorLink = () =>
     if (graphQLErrors) {
       graphQLErrors.forEach(({ message, locations, path }) => {
         // tslint:disable-next-line:no-console
-        console.log('[GQL ERROR]: Message: %s, Path: %s, Locations: %o', message, path && path.join('.'), locations);
+        console.log('[GQL ERROR]: Message: %s, Path: %s, Locations: %o', message, path?.join('.'), locations);
       });
     }
 
@@ -88,6 +86,4 @@ const createClient = () => {
   return client;
 };
 
-export default withApollo(createClient, {
-  getDataFromTree: 'never',
-})(App);
+export default withApollo(createClient)(App);

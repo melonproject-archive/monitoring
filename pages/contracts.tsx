@@ -7,7 +7,7 @@ import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -15,12 +15,12 @@ const styles = theme => ({
 
 type ContractsProps = WithStyles<typeof styles>;
 
-const Contracts: React.FunctionComponent<ContractsProps> = props => {
+const Contracts: React.FunctionComponent<ContractsProps> = () => {
   const contractResult = useScrapingQuery([ContractsQuery, ContractsQuery], proceedPaths(['contracts']), {
     ssr: false,
   });
 
-  const contracts = (contractResult.data && contractResult.data.contracts) || [];
+  const contracts = contractResult.data?.contracts || [];
 
   return (
     <Layout title="Contracts" page="contracts">

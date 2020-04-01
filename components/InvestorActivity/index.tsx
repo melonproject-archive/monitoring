@@ -11,16 +11,16 @@ export interface InvestorActivityProps {
   loading: any;
 }
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
 });
 
-const columns: Array<Column<any>> = [
+const columns: Column<any>[] = [
   {
     title: 'Date',
-    render: rowData => {
+    render: (rowData) => {
       return formatDate(rowData.timestamp, true);
     },
     defaultSort: 'asc',
@@ -49,7 +49,7 @@ const columns: Array<Column<any>> = [
   {
     title: 'Shares',
     type: 'numeric',
-    render: rowData => {
+    render: (rowData) => {
       return <TooltipNumber number={rowData.shares} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'shares'),
@@ -57,7 +57,7 @@ const columns: Array<Column<any>> = [
   {
     title: 'Share Price',
     type: 'numeric',
-    render: rowData => {
+    render: (rowData) => {
       return <TooltipNumber number={rowData.sharePrice} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'sharePrice'),
@@ -71,7 +71,7 @@ const columns: Array<Column<any>> = [
   {
     title: 'Amount',
     type: 'numeric',
-    render: rowData => {
+    render: (rowData) => {
       if (rowData.action === 'Redemption') {
         return '';
       }
@@ -90,7 +90,7 @@ const columns: Array<Column<any>> = [
   {
     title: 'Amount [ETH]',
     type: 'numeric',
-    render: rowData => {
+    render: (rowData) => {
       return <TooltipNumber number={rowData.amountInDenominationAsset} />;
     },
     customSort: (a, b) => sortBigNumber(a, b, 'amountInDenominationAsset'),
@@ -103,7 +103,7 @@ const columns: Array<Column<any>> = [
   },
 ];
 
-const InvestorActivity: React.FunctionComponent<InvestorActivityProps> = props => {
+const InvestorActivity: React.FunctionComponent<InvestorActivityProps> = (props) => {
   return (
     <MaterialTable
       columns={columns}

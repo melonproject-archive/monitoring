@@ -22,13 +22,13 @@ export interface TSChartProps {
   page?: string;
 }
 
-const styles = theme => ({});
+const styles = () => ({});
 
-const TSLineChart: React.FunctionComponent<TSChartProps> = props => {
-  const series = props.dataKeys.map(key => {
+const TSLineChart: React.FunctionComponent<TSChartProps> = (props) => {
+  const series = props.dataKeys.map((key) => {
     return {
       name: key,
-      data: props.data.map(d => {
+      data: props.data.map((d) => {
         return [parseInt(d.timestamp, 10) * 1000, parseFloat(d[key])];
       }),
     };

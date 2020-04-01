@@ -6,7 +6,7 @@ import AssetList from '~/components/AssetList';
 import { fetchCoinApiRates } from '~/utils/coinApi';
 import { retryWhen, delay } from 'rxjs/operators';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -22,9 +22,9 @@ const getRates = () => {
   const [rates, setRates] = useState({});
 
   useEffect(() => {
-    const rates$ = Rx.defer(() => fetchCoinApiRates()).pipe(retryWhen(error => error.pipe(delay(10000))));
+    const rates$ = Rx.defer(() => fetchCoinApiRates()).pipe(retryWhen((error) => error.pipe(delay(10000))));
     const subscription = rates$.subscribe({
-      next: result => setRates(result),
+      next: (result) => setRates(result),
     });
 
     return () => {
@@ -35,7 +35,7 @@ const getRates = () => {
   return rates;
 };
 
-const Assets: React.FunctionComponent<AssetsProps> = props => {
+const Assets: React.FunctionComponent<AssetsProps> = () => {
   const rates = getRates();
   return (
     <Layout title="Asset Universe" page="assets">

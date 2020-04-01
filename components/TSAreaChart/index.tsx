@@ -22,7 +22,7 @@ export interface TSAreaChartProps {
   loading?: boolean;
 }
 
-const styles = theme => ({});
+const styles = () => ({});
 
 // const lineColor = index => {
 //   const lineColors = ['#00bfff', '#1e90ff', '#87cefa'];
@@ -30,11 +30,11 @@ const styles = theme => ({});
 //   return lineColors[pick];
 // };
 
-const TSAreaChart: React.FunctionComponent<TSAreaChartProps> = props => {
-  const series = props.dataKeys.map(key => {
+const TSAreaChart: React.FunctionComponent<TSAreaChartProps> = (props) => {
+  const series = props.dataKeys.map((key) => {
     return {
       name: key,
-      data: props.data.map(d => {
+      data: props.data.map((d) => {
         return [parseInt(d.timestamp, 10) * 1000, parseFloat(d[key])];
       }),
     };

@@ -22,7 +22,7 @@ import LineItem from '~/components/LineItem';
 import TSLineChart from '~/components/TSLineChart';
 import { fetchCoinApiRates } from '~/utils/coinApi';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -34,9 +34,9 @@ const getRates = () => {
   const [rates, setRates] = useState({});
 
   useEffect(() => {
-    const rates$ = Rx.defer(() => fetchCoinApiRates()).pipe(retryWhen(error => error.pipe(delay(10000))));
+    const rates$ = Rx.defer(() => fetchCoinApiRates()).pipe(retryWhen((error) => error.pipe(delay(10000))));
     const subscription = rates$.subscribe({
-      next: result => setRates(result),
+      next: (result) => setRates(result),
     });
 
     return () => {
@@ -47,15 +47,15 @@ const getRates = () => {
   return rates;
 };
 
-const Asset: React.FunctionComponent<AssetProps> = props => {
+const Asset: React.FunctionComponent<AssetProps> = (props) => {
   const router = useRouter();
   const rates: any = getRates();
 
   const result = useQuery(AssetDetailsQuery, {
     ssr: false,
-    skip: !(router && router.query.address),
+    skip: !router?.query.address,
     variables: {
-      asset: router && router.query.address,
+      asset: router?.query.address,
     },
   });
 
@@ -72,9 +72,9 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
     proceedPaths(['assetPriceHistories']),
     {
       ssr: false,
-      skip: !(router && router.query.address),
+      skip: !router?.query.address,
       variables: {
-        asset: router && router.query.address,
+        asset: router?.query.address,
       },
     },
   );
@@ -84,9 +84,9 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
     proceedPaths(['melonNetworkAssetHistories']),
     {
       ssr: false,
-      skip: !(router && router.query.address),
+      skip: !router?.query.address,
       variables: {
-        asset: router && router.query.address,
+        asset: router?.query.address,
       },
     },
   );
@@ -107,7 +107,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
     };
   });
 
-  const networkValues = R.pathOr([], ['data', 'melonNetworkAssetHistories'], melonNetworkResult).map(item => {
+  const networkValues = R.pathOr([], ['data', 'melonNetworkAssetHistories'], melonNetworkResult).map((item) => {
     return {
       timestamp: item.timestamp,
       amount: item.amount > 0 ? formatBigNumber(item.amount, item.asset.decimals, 3) : undefined,
@@ -115,39 +115,37 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
   });
 
   const funds = R.pathOr([], ['data', 'accountings'], assetFundsResult)
-    .filter(fa => fa.fund)
-    .map(fa => {
+    .filter((fa) => fa.fund)
+    .map((fa) => {
       return { ...fa.fund };
     })
-    .map(fund => {
+    .map((fund) => {
       return {
         ...fund,
-        assetValue: fund.holdingsHistory.find(item => {
+        assetValue: fund.holdingsHistory.find((item) => {
           return item.asset.id === router.query.address;
         }) || { amount: 0 },
       };
     })
-    .filter(fund => fund.assetValue.amount);
+    .filter((fund) => fund.assetValue.amount);
 
   return (
     <Layout title="Asset" page="asset">
       <Grid item={true} xs={12} sm={12} md={12}>
         <Paper className={props.classes.paper}>
-          <Typography variant="h5">{asset && asset.symbol && asset.symbol + ' - ' + asset.name}&nbsp;</Typography>
+          <Typography variant="h5">{asset?.symbol + ' - ' + asset?.name}&nbsp;</Typography>
           <br />
           <Grid container={true}>
             <LineItem name="Address">
-              <EtherscanLink address={asset && asset.id} />
+              <EtherscanLink address={asset?.id} />
             </LineItem>
             <LineItem name="Decimals" linebreak={true}>
-              {asset && asset.decimals}
+              {asset?.decimals}
             </LineItem>
             <LineItem name="Price (Pricefeed)">
-              <TooltipNumber number={asset && asset.lastPrice} /> ETH
+              <TooltipNumber number={asset?.lastPrice} /> ETH
             </LineItem>
-            <LineItem name="Price (CoinAPI)">
-              {rates && asset && rates[asset.symbol] && (1 / rates[asset.symbol].rate).toFixed(4)} ETH
-            </LineItem>
+            <LineItem name="Price (CoinAPI)">{(1 / rates?.[asset.symbol]?.rate).toFixed(4)} ETH</LineItem>
           </Grid>
         </Paper>
       </Grid>
@@ -181,7 +179,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
               {
                 title: 'Amount',
                 type: 'numeric',
-                render: rowData => {
+                render: (rowData) => {
                   return (
                     <TooltipNumber number={rowData.assetValue.amount} decimals={rowData.assetValue.asset.decimals} />
                   );
@@ -191,7 +189,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
               {
                 title: 'Value in ETH',
                 type: 'numeric',
-                render: rowData => {
+                render: (rowData) => {
                   return <TooltipNumber number={rowData.assetValue.assetGav} />;
                 },
                 defaultSort: 'desc',
@@ -205,7 +203,7 @@ const Asset: React.FunctionComponent<AssetProps> = props => {
               },
             ]}
             data={funds}
-            title={`Funds with ${asset && asset.symbol} in their portfolio`}
+            title={`Funds with ${asset?.symbol} in their portfolio`}
             options={{
               paging: true,
               pageSize: 10,

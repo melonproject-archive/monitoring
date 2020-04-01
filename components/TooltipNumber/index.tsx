@@ -12,7 +12,7 @@ export interface TooltipNumberProps {
 
 const styles = {};
 
-const TooltipNumber: React.FunctionComponent<TooltipNumberProps> = props => {
+const TooltipNumber: React.FunctionComponent<TooltipNumberProps> = (props) => {
   return (
     <Tooltip title={formatBigNumber(props.number, props.decimals || 18, 18)} placement="right">
       <span>

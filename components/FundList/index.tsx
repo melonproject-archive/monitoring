@@ -17,7 +17,7 @@ export interface FundListProps {
   ethusd?: number;
 }
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -26,7 +26,7 @@ const styles = theme => ({
   },
 });
 
-const FundList: React.FunctionComponent<FundListProps> = props => {
+const FundList: React.FunctionComponent<FundListProps> = (props) => {
   const percentageChange = (current, previous) => {
     if (current && previous) {
       const bnCurrent = new BigNumber(current.sharePrice);
@@ -57,7 +57,7 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
     {
       title: 'Address',
       field: 'id',
-      render: rowData => {
+      render: (rowData) => {
         return (
           <Tooltip title={rowData.id} placement="right">
             <span>{rowData.id.substr(0, 8)}...</span>
@@ -67,7 +67,7 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
     },
     {
       title: 'Inception',
-      render: rowData => {
+      render: (rowData) => {
         return formatDate(rowData.createdAt, true);
       },
       customSort: (a, b) => sortBigNumber(a, b, 'createdAt'),
@@ -78,7 +78,7 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
     {
       title: 'AUM [ETH]',
       type: 'numeric',
-      render: rowData => {
+      render: (rowData) => {
         return <TooltipNumber number={rowData.gav} />;
       },
       customSort: (a, b) => sortBigNumber(a, b, 'gav'),
@@ -89,7 +89,7 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
     {
       title: 'AUM [USD]',
       type: 'numeric',
-      render: rowData => {
+      render: (rowData) => {
         return formatThousands((parseFloat(formatBigNumber(rowData.gav, 18, 18)) * (props.ethusd || 1)).toFixed(0));
       },
       customSort: (a, b) => sortBigNumber(a, b, 'gav'),
@@ -100,7 +100,7 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
     {
       title: 'Share price',
       type: 'numeric',
-      render: rowData => {
+      render: (rowData) => {
         return <TooltipNumber number={rowData.sharePrice} />;
       },
       customSort: (a, b) => sortBigNumber(a, b, 'sharePrice'),
@@ -111,7 +111,7 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
     },
     {
       title: 'Change',
-      render: rowData => {
+      render: (rowData) => {
         const change = percentageChange(rowData.calculationsHistory[0], rowData.calculationsHistory[1]);
         return (
           <Typography variant="body2" color={change.color as TypographyProps['color']}>
@@ -127,7 +127,7 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
     {
       title: '# shares',
       type: 'numeric',
-      render: rowData => {
+      render: (rowData) => {
         return <TooltipNumber number={rowData.totalSupply} />;
       },
       customSort: (a, b) => sortBigNumber(a, b, 'totalSupply'),
@@ -153,7 +153,7 @@ const FundList: React.FunctionComponent<FundListProps> = props => {
     },
     {
       title: 'Status',
-      render: rowData => {
+      render: (rowData) => {
         return rowData.isShutdown ? 'Not active' : 'Active';
       },
       customSort: (a, b) => {

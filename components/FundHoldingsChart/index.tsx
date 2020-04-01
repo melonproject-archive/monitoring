@@ -13,9 +13,9 @@ export interface FundHoldingsChartProps {
   yMax: number;
 }
 
-const styles = theme => ({});
+const styles = () => ({});
 
-const FundHoldingsChart: React.FunctionComponent<FundHoldingsChartProps> = props => {
+const FundHoldingsChart: React.FunctionComponent<FundHoldingsChartProps> = (props) => {
   const result =
     props.assets &&
     useScrapingQuery([FundHoldingsHistoryQuery, FundHoldingsHistoryQuery], proceedPaths(['fundHoldingsHistories']), {
@@ -24,7 +24,7 @@ const FundHoldingsChart: React.FunctionComponent<FundHoldingsChartProps> = props
     });
 
   const holdingsHistory = R.pathOr([], ['data', 'fundHoldingsHistories'], result);
-  const holdingsLength = holdingsHistory && holdingsHistory.length;
+  const holdingsLength = holdingsHistory?.length;
 
   const groupedHoldingsHistory: any[] = [];
   let ts = 0;

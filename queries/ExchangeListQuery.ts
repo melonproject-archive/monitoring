@@ -22,9 +22,9 @@ export const ExchangeListQuery = gql`
   }
 `;
 
-export const ExchangeMethodCallListQuery = gql`
-  query ExchangeMethodCallListQuery($limit: Int!, $skip: Int!) {
-    exchangeMethodCalls(orderBy: timestamp, orderDirection: "desc", first: $limit, skip: $skip) {
+export const TradeListQuery = gql`
+  query TradeListQuery($limit: Int!, $skip: Int!) {
+    trades(orderBy: timestamp, orderDirection: "desc", first: $limit, skip: $skip) {
       id
       timestamp
       exchange {
@@ -38,34 +38,25 @@ export const ExchangeMethodCallListQuery = gql`
           name
         }
       }
-      methodSignature
+      id
+      timestamp
       methodName
-      orderAddress0
-      orderAddress1
-      orderAddress2 {
+      exchange {
+        id
+        name
+      }
+      assetBought {
         id
         symbol
         decimals
       }
-      orderAddress3 {
+      amountBought
+      assetSold {
         id
         symbol
         decimals
       }
-      orderAddress4
-      orderAddress5
-      orderValue0
-      orderValue1
-      orderValue2
-      orderValue3
-      orderValue4
-      orderValue5
-      orderValue6
-      orderValue7
-      identifier
-      makerAssetData
-      takerAssetData
-      signature
+      amountSold
     }
   }
 `;

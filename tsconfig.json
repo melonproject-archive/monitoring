@@ -2,10 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": ".",
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "lib": ["ES2020", "dom"],
     "jsx": "preserve",
     "sourceMap": true,
     "strict": false,
@@ -13,7 +10,7 @@
     "declaration": false,
     "skipLibCheck": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": false,
+    "noUnusedParameters": true,
     "noImplicitAny": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
@@ -22,26 +19,15 @@
     "esModuleInterop": true,
     "downlevelIteration": true,
     "paths": {
-      "~/*": [
-        "*"
-      ]
+      "~/*": ["*"]
     },
-    "target": "es5",
+    "target": "ES2020",
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
     "moduleResolution": "node",
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": [
-    "pages/**/*",
-    "queries/**/*",
-    "components/**/*",
-    "utils/**/*",
-    "theme.ts",
-    "types.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["pages/**/*", "queries/**/*", "components/**/*", "utils/**/*", "theme.ts", "types.ts"],
+  "exclude": ["node_modules"]
 }

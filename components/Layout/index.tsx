@@ -39,7 +39,7 @@ const menuItems = [
 
 const drawerWidth = 240;
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     display: 'flex',
   },
@@ -97,7 +97,7 @@ class Layout extends React.Component<LayoutProps> {
 
   public handleDrawerToggle = () => {
     // @ts-ignore
-    this.setState(state => ({ mobileOpen: !state.mobileOpen }));
+    this.setState((state) => ({ mobileOpen: !state.mobileOpen }));
   };
 
   public render() {
@@ -109,19 +109,14 @@ class Layout extends React.Component<LayoutProps> {
           <Link href="/">
             <a className={classes.aStyle}>
               <div className={classes.topDrawer}>
-                <img
-                  src="https://github.com/melonproject/branding/raw/master/melon/11_Melon_icon.png"
-                  alt="MLN logo"
-                  width="50"
-                  height="50"
-                />{' '}
+                <img src="/static/icon.png" alt="MLN logo" width="50" height="50" />{' '}
                 <Typography variant="h6">&nbsp;Melon Network</Typography>
               </div>
             </a>
           </Link>
           <Divider />
           <List>
-            {menuItems.map((item, index) => (
+            {menuItems.map((item) => (
               <Link key={item.title} href={item.link}>
                 <ListItem button={true} component="a" selected={this.props.page === item.link}>
                   <ListItemText primary={item.title} />
@@ -143,9 +138,7 @@ class Layout extends React.Component<LayoutProps> {
 
     return (
       <>
-        {/* <Head>
-          <title>Melon Network - {this.props.title}</title>
-        </Head> */}
+        <title>Melon Network - {this.props.title}</title>
 
         <div className={classes.root}>
           <AppBar position="fixed" className={classes.appBar}>

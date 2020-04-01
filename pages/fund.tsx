@@ -16,13 +16,13 @@ import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import EtherscanLink from '~/components/EtherscanLink';
 import TSLineChart from '~/components/TSLineChart';
 import TooltipNumber from '~/components/TooltipNumber';
-import TradeList from '~/components/TradeList';
 import EventList from '~/components/EventList';
 import LineItem from '~/components/LineItem';
 import ShortAddress from '~/components/ShortAddress';
 import { ContractEventsQuery } from '~/queries/ContractEventsQuery';
+import TradeList from '~/components/TradeList';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -44,17 +44,17 @@ const styles = theme => ({
 
 type FundProps = WithStyles<typeof styles>;
 
-const Fund: React.FunctionComponent<FundProps> = props => {
+const Fund: React.FunctionComponent<FundProps> = (props) => {
   const router = useRouter();
   const result = useQuery(FundDetailsQuery, {
     ssr: false,
-    skip: !(router && router.query.address),
+    skip: !router?.query.address,
     variables: {
-      fund: router && router.query.address,
+      fund: router?.query.address,
     },
   });
 
-  const debugLink = router && '/fund?address=' + router.query.address + '&debug=1';
+  const debugLink = '/fund?address=' + router?.query.address + '&debug=1';
 
   const fund = R.pathOr(undefined, ['data', 'fund'], result);
   const assets = R.pathOr([], ['data', 'assets'], result);
@@ -64,9 +64,9 @@ const Fund: React.FunctionComponent<FundProps> = props => {
     proceedPaths(['fundCalculationsHistories']),
     {
       ssr: false,
-      skip: !(router && router.query.address),
+      skip: !router?.query.address,
       variables: {
-        fund: router && router.query.address,
+        fund: router?.query.address,
       },
     },
   );
@@ -76,12 +76,12 @@ const Fund: React.FunctionComponent<FundProps> = props => {
     variables: {
       contracts: [
         router.query.address,
-        fund && fund.accounting && fund.accounting.id,
-        fund && fund.feeManager && fund.feeManager.id,
-        fund && fund.participation && fund.participation.id,
-        fund && fund.policyManager && fund.policyManager.id,
-        fund && fund.trading && fund.trading.id,
-        fund && fund.share && fund.share.id,
+        fund?.accounting?.id,
+        fund?.feeManager?.id,
+        fund?.participation?.id,
+        fund?.policyManager?.id,
+        fund?.trading?.id,
+        fund?.share?.id,
       ],
     },
     skip: !router.query.address || !fund,
@@ -100,7 +100,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       }
       return {
         ...item,
-        sharePrice: item.sharePrice && formatBigNumber(item.sharePrice, 18, 6),
+        sharePrice: item.sharePrice ? formatBigNumber(item.sharePrice, 18, 6) : 0,
         gav: item.gav ? formatBigNumber(item.gav, 18, 6) : 0,
         nav: item.nav ? formatBigNumber(item.nav, 18, 6) : 0,
         totalSupply: item.totalSupply ? formatBigNumber(item.totalSupply, 18, 3) : 0,
@@ -128,11 +128,11 @@ const Fund: React.FunctionComponent<FundProps> = props => {
   const nextPeriodStart =
     fund && secondsNow + (fund.feeManager.performanceFee.performanceFeePeriod - secondsSinceLastPeriod);
 
-  const maxSharePrice = Math.max(...normalizedNumbers.map(item => item.sharePrice));
-  const minSharePrice = Math.min(...normalizedNumbers.map(item => item.sharePrice));
+  const maxSharePrice = Math.max(...normalizedNumbers.map((item) => item.sharePrice));
+  const minSharePrice = Math.min(...normalizedNumbers.map((item) => item.sharePrice));
 
-  const maxNav = Math.max(...normalizedNumbers.map(item => item.nav), 0);
-  const maxGav = Math.max(...normalizedNumbers.map(item => item.gav), 0);
+  const maxNav = Math.max(...normalizedNumbers.map((item) => item.nav), 0);
+  const maxGav = Math.max(...normalizedNumbers.map((item) => item.gav), 0);
   // const maxSupply = Math.max(...normalizedNumbers.map(item => item.totalSupply), 0);
 
   const returnSinceInception =
@@ -148,24 +148,24 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       100;
 
   const volatility =
-    normalizedNumbers && standardDeviation(normalizedNumbers.map(item => item.logReturn)) * 100 * Math.sqrt(365.25);
+    normalizedNumbers && standardDeviation(normalizedNumbers.map((item) => item.logReturn)) * 100 * Math.sqrt(365.25);
 
-  const investmentHistory = fund && fund.investmentHistory;
+  const investmentHistory = fund?.investmentHistory;
 
   const currentHoldings =
     fund &&
     fund.currentHoldings.filter(
-      (holding, index, array) => holding.timestamp === array[0].timestamp && !new BigNumber(holding.amount).isZero(),
+      (holding, _, array) => holding.timestamp === array[0].timestamp && !new BigNumber(holding.amount).isZero(),
     );
 
-  const investments = fund && fund.investments;
+  const investments = fund?.investments;
 
   const feesPaidOut = R.pathOr([], ['feeManager', 'feeRewardHistory'], fund);
 
   const policies =
     fund &&
     fund.policyManager &&
-    fund.policyManager.policies.map(policy => {
+    fund.policyManager.policies.map((policy) => {
       const category =
         policy.identifier === 'UserWhitelist' || policy.identifier === 'UserBlackList'
           ? 'Compliance'
@@ -188,11 +188,11 @@ const Fund: React.FunctionComponent<FundProps> = props => {
 
   const contractAddresses =
     fund &&
-    contractNames.map(contract => {
-      return { ...contract, address: fund[contract.field] && fund[contract.field].id };
+    contractNames.map((contract) => {
+      return { ...contract, address: fund[contract.field]?.id };
     });
 
-  const investmentRequests = R.pathOr([], ['data', 'investmentRequests'], result).map(item => {
+  const investmentRequests = R.pathOr([], ['data', 'investmentRequests'], result).map((item) => {
     let expires = parseInt(item.requestTimestamp, 10) + 24 * 60 * 60;
     let status = item.status;
     if (new Date().getTime() > new Date(expires * 1000).getTime()) {
@@ -213,18 +213,18 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           <Typography variant="h5">Fund Factsheet</Typography>
           <br />
           <Grid container={true}>
-            <LineItem name="Fund name">{fund && fund.name}</LineItem>
-            <LineItem name="Protocol version">{fund && fund.version.name}</LineItem>
+            <LineItem name="Fund name">{fund?.name}</LineItem>
+            <LineItem name="Protocol version">{fund?.version.name}</LineItem>
             <LineItem name="Fund address">
-              <EtherscanLink address={fund && fund.id} />
+              <EtherscanLink address={fund?.id} />
             </LineItem>
             <LineItem name="Manager address">
-              <EtherscanLink address={fund && fund.manager.id} />
+              <EtherscanLink address={fund?.manager.id} />
             </LineItem>
             <LineItem name="Inception">{fund && formatDate(fund.createdAt, true)}</LineItem>
             <LineItem name="Status">
-              {fund && fund.isShutdown ? 'Inactive' : 'Active'}
-              {fund && fund.isShutdown && <> (deactivated: {fund.shutdownAt && formatDate(fund.shutdownAt)})</>}
+              {fund?.isShutdown ? 'Inactive' : 'Active'}
+              {fund?.isShutdown && <> (deactivated: {fund.shutdownAt && formatDate(fund.shutdownAt)})</>}
               <div>&nbsp;</div>
             </LineItem>
             <LineItem name="GAV">{fund && <TooltipNumber number={fund.gav} />} ETH</LineItem>
@@ -247,24 +247,22 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               {fund && formatBigNumber(fund.feeManager.performanceFee.performanceFeeRate + '00', 18, 2)}%{' '}
             </LineItem>
             <LineItem name="Performance fee period">
-              {fund && fund.feeManager.performanceFee.performanceFeePeriod / (60 * 60 * 24)} days
+              {fund?.feeManager.performanceFee.performanceFeePeriod / (60 * 60 * 24)} days
             </LineItem>
             <LineItem name="Start of next perfomance fee period">
               {nextPeriodStart && formatDate(nextPeriodStart, true)}
               <div>&nbsp;</div>
             </LineItem>
 
-            <LineItem name="Return since inception">
-              {returnSinceInception && returnSinceInception.toFixed(2)}%
-            </LineItem>
-            <LineItem name="Annualized return">{annualizedReturn && annualizedReturn.toFixed(2)}%</LineItem>
+            <LineItem name="Return since inception">{returnSinceInception?.toFixed(2)}%</LineItem>
+            <LineItem name="Annualized return">{annualizedReturn?.toFixed(2)}%</LineItem>
             <LineItem name="Annual volatility">
-              {volatility && volatility.toFixed(2)}%<div>&nbsp;</div>
+              {volatility?.toFixed(2)}%<div>&nbsp;</div>
             </LineItem>
             <LineItem name="Authorized exchanges">
               {fund &&
                 fund.trading.exchanges
-                  .map(exchange => {
+                  .map((exchange) => {
                     return exchange.name;
                   })
                   .join(', ')}
@@ -297,7 +295,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                       return rowData.maxPositions;
                     case 'Asset whitelist':
                       return rowData.assetWhiteList
-                        .map(asset => asset.symbol)
+                        .map((asset) => asset.symbol)
                         .sort()
                         .join(', ');
                   }
@@ -360,7 +358,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
           <br />
           <Grid container={true}>
             {contractAddresses &&
-              contractAddresses.map(a => {
+              contractAddresses.map((a) => {
                 return (
                   <>
                     {a.name === 'Registry' && (
@@ -422,8 +420,8 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Fund holdings</Typography>
           <FundHoldingsChart
-            fundAddres={router && router.query.address}
-            assets={assets.map(item => item.symbol)}
+            fundAddres={router?.query.address as string}
+            assets={assets.map((item) => item.symbol)}
             yMax={fund && maxGav}
           />
         </Paper>
@@ -435,7 +433,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
             columns={[
               {
                 title: 'Time',
-                render: rowData => {
+                render: (rowData) => {
                   return formatDate(rowData.timestamp, true);
                 },
                 cellStyle: {
@@ -448,7 +446,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               {
                 title: 'Shares',
                 type: 'numeric',
-                render: rowData => {
+                render: (rowData) => {
                   return <TooltipNumber number={rowData.shares} />;
                 },
               },
@@ -509,7 +507,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               {
                 title: 'Time',
                 field: 'timestamp',
-                render: rowData => {
+                render: (rowData) => {
                   return formatDate(rowData.timestamp, true);
                 },
                 cellStyle: {
@@ -521,7 +519,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               },
               {
                 title: 'Investor',
-                render: rowData => <ShortAddress address={rowData.owner.id} />,
+                render: (rowData) => <ShortAddress address={rowData.owner.id} />,
               },
               {
                 title: 'Action',
@@ -540,7 +538,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               {
                 title: 'Amount',
                 type: 'numeric',
-                render: rowData => {
+                render: (rowData) => {
                   if (rowData.action === 'Redemption') {
                     return '';
                   }
@@ -586,7 +584,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
               columns={[
                 {
                   title: 'Date',
-                  render: rowData => {
+                  render: (rowData) => {
                     return formatDate(rowData.requestTimestamp, true);
                   },
                   cellStyle: {
@@ -598,16 +596,16 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 },
                 {
                   title: 'Investor',
-                  render: rowData => <ShortAddress address={rowData.owner.id} />,
+                  render: (rowData) => <ShortAddress address={rowData.owner.id} />,
                 },
                 {
                   title: 'Shares',
-                  render: rowData => <TooltipNumber number={rowData.shares} />,
+                  render: (rowData) => <TooltipNumber number={rowData.shares} />,
                   type: 'numeric',
                 },
                 {
                   title: 'Amount',
-                  render: rowData => <TooltipNumber number={rowData.amount} decimals={rowData.asset.decimals} />,
+                  render: (rowData) => <TooltipNumber number={rowData.amount} decimals={rowData.asset.decimals} />,
                   type: 'numeric',
                 },
                 {
@@ -620,7 +618,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
                 },
                 {
                   title: 'Expires',
-                  render: rowData => {
+                  render: (rowData) => {
                     return rowData.expires && formatDate(rowData.expires, true);
                   },
                   cellStyle: {
@@ -650,7 +648,7 @@ const Fund: React.FunctionComponent<FundProps> = props => {
       <Grid item={true} xs={12} sm={12} md={12}>
         <NoSsr>
           <TradeList
-            data={fund && fund.trading.calls}
+            data={fund?.trading.trades}
             loading={result.loading}
             hideFund={true}
             hideExchange={false}
@@ -660,14 +658,14 @@ const Fund: React.FunctionComponent<FundProps> = props => {
         </NoSsr>
       </Grid>
 
-      {(router && router.query.debug === '1') || (
+      {router?.query.debug === '1' || (
         <Grid item={true} xs={12} sm={12} md={12}>
           <Link href={debugLink} className={props.classes.debug}>
             Fund Events
           </Link>
         </Grid>
       )}
-      {router && router.query.debug === '1' && fund && <EventList events={events} loading={eventListResult.loading} />}
+      {router?.query.debug === '1' && fund && <EventList events={events} loading={eventListResult.loading} />}
     </Layout>
   );
 };

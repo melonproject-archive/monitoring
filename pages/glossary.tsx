@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, withStyles, WithStyles, Typography, Card, CardContent } from '@material-ui/core';
 import Layout from '~/components/Layout';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -72,12 +72,12 @@ const engineTerms = [
   },
 ];
 
-const TermList = props => {
+const TermList = (props) => {
   const t = props.terms;
 
   const listItems = t
     // .sort((a, b) => a.term.localeCompare(b.term))
-    .map(item => (
+    .map((item) => (
       <div key={item.term}>
         <br />
         <Typography variant="body1">
@@ -91,7 +91,7 @@ const TermList = props => {
 
 type GlossaryProps = WithStyles<typeof styles>;
 
-const Glossary: React.FunctionComponent<GlossaryProps> = props => {
+const Glossary: React.FunctionComponent<GlossaryProps> = (props) => {
   return (
     <Layout title="Glossary" page="glossary">
       <Grid item={true} xs={12} sm={12} md={12}>

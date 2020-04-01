@@ -12,7 +12,7 @@ import { useQuery } from '@apollo/react-hooks';
 import TooltipNumber from '~/components/TooltipNumber';
 import ShortAddress from '~/components/ShortAddress';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -20,7 +20,7 @@ const styles = theme => ({
 
 type InvestorsProps = WithStyles<typeof styles>;
 
-const Investors: React.FunctionComponent<InvestorsProps> = props => {
+const Investors: React.FunctionComponent<InvestorsProps> = () => {
   const investmentHistoryResult = useQuery(InvestmentHistoryQuery, { ssr: false, variables: { limit: 10 } });
 
   const investmentHistory =
@@ -35,10 +35,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
     { ssr: false },
   );
 
-  const investmentRequests = (
-    (investmentRequestsResult.data && investmentRequestsResult.data.investmentRequests) ||
-    []
-  ).map(item => {
+  const investmentRequests = (investmentRequestsResult.data?.investmentRequests || []).map((item) => {
     let expires = parseInt(item.requestTimestamp, 10) + 24 * 60 * 60;
     let status = item.status;
     if (new Date().getTime() > new Date(expires * 1000).getTime()) {
@@ -64,7 +61,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
               {
                 title: 'Time',
                 field: 'timestamp',
-                render: rowData => {
+                render: (rowData) => {
                   return formatDate(rowData.timestamp, true);
                 },
                 cellStyle: {
@@ -76,7 +73,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
               },
               {
                 title: 'Investor',
-                render: rowData => {
+                render: (rowData) => {
                   return <ShortAddress address={rowData.owner.id} />;
                 },
               },
@@ -199,7 +196,7 @@ const Investors: React.FunctionComponent<InvestorsProps> = props => {
                 },
                 {
                   title: 'Expires',
-                  render: rowData => {
+                  render: (rowData) => {
                     return rowData.expires && formatDate(rowData.expires, true);
                   },
                   cellStyle: {

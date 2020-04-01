@@ -7,17 +7,17 @@ import Layout from '~/components/Layout';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import TSAreaChart from '~/components/TSAreaChart';
-import { InvestorCountQuery } from '~/queries/InvestorListQuery';
+import { InvestorCountQuery, InvestmentCountQuery } from '~/queries/InvestorListQuery';
 import { AmguPaymentsQuery, AmguConsumedQuery } from '~/queries/EngineDetailsQuery';
 import { useQuery } from '@apollo/react-hooks';
 import { formatThousands } from '~/utils/formatThousands';
-import { fetchSingleCoinApiRate, fetchCoinApiRates } from '~/utils/coinApi';
+import { fetchSingleCoinApiRate, fetchCoinApiRates, CoinApiRates, SingleCoinApiRate } from '~/utils/coinApi';
 import EtherscanLink from '~/components/EtherscanLink';
-import { fetchEnsAddresses } from '~/utils/ens';
+import { fetchEnsAddresses, EnsData } from '~/utils/ens';
 import LineItem from '~/components/LineItem';
 import { retryWhen, delay } from 'rxjs/operators';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -43,12 +43,12 @@ const styles = theme => ({
 type NetworkProps = WithStyles<typeof styles>;
 
 const getEthUsdRate = () => {
-  const [rate, setRate] = useState({ rate: 1 });
+  const [rate, setRate] = useState<SingleCoinApiRate>();
 
   useEffect(() => {
-    const rates$ = Rx.defer(() => fetchSingleCoinApiRate()).pipe(retryWhen(error => error.pipe(delay(10000))));
+    const rates$ = Rx.defer(() => fetchSingleCoinApiRate()).pipe(retryWhen((error) => error.pipe(delay(10000))));
     const subscription = rates$.subscribe({
-      next: result => setRate(result),
+      next: (result) => setRate(result),
     });
 
     return () => {
@@ -60,12 +60,12 @@ const getEthUsdRate = () => {
 };
 
 const getMlnRates = () => {
-  const [rates, setRate] = useState();
+  const [rates, setRate] = useState<CoinApiRates>();
 
   useEffect(() => {
-    const rates$ = Rx.defer(() => fetchCoinApiRates('MLN')).pipe(retryWhen(error => error.pipe(delay(10000))));
+    const rates$ = Rx.defer(() => fetchCoinApiRates('MLN')).pipe(retryWhen((error) => error.pipe(delay(10000))));
     const subscription = rates$.subscribe({
-      next: result => setRate(result),
+      next: (result) => setRate(result),
     });
 
     return () => {
@@ -77,12 +77,12 @@ const getMlnRates = () => {
 };
 
 const getEnsAddresses = () => {
-  const [addresses, setAddresses] = useState();
+  const [addresses, setAddresses] = useState<EnsData[]>();
 
   useEffect(() => {
-    const rates$ = Rx.defer(() => fetchEnsAddresses()).pipe(retryWhen(error => error.pipe(delay(10000))));
+    const rates$ = Rx.defer(() => fetchEnsAddresses()).pipe(retryWhen((error) => error.pipe(delay(10000))));
     const subscription = rates$.subscribe({
-      next: result => setAddresses(result),
+      next: (result) => setAddresses(result),
     });
 
     return () => {
@@ -93,16 +93,16 @@ const getEnsAddresses = () => {
   return addresses;
 };
 
-const Network: React.FunctionComponent<NetworkProps> = props => {
+const Network: React.FunctionComponent<NetworkProps> = (props) => {
   const ethUsdRate = getEthUsdRate();
   const mlnRates = getMlnRates();
 
   const ens = getEnsAddresses();
 
   const fxRates = {
-    MLNETH: mlnRates && mlnRates.ETH && mlnRates.ETH.rate.toFixed(4),
-    MLNUSD: mlnRates && mlnRates.USD && mlnRates.USD.rate.toFixed(4),
-    ETHUSD: ethUsdRate && ethUsdRate.rate.toFixed(4),
+    MLNETH: mlnRates?.ETH?.rate.toFixed(4),
+    MLNUSD: mlnRates?.USD?.rate.toFixed(4),
+    ETHUSD: ethUsdRate?.rate.toFixed(4),
   };
 
   const result = useScrapingQuery([FundCountQuery, FundCountQuery], proceedPaths(['fundCounts']), {
@@ -120,18 +120,26 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
   );
 
   const melonNetworkHistories = R.pathOr([], ['data', 'melonNetworkHistories'], historyResult)
-    .filter(item => item.gav > 0)
-    .map(item => {
+    .filter((item) => item.gav > 0)
+    .map((item) => {
       return {
         ...item,
         gav: formatBigNumber(item.gav, 18, 0),
       };
     });
 
+  const investmentResult = useScrapingQuery(
+    [InvestmentCountQuery, InvestmentCountQuery],
+    proceedPaths(['investorCounts']),
+    {
+      ssr: false,
+    },
+  );
+  const investmentCounts = R.pathOr([], ['data', 'investmentCounts'], investmentResult);
+
   const investorResult = useScrapingQuery([InvestorCountQuery, InvestorCountQuery], proceedPaths(['investorCounts']), {
     ssr: false,
   });
-
   const investorCounts = R.pathOr([], ['data', 'investorCounts'], investorResult);
 
   const amguResult = useScrapingQuery([AmguPaymentsQuery, AmguPaymentsQuery], proceedPaths(['amguPayments']), {
@@ -153,12 +161,12 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
   const mlnSetupCosts = 17500000 * parseFloat(formatBigNumber(amguPrice, 18, 7));
   const setupCosts = {
     MLN: mlnSetupCosts.toFixed(4),
-    ETH: mlnRates && mlnRates.ETH && (mlnSetupCosts * mlnRates.ETH.rate).toFixed(4),
-    USD: mlnRates && mlnRates.USD && (mlnSetupCosts * mlnRates.USD.rate).toFixed(4),
+    ETH: (mlnSetupCosts * mlnRates?.ETH?.rate).toFixed(4),
+    USD: (mlnSetupCosts * mlnRates?.USD?.rate).toFixed(4),
   };
 
   const ethAum = melonNetworkHistories.length && melonNetworkHistories[melonNetworkHistories.length - 1].gav;
-  const usdAum = formatThousands((ethAum && ethAum * ethUsdRate.rate).toFixed(0));
+  const usdAum = formatThousands((ethAum * ethUsdRate?.rate).toFixed(0));
 
   return (
     <Layout title="Network overview" page="/">
@@ -169,12 +177,7 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
               Melon network monitoring tool - your friendly companion into the Melon ecosystem
             </Typography>
             <div className={props.classes.logoDiv}>
-              <img
-                src="https://github.com/melonproject/branding/raw/master/melon/11_Melon_icon.png"
-                alt="MLN logo"
-                width="50"
-                height="50"
-              />
+              <img src="/static/icon.png" alt="MLN logo" width="50" height="50" />
             </div>
           </div>
         </Paper>
@@ -219,8 +222,7 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
                 {fundCounts &&
                   parseInt(fundCounts[fundCounts.length - 1].active, 10) +
                     parseInt(fundCounts[fundCounts.length - 1].nonActive, 10)}{' '}
-                funds ({fundCounts[fundCounts.length - 1].active} active,{' '}
-                {fundCounts && fundCounts[fundCounts.length - 1].nonActive} not active)
+                funds
               </Typography>
               <br />
               <TSAreaChart data={fundCounts} dataKeys={['active', 'nonActive']} />
@@ -247,15 +249,33 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
       </Grid>
       <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
+          <Typography variant="h5">Investments</Typography>
+          {(historyResult.loading && <CircularProgress />) || (
+            <>
+              <br />
+              <Typography variant="body1" align="right">
+                {investmentCounts.length && investmentCounts[investmentCounts.length - 1].all} investments
+              </Typography>
+              <br />
+              <TSAreaChart data={investmentCounts} dataKeys={['all', 'active', 'nonActive']} />
+            </>
+          )}
+        </Paper>
+      </Grid>
+      <Grid item={true} xs={12} sm={12} md={6}>
+        <Paper className={props.classes.paper}>
           <Typography variant="h5">Investors</Typography>
           {(historyResult.loading && <CircularProgress />) || (
             <>
               <br />
               <Typography variant="body1" align="right">
-                {investorCounts.length && investorCounts[investorCounts.length - 1].numberOfInvestors} investors
+                {investorCounts.length &&
+                  parseInt(investorCounts[investorCounts.length - 1].active, 10) +
+                    parseInt(investorCounts[investorCounts.length - 1].nonActive, 10)}{' '}
+                investors
               </Typography>
               <br />
-              <TSAreaChart data={investorCounts} dataKeys={['numberOfInvestors']} />
+              <TSAreaChart data={investorCounts} dataKeys={['active', 'nonActive']} />
             </>
           )}
         </Paper>
@@ -275,19 +295,18 @@ const Network: React.FunctionComponent<NetworkProps> = props => {
           )}
         </Paper>
       </Grid>
-      <Grid item={true} xs={12} sm={12} md={12}>
+      <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5">Contract addresses</Typography>
           <br />
           <Grid container={true}>
-            {ens &&
-              ens.map(a => {
-                return (
-                  <LineItem name={a.ens} key={a.ens}>
-                    <EtherscanLink address={a.address} />
-                  </LineItem>
-                );
-              })}
+            {ens?.map((a) => {
+              return (
+                <LineItem name={a.ens} key={a.ens}>
+                  <EtherscanLink address={a.address} />
+                </LineItem>
+              );
+            })}
           </Grid>
         </Paper>
       </Grid>

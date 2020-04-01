@@ -38,7 +38,7 @@ const styles = {
   },
 };
 
-const EtherscanLink: React.FunctionComponent<EtherscanLinkProps> = props => {
+const EtherscanLink: React.FunctionComponent<EtherscanLinkProps> = (props) => {
   const path = props.address ? 'address/' : props.tx ? 'tx/' : props.ens ? 'enslookup?q=' : '';
   const query = props.address || props.tx || props.ens || '';
   const queryShort = props.short ? query.substr(0, 6) + '...' : query;

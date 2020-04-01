@@ -14,7 +14,7 @@ import { sortBigNumber } from '~/utils/sortBigNumber';
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import { ContractEventsQuery } from '~/queries/ContractEventsQuery';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -26,13 +26,13 @@ const styles = theme => ({
 
 type ContractProps = WithStyles<typeof styles>;
 
-const Contract: React.FunctionComponent<ContractProps> = props => {
+const Contract: React.FunctionComponent<ContractProps> = (props) => {
   const router = useRouter();
   const result = useQuery(ContractDetailsQuery, {
     ssr: false,
-    skip: !(router && router.query.address),
+    skip: !router?.query.address,
     variables: {
-      address: router && router.query.address,
+      address: router?.query.address,
     },
   });
 
@@ -58,8 +58,8 @@ const Contract: React.FunctionComponent<ContractProps> = props => {
               Address
             </Grid>
             <Grid item={true} xs={6} sm={6} md={8}>
-              {contract && <EtherscanLink address={contract.id} />}
-              {contract && contract.name === 'Hub' && (
+              {<EtherscanLink address={contract.id} />}
+              {contract?.name === 'Hub' && (
                 <>
                   &nbsp;
                   <a href={'/fund?address=' + contract.id} className={props.classes.aStyle}>
@@ -72,19 +72,19 @@ const Contract: React.FunctionComponent<ContractProps> = props => {
               Type
             </Grid>
             <Grid item={true} xs={6} sm={6} md={8}>
-              {contract && contract.name}
+              {contract?.name}
             </Grid>
             <Grid item={true} xs={6} sm={6} md={4}>
               Created at
             </Grid>
             <Grid item={true} xs={6} sm={6} md={8}>
-              {contract && formatDate(contract.createdAt, true)}
+              {formatDate(contract?.createdAt, true)}
             </Grid>
             <Grid item={true} xs={6} sm={6} md={4}>
               Parent contract
             </Grid>
             <Grid item={true} xs={6} sm={6} md={8}>
-              {contract && contract.parent && (
+              {contract?.parent && (
                 <>
                   {contract.parent.name}
                   <br />
@@ -127,7 +127,7 @@ const Contract: React.FunctionComponent<ContractProps> = props => {
                 field: 'id',
               },
             ]}
-            data={contract && contract.children}
+            data={contract?.children}
             title="Children"
             options={{
               paging: false,

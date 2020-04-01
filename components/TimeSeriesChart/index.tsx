@@ -15,15 +15,15 @@ export interface TimeSeriesChartProps {
   loading?: boolean;
 }
 
-const styles = theme => ({});
+const styles = () => ({});
 
-const lineColor = index => {
+const lineColor = (index) => {
   const lineColors = ['#00bfff', '#1e90ff', '#87cefa'];
   const pick = index % lineColors.length;
   return lineColors[pick];
 };
 
-const TimeSeriesChart: React.FunctionComponent<TimeSeriesChartProps> = props => {
+const TimeSeriesChart: React.FunctionComponent<TimeSeriesChartProps> = (props) => {
   return (
     <ResponsiveContainer height={props.height || 200} width="100%">
       {(props.loading && <CircularProgress />) || (
@@ -35,14 +35,14 @@ const TimeSeriesChart: React.FunctionComponent<TimeSeriesChartProps> = props => 
             dataKey="timestamp"
             type="number"
             domain={['dataMin', 'dataMax']}
-            tickFormatter={timeStr => formatDate(timeStr)}
+            tickFormatter={(timeStr) => formatDate(timeStr)}
             stroke="#dddddd"
           />
           <YAxis domain={[props.yMin || 0, props.yMax || 'auto']} stroke="#dddddd" />
           {props.referenceLine && <ReferenceLine y={0} stroke="gray" strokeDasharray="3 3" />}
 
           <Tooltip
-            labelFormatter={value => 'Date: ' + formatDate(value)}
+            labelFormatter={(value) => 'Date: ' + formatDate(value)}
             contentStyle={{ backgroundColor: '#4A4A4A' }}
           />
         </LineChart>

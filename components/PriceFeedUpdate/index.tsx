@@ -9,7 +9,7 @@ import { Typography } from '@material-ui/core';
 
 const styles = {};
 
-const PriceFeedUpdate: React.FunctionComponent<{}> = props => {
+const PriceFeedUpdate: React.FunctionComponent<{}> = () => {
   const result = useQuery(LastPriceUpdateQuery, { ssr: false });
   const priceUpdate = R.pathOr('', ['data', 'state', 'lastPriceUpdate'], result);
 

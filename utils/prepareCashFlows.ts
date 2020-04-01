@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 import { formatBigNumber } from './formatBigNumber';
 
 export const prepareCashFlows = (history, currentValue: string) => {
-  const investmentCashFlows = history.map(item => {
+  const investmentCashFlows = history.map((item) => {
     let pre = '';
     if (item.action === 'Investment') {
       pre = '-';

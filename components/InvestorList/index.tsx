@@ -18,7 +18,7 @@ export interface InvestorListProps {
   data?: any;
 }
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
@@ -27,11 +27,11 @@ const styles = theme => ({
 const columns = [
   {
     title: 'Address',
-    render: rowData => <ShortAddress address={rowData.id} length={16} />,
+    render: (rowData) => <ShortAddress address={rowData.id} length={16} />,
   },
   {
     title: 'Investor since',
-    render: rowData => formatDate(rowData.createdAt),
+    render: (rowData) => formatDate(rowData.createdAt),
     customSort: (a, b) => sortBigNumber(a, b, 'createdAt'),
     cellStyle: {
       whiteSpace: 'nowrap',
@@ -48,7 +48,7 @@ const columns = [
   {
     title: 'AUM [ETH]',
     type: 'numeric',
-    render: rowData => <TooltipNumber number={rowData.netAum} />,
+    render: (rowData) => <TooltipNumber number={rowData.netAum} />,
     customSort: (a, b) => sortBigNumber(a, b, 'netAum'),
     defaultSort: 'desc',
     cellStyle: {
@@ -82,7 +82,7 @@ const columns = [
   },
 ];
 
-const InvestorList: React.FunctionComponent<InvestorListProps> = props => {
+const InvestorList: React.FunctionComponent<InvestorListProps> = () => {
   const result = useScrapingQuery([InvestorListQuery, InvestorListQuery], proceedPaths(['investors']), {
     ssr: false,
   });
@@ -91,11 +91,8 @@ const InvestorList: React.FunctionComponent<InvestorListProps> = props => {
 
   const investorsInclAum =
     investors &&
-    investors.map(investor => {
-      const cashflows = prepareCashFlows(
-        investor.investmentHistory,
-        (investor.valuationHistory[0] && investor.valuationHistory[0].nav) || 0,
-      );
+    investors.map((investor) => {
+      const cashflows = prepareCashFlows(investor.investmentHistory, investor.valuationHistory[0]?.nav || 0);
       return {
         ...investor,
         netAum: investor.investments.reduce((carry, item) => {

@@ -18,6 +18,40 @@ export default gql`
       #     id
       #   }
       # }
+      trades(orderBy: timestamp, orderDirection: "desc") {
+        id
+        timestamp
+        exchange {
+          id
+          name
+        }
+        trading {
+          id
+          fund {
+            id
+            name
+          }
+        }
+        id
+        timestamp
+        methodName
+        exchange {
+          id
+          name
+        }
+        assetBought {
+          id
+          symbol
+          decimals
+        }
+        amountBought
+        assetSold {
+          id
+          symbol
+          decimals
+        }
+        amountSold
+      }
       calls {
         id
         timestamp

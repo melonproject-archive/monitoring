@@ -22,13 +22,13 @@ export interface TSGroupedChartProps {
   page?: string;
 }
 
-const styles = theme => ({});
+const styles = () => ({});
 
-const TSGroupedChart: React.FunctionComponent<TSGroupedChartProps> = props => {
-  const series = props.dataKeys.map(key => {
+const TSGroupedChart: React.FunctionComponent<TSGroupedChartProps> = (props) => {
+  const series = props.dataKeys.map((key) => {
     return {
       name: key,
-      data: props.data.map(d => {
+      data: props.data.map((d) => {
         return [parseInt(d.timestamp, 10) * 1000, parseFloat(d[key])];
       }),
       type: 'column',
