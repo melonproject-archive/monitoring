@@ -11,6 +11,7 @@ import {
   MonthlyInvestmentCountQuery,
   MonthlyAumQuery,
   MonthlyTradeCountQuery,
+  MonthlyFundCountQuery,
 } from '~/queries/MonthlyQuery';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import BigNumber from 'bignumber.js';
@@ -68,6 +69,23 @@ const KPI: React.FunctionComponent<KPIProps> = () => {
   const timestamps = R.range(0, 13).map((r) => startOfMonth(r, year));
   const queryVariables = timestamps.reduce((acc, item, index) => ({ ...acc, ['d' + index]: item }), {});
 
+  // funds
+  const fundsResult = useQuery(MonthlyFundCountQuery, {
+    ssr: false,
+    variables: queryVariables,
+  });
+  const fundsData = fundsResult?.data;
+  const fundsMonthly = R.range(1, 13)
+    .map((r) => ({
+      value: parseInt(fundsData?.[`m${r}`]?.[0]?.active, 10) + parseInt(fundsData?.[`m${r}`]?.[0]?.nonActive, 10),
+      change:
+        parseInt(fundsData?.[`m${r}`]?.[0]?.active, 10) +
+        parseInt(fundsData?.[`m${r}`]?.[0]?.nonActive, 10) -
+        (!isNaN(fundsData?.[`m${r - 1}`]?.[0]?.active) ? fundsData?.[`m${r - 1}`]?.[0]?.active : 0) -
+        (!isNaN(fundsData?.[`m${r - 1}`]?.[0]?.nonActive) ? fundsData?.[`m${r - 1}`]?.[0]?.nonActive : 0),
+    }))
+    .reduce((acc, item, index) => ({ ...acc, [`m${index + 1}`]: item }), {});
+
   // investors
   const investorResult = useQuery(MonthlyInvestorCountQuery, {
     ssr: false,
@@ -122,14 +140,18 @@ const KPI: React.FunctionComponent<KPIProps> = () => {
   const tradeData = tradeResult?.data;
   const tradeMonthly = R.range(1, 13)
     .map((r) => ({
-      value:
+      value: tradeData?.[`m${r}`]?.[0]?.all,
+      change:
         tradeData?.[`m${r}`]?.[0]?.all -
         (!isNaN(tradeData?.[`m${r - 1}`]?.[0]?.all) ? tradeData?.[`m${r - 1}`]?.[0]?.all : 0),
-      change: undefined,
     }))
     .reduce((acc, item, index) => ({ ...acc, [`m${index + 1}`]: item }), {});
 
   const list = [
+    {
+      quantity: '# Funds',
+      ...fundsMonthly,
+    },
     {
       quantity: '# Investors',
       ...investorMonthly,
