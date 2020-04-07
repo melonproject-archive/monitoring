@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/styles';
 import { formatDate } from '~/utils/formatDate';
 import { sortBigNumber } from '~/utils/sortBigNumber';
 import TooltipNumber from '../TooltipNumber';
+import BigNumber from 'bignumber.js';
 
 export interface TradeListProps {
   data: any;
@@ -85,6 +86,23 @@ const TradeList: React.FunctionComponent<TradeListProps> = (props) => {
       title: 'Amount sold',
       render: (rowData) => {
         return <TooltipNumber number={rowData.amountSold} decimals={rowData.assetSold?.decimals || 18} />;
+      },
+      customSort: (a, b) => sortBigNumber(a, b, 'amountSold'),
+      type: 'numeric',
+      cellStyle: {
+        whiteSpace: 'nowrap',
+      },
+      headerStyle: {
+        whiteSpace: 'nowrap',
+      },
+    },
+    {
+      title: 'Price',
+      render: (rowData) => {
+        const price = new BigNumber(rowData.amountSold)
+          .dividedBy(new BigNumber(rowData.amountBought))
+          .dividedBy(`1e${rowData.assetSold.decimals - rowData.assetBought.decimals}`);
+        return <TooltipNumber number={price} decimals={0} />;
       },
       customSort: (a, b) => sortBigNumber(a, b, 'amountSold'),
       type: 'numeric',

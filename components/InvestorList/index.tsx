@@ -27,6 +27,7 @@ const styles = (theme) => ({
 const columns = [
   {
     title: 'Address',
+    field: 'id',
     render: (rowData) => <ShortAddress address={rowData.id} length={16} />,
   },
   {

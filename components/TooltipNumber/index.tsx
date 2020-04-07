@@ -14,9 +14,9 @@ const styles = {};
 
 const TooltipNumber: React.FunctionComponent<TooltipNumberProps> = (props) => {
   return (
-    <Tooltip title={formatBigNumber(props.number, props.decimals || 18, 18)} placement="right">
+    <Tooltip title={formatBigNumber(props.number, props.decimals ?? 18, 18)} placement="right">
       <span>
-        {formatBigNumber(props.number, props.decimals || 18, (props.digits && (props.digits as number)) || 4)}
+        {formatBigNumber(props.number, props.decimals ?? 18, (props.digits && (props.digits as number)) ?? 4)}
       </span>
     </Tooltip>
   );

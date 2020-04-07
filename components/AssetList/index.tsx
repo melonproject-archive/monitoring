@@ -65,6 +65,7 @@ const AssetList: React.FunctionComponent<AssetListProps> = (props) => {
     },
     {
       title: 'Addres',
+      field: 'id',
       render: (rowData) => <ShortAddress address={rowData.id} />,
       headerStyle: {
         verticalAlign: 'text-top',
