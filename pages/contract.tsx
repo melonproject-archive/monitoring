@@ -58,7 +58,7 @@ const Contract: React.FunctionComponent<ContractProps> = (props) => {
               Address
             </Grid>
             <Grid item={true} xs={6} sm={6} md={8}>
-              {<EtherscanLink address={contract.id} />}
+              {<EtherscanLink address={contract?.id} />}
               {contract?.name === 'Hub' && (
                 <>
                   &nbsp;

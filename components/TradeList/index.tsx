@@ -99,9 +99,15 @@ const TradeList: React.FunctionComponent<TradeListProps> = (props) => {
     {
       title: 'Price',
       render: (rowData) => {
-        const price = new BigNumber(rowData.amountSold)
-          .dividedBy(new BigNumber(rowData.amountBought))
-          .dividedBy(`1e${rowData.assetSold.decimals - rowData.assetBought.decimals}`);
+        const amountSold = new BigNumber(rowData.amountSold);
+        const amountBought = new BigNumber(rowData.amountBought);
+
+        const price =
+          !amountSold.isZero() && !amountBought.isZero()
+            ? amountSold
+                .dividedBy(amountBought)
+                .dividedBy(`1e${rowData.assetSold.decimals - rowData.assetBought.decimals}`)
+            : '';
         return <TooltipNumber number={price} decimals={0} />;
       },
       customSort: (a, b) => sortBigNumber(a, b, 'amountSold'),
