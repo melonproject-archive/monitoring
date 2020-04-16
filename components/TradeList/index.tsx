@@ -106,7 +106,7 @@ const TradeList: React.FunctionComponent<TradeListProps> = (props) => {
           !amountSold.isZero() && !amountBought.isZero()
             ? amountSold
                 .dividedBy(amountBought)
-                .dividedBy(`1e${rowData.assetSold.decimals - rowData.assetBought.decimals}`)
+                .dividedBy(`1e${rowData.assetSold?.decimals - rowData.assetBought?.decimals}`)
             : '';
         return <TooltipNumber number={price} decimals={0} />;
       },
