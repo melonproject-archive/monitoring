@@ -2,7 +2,7 @@ import React from 'react';
 
 import * as R from 'ramda';
 import { Grid, withStyles, WithStyles, Typography, Paper, NoSsr, CircularProgress } from '@material-ui/core';
-import { AmguPaymentsQuery, EngineQuery, EngineEtherEventsQuery } from '~/queries/EngineDetailsQuery';
+import { AmguPaymentsQuery, EngineQuery, EngineEtherEventsQuery, TotalSupplyQuery } from '~/queries/EngineDetailsQuery';
 
 import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import Layout from '~/components/Layout';
@@ -33,7 +33,16 @@ const Engine: React.FunctionComponent<EngineProps> = (props) => {
     ssr: false,
   });
 
+  const totalSupplyResult = useScrapingQuery([TotalSupplyQuery, TotalSupplyQuery], proceedPaths(['engineHistories']), {
+    ssr: false,
+  });
+
   const amguPayments = R.pathOr([], ['data', 'amguPayments'], amguResult) || [];
+
+  const totalSupply = (R.pathOr([], ['data', 'engineHistories'], totalSupplyResult) || []).map((entry) => ({
+    ...entry,
+    mlnTotalSupply: new BigNumber(entry.mlnTotalSupply).dividedBy('1e18').integerValue().toNumber(),
+  }));
 
   const amguCumulative: any[] = [];
   amguPayments.reduce((carry, item) => {
@@ -63,10 +72,10 @@ const Engine: React.FunctionComponent<EngineProps> = (props) => {
               {engineQuantities && formatBigNumber(engineQuantities.amguPrice, 18, 7)} MLN
             </LineItem>
             <LineItem name="MLN burned">
-              {totalMlnBurnt && <TooltipNumber number={totalMlnBurnt} digits={0} />} MLN
+              {totalMlnBurnt && formatThousands(formatBigNumber(totalMlnBurnt, 18, 0))} MLN
             </LineItem>
             <LineItem name="Total MLN supply">
-              {engineQuantities && formatThousands(formatBigNumber(engineQuantities.mlnTotalSupply, 18, 0))}
+              {engineQuantities && formatThousands(formatBigNumber(engineQuantities.mlnTotalSupply, 18, 0))} MLN
             </LineItem>
             <LineItem name="Engine premium" linebreak={true}>
               {engineQuantities?.premiumPercent}%
@@ -89,6 +98,16 @@ const Engine: React.FunctionComponent<EngineProps> = (props) => {
           {(amguResult.loading && <CircularProgress />) || (
             <>
               <TSAreaChart data={amguCumulative} dataKeys={['cumulativeAmount']} />
+            </>
+          )}
+        </Paper>
+      </Grid>
+      <Grid item={true} xs={12} sm={12} md={6}>
+        <Paper className={props.classes.paper}>
+          <Typography variant="h5">MLN supply</Typography>
+          {(totalSupplyResult.loading && <CircularProgress />) || (
+            <>
+              <TSAreaChart data={totalSupply} dataKeys={['mlnTotalSupply']} />
             </>
           )}
         </Paper>

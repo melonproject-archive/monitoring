@@ -66,3 +66,13 @@ export const AmguPaymentsQuery = gql`
     }
   }
 `;
+
+export const TotalSupplyQuery = gql`
+  query TotalSupplyQuery($limit: Int!, $skip: Int!) {
+    engineHistories(orderBy: timestamp, first: $limit, skip: $skip) {
+      id
+      mlnTotalSupply
+      timestamp
+    }
+  }
+`;
