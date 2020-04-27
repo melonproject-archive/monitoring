@@ -18,7 +18,7 @@ export default gql`
       #     id
       #   }
       # }
-      trades(orderBy: timestamp, orderDirection: "desc") {
+      trades(orderBy: timestamp, orderDirection: "desc", first: 1000) {
         id
         timestamp
         exchange {

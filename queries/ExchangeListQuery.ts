@@ -9,10 +9,10 @@ export const ExchangeListQuery = gql`
         id
         createdAt
       }
-      calls(orderBy: timestamp, orderDirection: "desc") {
+      calls(orderBy: timestamp, orderDirection: "desc", first: 1000) {
         id
       }
-      tradings {
+      tradings(first: 1000) {
         id
         fund {
           id
