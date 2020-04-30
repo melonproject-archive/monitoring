@@ -31,6 +31,14 @@ const columns = [
     },
   },
   {
+    title: 'Block',
+    field: 'block',
+    type: 'numeric',
+    cellStyle: {
+      whiteSpace: 'nowrap',
+    },
+  },
+  {
     title: 'Address',
     render: (rowData) => {
       return <EtherscanLink address={rowData.contract.id} short={true} />;
