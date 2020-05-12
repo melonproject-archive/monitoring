@@ -4,11 +4,12 @@ const path = require('path');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const { PHASE_PRODUCTION_SERVER } = require('next/constants');
 
-module.exports = phase => {
+module.exports = (phase) => {
   const common = {
     target: 'serverless',
     env: {
       MELON_SUBGRAPH: process.env.MELON_SUBGRAPH,
+      MELON_RATES_API: process.env.MELON_RATES_API,
     },
   };
 
@@ -28,7 +29,7 @@ module.exports = phase => {
         '~': path.join(options.dir),
       });
 
-      config.plugins = config.plugins.filter(plugin => !(plugin instanceof ForkTsCheckerWebpackPlugin));
+      config.plugins = config.plugins.filter((plugin) => !(plugin instanceof ForkTsCheckerWebpackPlugin));
 
       return config;
     },

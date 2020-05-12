@@ -11,6 +11,7 @@ import { HttpLink } from 'apollo-link-http';
 import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { theme } from '~/theme';
+import { RatesProvider } from '~/contexts/Rates/Rates';
 
 export type RedirectFn = (target: string, code?: number) => void;
 
@@ -26,8 +27,10 @@ class App extends BaseApp<AppProps> {
       <NoSsr>
         <ThemeProvider theme={theme}>
           <ApolloProvider client={this.props.apollo}>
-            <CssBaseline />
-            <Component {...this.props.pageProps} />
+            <RatesProvider>
+              <CssBaseline />
+              <Component {...this.props.pageProps} />
+            </RatesProvider>
           </ApolloProvider>
         </ThemeProvider>
       </NoSsr>

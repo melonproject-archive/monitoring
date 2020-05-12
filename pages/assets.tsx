@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import * as Rx from 'rxjs';
-import { Grid, withStyles, WithStyles, NoSsr } from '@material-ui/core';
-import Layout from '~/components/Layout';
+import { Grid, NoSsr, withStyles, WithStyles } from '@material-ui/core';
+import React from 'react';
 import AssetList from '~/components/AssetList';
-import { fetchCoinApiRates } from '~/utils/coinApi';
-import { retryWhen, delay } from 'rxjs/operators';
+import Layout from '~/components/Layout';
+import { useRates } from '~/contexts/Rates/Rates';
 
 const styles = (theme) => ({
   paper: {
@@ -18,25 +16,8 @@ const styles = (theme) => ({
 
 type AssetsProps = WithStyles<typeof styles>;
 
-const getRates = () => {
-  const [rates, setRates] = useState({});
-
-  useEffect(() => {
-    const rates$ = Rx.defer(() => fetchCoinApiRates()).pipe(retryWhen((error) => error.pipe(delay(10000))));
-    const subscription = rates$.subscribe({
-      next: (result) => setRates(result),
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
-
-  return rates;
-};
-
 const Assets: React.FunctionComponent<AssetsProps> = () => {
-  const rates = getRates();
+  const rates = useRates();
   return (
     <Layout title="Asset Universe" page="assets">
       <Grid item={true} xs={12} sm={12} md={12}>
