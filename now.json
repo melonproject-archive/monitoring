@@ -2,7 +2,8 @@
   "alias": ["monitoring.melon.network"],
   "build": {
     "env": {
-      "MELON_SUBGRAPH": "https://api.thegraph.com/subgraphs/name/melonproject/melon"
+      "MELON_SUBGRAPH": "https://api.thegraph.com/subgraphs/name/melonproject/melon",
+      "MELON_RATES_API": "https://rates.avantgarde.finance"
     }
   }
 }
