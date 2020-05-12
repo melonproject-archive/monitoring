@@ -57,11 +57,6 @@ const Network: React.FunctionComponent<NetworkProps> = (props) => {
   const ens = getEnsAddresses();
 
   const rates = useRates();
-  const fxRates = {
-    MLNETH: rates?.MLN.ETH.toFixed(4),
-    MLNUSD: rates?.MLN.USD.toFixed(4),
-    ETHUSD: rates?.ETH.USD.toFixed(4),
-  };
 
   const result = useScrapingQuery([FundCountQuery, FundCountQuery], proceedPaths(['fundCounts']), {
     ssr: false,
@@ -146,11 +141,11 @@ const Network: React.FunctionComponent<NetworkProps> = (props) => {
             Exchange rates
           </Typography>
           <Typography variant="body1" align="right">
-            {fxRates.MLNETH} MLN/ETH
+            {rates?.MLN.ETH.toFixed(4)} MLN/ETH
             <br />
-            {fxRates.MLNUSD} MLN/USD
+            {rates?.MLN.USD.toFixed(4)} MLN/USD
             <br />
-            {fxRates.ETHUSD} ETH/USD
+            {rates?.ETH.USD.toFixed(4)} ETH/USD
           </Typography>
         </Paper>
       </Grid>
