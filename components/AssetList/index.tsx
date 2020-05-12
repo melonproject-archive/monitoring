@@ -83,9 +83,9 @@ const AssetList: React.FunctionComponent<AssetListProps> = (props) => {
       // },
     },
     {
-      title: 'Last price (CoinAPI)',
+      title: 'Last price',
       render: (rowData) => {
-        return props.rates.hasOwnProperty(rowData.symbol) ? (1 / props.rates[rowData.symbol].rate).toFixed(4) : '';
+        return props.rates?.hasOwnProperty(rowData.symbol) ? props.rates[rowData.symbol].ETH.toFixed(4) : '';
       },
       type: 'numeric',
       // headerStyle: {

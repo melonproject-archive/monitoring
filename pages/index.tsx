@@ -11,11 +11,11 @@ import { InvestorCountQuery, InvestmentCountQuery } from '~/queries/InvestorList
 import { AmguPaymentsQuery, AmguConsumedQuery } from '~/queries/EngineDetailsQuery';
 import { useQuery } from '@apollo/react-hooks';
 import { formatThousands } from '~/utils/formatThousands';
-import { fetchSingleCoinApiRate, fetchCoinApiRates, CoinApiRates, SingleCoinApiRate } from '~/utils/coinApi';
 import EtherscanLink from '~/components/EtherscanLink';
 import { fetchEnsAddresses, EnsData } from '~/utils/ens';
 import LineItem from '~/components/LineItem';
 import { retryWhen, delay } from 'rxjs/operators';
+import { useRates } from '~/contexts/Rates/Rates';
 
 const styles = (theme) => ({
   paper: {
@@ -32,56 +32,16 @@ const styles = (theme) => ({
   logoDiv: {
     marginLeft: 'auto',
   },
-  // truncate: {
-  //   width: '250px',
-  //   whiteSpace: 'nowrap',
-  //   overflow: 'hidden',
-  //   textOverflow: 'ellipsis',
-  // },
 });
 
 type NetworkProps = WithStyles<typeof styles>;
-
-const getEthUsdRate = () => {
-  const [rate, setRate] = useState<SingleCoinApiRate>();
-
-  useEffect(() => {
-    const rates$ = Rx.defer(() => fetchSingleCoinApiRate()).pipe(retryWhen((error) => error.pipe(delay(10000))));
-    const subscription = rates$.subscribe({
-      next: (result) => setRate(result),
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
-
-  return rate;
-};
-
-const getMlnRates = () => {
-  const [rates, setRate] = useState<CoinApiRates>();
-
-  useEffect(() => {
-    const rates$ = Rx.defer(() => fetchCoinApiRates('MLN')).pipe(retryWhen((error) => error.pipe(delay(10000))));
-    const subscription = rates$.subscribe({
-      next: (result) => setRate(result),
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
-
-  return rates;
-};
 
 const getEnsAddresses = () => {
   const [addresses, setAddresses] = useState<EnsData[]>();
 
   useEffect(() => {
-    const rates$ = Rx.defer(() => fetchEnsAddresses()).pipe(retryWhen((error) => error.pipe(delay(10000))));
-    const subscription = rates$.subscribe({
+    const addresses$ = Rx.defer(() => fetchEnsAddresses()).pipe(retryWhen((error) => error.pipe(delay(10000))));
+    const subscription = addresses$.subscribe({
       next: (result) => setAddresses(result),
     });
 
@@ -94,15 +54,13 @@ const getEnsAddresses = () => {
 };
 
 const Network: React.FunctionComponent<NetworkProps> = (props) => {
-  const ethUsdRate = getEthUsdRate();
-  const mlnRates = getMlnRates();
-
   const ens = getEnsAddresses();
 
+  const rates = useRates();
   const fxRates = {
-    MLNETH: mlnRates?.ETH?.rate.toFixed(4),
-    MLNUSD: mlnRates?.USD?.rate.toFixed(4),
-    ETHUSD: ethUsdRate?.rate.toFixed(4),
+    MLNETH: rates?.MLN.ETH.toFixed(4),
+    MLNUSD: rates?.MLN.USD.toFixed(4),
+    ETHUSD: rates?.ETH.USD.toFixed(4),
   };
 
   const result = useScrapingQuery([FundCountQuery, FundCountQuery], proceedPaths(['fundCounts']), {
@@ -161,12 +119,12 @@ const Network: React.FunctionComponent<NetworkProps> = (props) => {
   const mlnSetupCosts = 17500000 * parseFloat(formatBigNumber(amguPrice, 18, 7));
   const setupCosts = {
     MLN: mlnSetupCosts.toFixed(4),
-    ETH: (mlnSetupCosts * mlnRates?.ETH?.rate).toFixed(4),
-    USD: (mlnSetupCosts * mlnRates?.USD?.rate).toFixed(4),
+    ETH: (mlnSetupCosts * rates?.MLN.ETH).toFixed(4),
+    USD: (mlnSetupCosts * rates?.MLN.USD).toFixed(4),
   };
 
   const ethAum = melonNetworkHistories.length && melonNetworkHistories[melonNetworkHistories.length - 1].gav;
-  const usdAum = formatThousands((ethAum * ethUsdRate?.rate).toFixed(0));
+  const usdAum = formatThousands((ethAum * rates?.ETH.USD).toFixed(0));
 
   return (
     <Layout title="Network overview" page="/">

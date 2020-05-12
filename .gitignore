@@ -21,3 +21,5 @@ build/
 !.env.defaults
 !.env.schema
 !.env.example
+
+.now

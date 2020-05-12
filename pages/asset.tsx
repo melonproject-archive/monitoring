@@ -1,26 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import * as R from 'ramda';
-import * as Rx from 'rxjs';
-import { retryWhen, delay } from 'rxjs/operators';
-import { Grid, withStyles, WithStyles, Typography, Paper, NoSsr } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
+import { Grid, NoSsr, Paper, Typography, withStyles, WithStyles } from '@material-ui/core';
+import MaterialTable from 'material-table';
 import { useRouter } from 'next/router';
+import * as R from 'ramda';
+import React from 'react';
+import EtherscanLink from '~/components/EtherscanLink';
+import Layout from '~/components/Layout';
+import LineItem from '~/components/LineItem';
+import TooltipNumber from '~/components/TooltipNumber';
+import TSLineChart from '~/components/TSLineChart';
 import {
   AssetDetailsQuery,
-  SingleAssetPriceHistoryQuery,
-  MelonNetworkAssetHistoryQuery,
   AssetFundsQuery,
+  MelonNetworkAssetHistoryQuery,
+  SingleAssetPriceHistoryQuery,
 } from '~/queries/AssetDetailsQuery';
-import Layout from '~/components/Layout';
-import MaterialTable from 'material-table';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { sortBigNumber } from '~/utils/sortBigNumber';
-import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
-import EtherscanLink from '~/components/EtherscanLink';
-import TooltipNumber from '~/components/TooltipNumber';
-import LineItem from '~/components/LineItem';
-import TSLineChart from '~/components/TSLineChart';
-import { fetchCoinApiRates } from '~/utils/coinApi';
+import { proceedPaths, useScrapingQuery } from '~/utils/useScrapingQuery';
+import { useRates } from '~/contexts/Rates/Rates';
 
 const styles = (theme) => ({
   paper: {
@@ -30,26 +28,9 @@ const styles = (theme) => ({
 
 type AssetProps = WithStyles<typeof styles>;
 
-const getRates = () => {
-  const [rates, setRates] = useState({});
-
-  useEffect(() => {
-    const rates$ = Rx.defer(() => fetchCoinApiRates()).pipe(retryWhen((error) => error.pipe(delay(10000))));
-    const subscription = rates$.subscribe({
-      next: (result) => setRates(result),
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
-
-  return rates;
-};
-
 const Asset: React.FunctionComponent<AssetProps> = (props) => {
   const router = useRouter();
-  const rates: any = getRates();
+  const rates = useRates();
 
   const result = useQuery(AssetDetailsQuery, {
     ssr: false,
@@ -145,7 +126,7 @@ const Asset: React.FunctionComponent<AssetProps> = (props) => {
             <LineItem name="Price (Pricefeed)">
               <TooltipNumber number={asset?.lastPrice} /> ETH
             </LineItem>
-            <LineItem name="Price (CoinAPI)">{(1 / rates?.[asset.symbol]?.rate).toFixed(4)} ETH</LineItem>
+            <LineItem name="Price (CoinAPI)">{rates?.[asset.symbol]?.ETH.toFixed(4)} ETH</LineItem>
           </Grid>
         </Paper>
       </Grid>

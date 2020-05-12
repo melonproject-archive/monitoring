@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CircularProgress, Grid, Typography, withStyles, WithStyles } from '@material-ui/core';
 import * as R from 'ramda';
-import * as Rx from 'rxjs';
-import { Grid, withStyles, WithStyles, Card, CardContent, Typography, CircularProgress } from '@material-ui/core';
-import { FundListQuery, FundCountQuery, MelonNetworkHistoryQuery } from '~/queries/FundListQuery';
+import React from 'react';
 import FundList from '~/components/FundList';
 import Layout from '~/components/Layout';
-import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
+import { useRates } from '~/contexts/Rates/Rates';
+import { FundCountQuery, FundListQuery, MelonNetworkHistoryQuery } from '~/queries/FundListQuery';
 import { formatBigNumber } from '~/utils/formatBigNumber';
-import { fetchSingleCoinApiRate } from '~/utils/coinApi';
 import { formatThousands } from '~/utils/formatThousands';
-import { delay, retryWhen } from 'rxjs/operators';
+import { proceedPaths, useScrapingQuery } from '~/utils/useScrapingQuery';
 
 const styles = (theme) => ({
   paper: {
@@ -21,27 +19,10 @@ const styles = (theme) => ({
   },
 });
 
-const getUSDRate = () => {
-  const [rate, setRate] = useState({ rate: 1 });
-
-  useEffect(() => {
-    const rates$ = Rx.defer(() => fetchSingleCoinApiRate()).pipe(retryWhen((error) => error.pipe(delay(10000))));
-    const subscription = rates$.subscribe({
-      next: (result) => setRate(result),
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
-
-  return rate;
-};
-
 type HomeProps = WithStyles<typeof styles>;
 
 const Home: React.FunctionComponent<HomeProps> = (props) => {
-  const rate = getUSDRate();
+  const rates = useRates();
 
   const fundListResult = useScrapingQuery([FundListQuery, FundListQuery], proceedPaths(['funds']), {
     ssr: false,
@@ -77,7 +58,7 @@ const Home: React.FunctionComponent<HomeProps> = (props) => {
     });
 
   const ethAum = melonNetworkHistories.length && melonNetworkHistories[melonNetworkHistories.length - 1].gav;
-  const usdAum = formatThousands((ethAum && ethAum * rate.rate).toFixed(0));
+  const usdAum = formatThousands((ethAum && ethAum * rates?.ETH.USD).toFixed(0));
 
   return (
     <Layout title="Melon Funds" page="funds">
@@ -133,7 +114,7 @@ const Home: React.FunctionComponent<HomeProps> = (props) => {
         </Card>
       </Grid>
       <Grid item={true} xs={12} sm={12} md={12}>
-        <FundList data={funds} loading={fundListResult.loading} ethusd={rate.rate} />
+        <FundList data={funds} loading={fundListResult.loading} ethusd={rates?.ETH.USD} />
       </Grid>
     </Layout>
   );
