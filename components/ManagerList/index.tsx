@@ -53,7 +53,9 @@ const ManagerList: React.FunctionComponent<ManagerListProps> = () => {
       data={managers}
       title="Fund Managers"
       options={{
-        paging: false,
+        paging: true,
+        pageSize: 20,
+        doubleHorizontalScroll: true,
       }}
       isLoading={result.loading}
       onRowClick={(_, rowData: any) => {
