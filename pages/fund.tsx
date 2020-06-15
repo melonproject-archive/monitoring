@@ -160,7 +160,9 @@ const Fund: React.FunctionComponent<FundProps> = (props) => {
 
   const investments = fund?.investments;
 
-  const feesPaidOut = R.pathOr([], ['feeManager', 'feeRewardHistory'], fund);
+  const feesPaidOut = R.pathOr([], ['feeManager', 'feeRewardHistory'], fund).filter(
+    (fee) => !new BigNumber(fee.shares).isZero(),
+  );
 
   const policies =
     fund &&
