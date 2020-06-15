@@ -116,7 +116,9 @@ const Investor: React.FunctionComponent<InvestorProps> = (props) => {
 
   const maxValuation = valuationHistory && Math.max(...valuationHistory.map((item) => item.nav), 0);
 
-  const investmentHistory = (investor && investor.investmentHistory) || [];
+  const investmentHistory = ((investor && investor.investmentHistory) || []).filter(
+    (item) => item.action !== 'Fee allocation',
+  );
   const investmentRequests = ((investor && investor.investmentRequests) || [])
     .filter((item) => item.status === 'PENDING')
     .map((item) => {
