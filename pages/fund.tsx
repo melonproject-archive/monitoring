@@ -150,7 +150,7 @@ const Fund: React.FunctionComponent<FundProps> = (props) => {
   const volatility =
     normalizedNumbers && standardDeviation(normalizedNumbers.map((item) => item.logReturn)) * 100 * Math.sqrt(365.25);
 
-  const investmentHistory = fund?.investmentHistory;
+  const investmentHistory = (fund?.investmentHistory || []).filter((item) => item.action !== 'Fee allocation');
 
   const currentHoldings =
     fund &&
