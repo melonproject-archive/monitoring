@@ -50,11 +50,12 @@ export const InvestorListQuery = gql`
 `;
 
 export const InvestmentHistoryQuery = gql`
-  query InvestmentHistoryQuery($limit: Int!) {
+  query InvestmentHistoryQuery($limit: Int!, $skip: Int!) {
     investmentHistories(
       orderBy: timestamp
       orderDirection: desc
       first: $limit
+      skip: $skip
       where: { action_not: "Fee allocation" }
     ) {
       id

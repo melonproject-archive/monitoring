@@ -8,7 +8,6 @@ import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
 import MaterialTable from 'material-table';
 import { formatDate } from '~/utils/formatDate';
 import { formatBigNumber } from '~/utils/formatBigNumber';
-import { useQuery } from '@apollo/react-hooks';
 import TooltipNumber from '~/components/TooltipNumber';
 import ShortAddress from '~/components/ShortAddress';
 
@@ -21,13 +20,13 @@ const styles = (theme) => ({
 type InvestorsProps = WithStyles<typeof styles>;
 
 const Investors: React.FunctionComponent<InvestorsProps> = () => {
-  const investmentHistoryResult = useQuery(InvestmentHistoryQuery, { ssr: false, variables: { limit: 10 } });
+  const investmentHistoryResult = useScrapingQuery(
+    [InvestmentHistoryQuery, InvestmentHistoryQuery],
+    proceedPaths(['investmentHistories']),
+    { ssr: false },
+  );
 
-  const investmentHistory =
-    (investmentHistoryResult.data &&
-      investmentHistoryResult.data.investmentHistories &&
-      investmentHistoryResult.data.investmentHistories) ||
-    [];
+  const investmentHistory = investmentHistoryResult.data?.investmentHistories || [];
 
   const investmentRequestsResult = useScrapingQuery(
     [InvestmentRequestsQuery, InvestmentRequestsQuery],
@@ -133,9 +132,8 @@ const Investors: React.FunctionComponent<InvestorsProps> = () => {
             data={investmentHistory}
             title="Latest investments and redemptions"
             options={{
-              paging: false,
-              search: false,
-              doubleHorizontalScroll: true,
+              paging: true,
+              pageSize: 10,
             }}
             isLoading={investmentHistoryResult.loading}
             onRowClick={(_, rowData: any) => {
