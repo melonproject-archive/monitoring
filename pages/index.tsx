@@ -16,6 +16,7 @@ import { fetchEnsAddresses, EnsData } from '~/utils/ens';
 import LineItem from '~/components/LineItem';
 import { retryWhen, delay } from 'rxjs/operators';
 import { useRates } from '~/contexts/Rates/Rates';
+import { fetchEthGasStation, GasPrices } from '~/utils/fetchGasPrices';
 
 const styles = (theme) => ({
   paper: {
@@ -53,10 +54,28 @@ const getEnsAddresses = () => {
   return addresses;
 };
 
+const getGasPrices = () => {
+  const [gasPrices, setGasPrices] = useState<GasPrices>();
+
+  useEffect(() => {
+    const gasPrices$ = Rx.defer(() => fetchEthGasStation()).pipe(retryWhen((error) => error.pipe(delay(10000))));
+    const subscription = gasPrices$.subscribe({
+      next: (result) => setGasPrices(result),
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  return gasPrices;
+};
+
 const Network: React.FunctionComponent<NetworkProps> = (props) => {
   const ens = getEnsAddresses();
 
   const rates = useRates();
+  const gasPrices = getGasPrices();
 
   const result = useScrapingQuery([FundCountQuery, FundCountQuery], proceedPaths(['fundCounts']), {
     ssr: false,
@@ -111,11 +130,21 @@ const Network: React.FunctionComponent<NetworkProps> = (props) => {
   const amguSum = R.pathOr('', ['data', 'state', 'currentEngine', 'totalAmguConsumed'], amguSumResult);
 
   const amguPrice = R.pathOr(1, ['data', 'state', 'currentEngine', 'amguPrice'], amguSumResult) as number;
-  const mlnSetupCosts = 17500000 * parseFloat(formatBigNumber(amguPrice, 18, 7));
+
+  const gasUnits = 17500000;
+
+  const mlnSetupCosts = gasUnits * parseFloat(formatBigNumber(amguPrice, 18, 7));
   const setupCosts = {
     MLN: mlnSetupCosts.toFixed(4),
     ETH: (mlnSetupCosts * rates?.MLN.ETH).toFixed(4),
-    USD: (mlnSetupCosts * rates?.MLN.USD).toFixed(4),
+    USD: (mlnSetupCosts * rates?.MLN.USD).toFixed(0),
+  };
+
+  const gasCostsInEth = gasUnits * gasPrices?.average * 0.000000001;
+
+  const gasCosts = {
+    ETH: gasCostsInEth.toFixed(4),
+    USD: (gasCostsInEth * rates?.ETH.USD).toFixed(0),
   };
 
   const ethAum = melonNetworkHistories.length && melonNetworkHistories[melonNetworkHistories.length - 1].gav;
@@ -155,11 +184,14 @@ const Network: React.FunctionComponent<NetworkProps> = (props) => {
             Estimated setup costs
           </Typography>
           <Typography variant="body1" align="right">
-            {setupCosts.MLN} MLN
+            amgu costs: {setupCosts.ETH} ETH
             <br />
-            {setupCosts.ETH} ETH
+            gas costs: {gasCosts.ETH} ETH
             <br />
-            {setupCosts.USD} USD
+          </Typography>
+          <Typography variant="caption">
+            Gas costs vary substantially over time. Calculation based on current standard gas price:{' '}
+            {gasPrices?.average} gwei.
           </Typography>
         </Paper>
       </Grid>
