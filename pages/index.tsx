@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import * as R from 'ramda';
-import * as Rx from 'rxjs';
-import { Grid, withStyles, WithStyles, Typography, CircularProgress, Paper } from '@material-ui/core';
-import { FundCountQuery, MelonNetworkHistoryQuery } from '~/queries/FundListQuery';
-import Layout from '~/components/Layout';
-import { formatBigNumber } from '~/utils/formatBigNumber';
-import { useScrapingQuery, proceedPaths } from '~/utils/useScrapingQuery';
-import TSAreaChart from '~/components/TSAreaChart';
-import { InvestorCountQuery, InvestmentCountQuery } from '~/queries/InvestorListQuery';
-import { AmguPaymentsQuery, AmguConsumedQuery } from '~/queries/EngineDetailsQuery';
 import { useQuery } from '@apollo/react-hooks';
-import { formatThousands } from '~/utils/formatThousands';
+import { CircularProgress, Grid, Paper, Typography, withStyles, WithStyles } from '@material-ui/core';
+import * as R from 'ramda';
+import React, { useEffect, useState } from 'react';
+import * as Rx from 'rxjs';
+import { delay, retryWhen } from 'rxjs/operators';
 import EtherscanLink from '~/components/EtherscanLink';
-import { fetchEnsAddresses, EnsData } from '~/utils/ens';
+import Layout from '~/components/Layout';
 import LineItem from '~/components/LineItem';
-import { retryWhen, delay } from 'rxjs/operators';
+import TSAreaChart from '~/components/TSAreaChart';
 import { useRates } from '~/contexts/Rates/Rates';
+import { AmguConsumedQuery, AmguPaymentsQuery } from '~/queries/EngineDetailsQuery';
+import { FundCountQuery, MelonNetworkHistoryQuery } from '~/queries/FundListQuery';
+import { InvestmentCountQuery, InvestorCountQuery } from '~/queries/InvestorListQuery';
+import { EnsData, fetchEnsAddresses } from '~/utils/ens';
 import { fetchEthGasStation, GasPrices } from '~/utils/fetchGasPrices';
+import { formatBigNumber } from '~/utils/formatBigNumber';
+import { formatThousands } from '~/utils/formatThousands';
+import { proceedPaths, useScrapingQuery } from '~/utils/useScrapingQuery';
 
 const styles = (theme) => ({
   paper: {
@@ -102,7 +102,7 @@ const Network: React.FunctionComponent<NetworkProps> = (props) => {
 
   const investmentResult = useScrapingQuery(
     [InvestmentCountQuery, InvestmentCountQuery],
-    proceedPaths(['investorCounts']),
+    proceedPaths(['investmentCounts']),
     {
       ssr: false,
     },
