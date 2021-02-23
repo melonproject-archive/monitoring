@@ -13,7 +13,6 @@ import { AmguConsumedQuery, AmguPaymentsQuery } from '~/queries/EngineDetailsQue
 import { FundCountQuery, MelonNetworkHistoryQuery } from '~/queries/FundListQuery';
 import { InvestmentCountQuery, InvestorCountQuery } from '~/queries/InvestorListQuery';
 import { EnsData, fetchEnsAddresses } from '~/utils/ens';
-import { fetchEthGasStation, GasPrices } from '~/utils/fetchGasPrices';
 import { formatBigNumber } from '~/utils/formatBigNumber';
 import { formatThousands } from '~/utils/formatThousands';
 import { proceedPaths, useScrapingQuery } from '~/utils/useScrapingQuery';
@@ -54,28 +53,28 @@ const getEnsAddresses = () => {
   return addresses;
 };
 
-const getGasPrices = () => {
-  const [gasPrices, setGasPrices] = useState<GasPrices>();
+// const getGasPrices = () => {
+//   const [gasPrices, setGasPrices] = useState<GasPrices>();
 
-  useEffect(() => {
-    const gasPrices$ = Rx.defer(() => fetchEthGasStation()).pipe(retryWhen((error) => error.pipe(delay(10000))));
-    const subscription = gasPrices$.subscribe({
-      next: (result) => setGasPrices(result),
-    });
+//   useEffect(() => {
+//     const gasPrices$ = Rx.defer(() => fetchEthGasStation()).pipe(retryWhen((error) => error.pipe(delay(10000))));
+//     const subscription = gasPrices$.subscribe({
+//       next: (result) => setGasPrices(result),
+//     });
 
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+//     return () => {
+//       subscription.unsubscribe();
+//     };
+//   }, []);
 
-  return gasPrices;
-};
+//   return gasPrices;
+// };
 
 const Network: React.FunctionComponent<NetworkProps> = (props) => {
   const ens = getEnsAddresses();
 
   const rates = useRates();
-  const gasPrices = getGasPrices();
+  // const gasPrices = getGasPrices();
 
   const result = useScrapingQuery([FundCountQuery, FundCountQuery], proceedPaths(['fundCounts']), {
     ssr: false,
@@ -129,23 +128,23 @@ const Network: React.FunctionComponent<NetworkProps> = (props) => {
   const amguSumResult = useQuery(AmguConsumedQuery, { ssr: false });
   const amguSum = R.pathOr('', ['data', 'state', 'currentEngine', 'totalAmguConsumed'], amguSumResult);
 
-  const amguPrice = R.pathOr(1, ['data', 'state', 'currentEngine', 'amguPrice'], amguSumResult) as number;
+  // const amguPrice = R.pathOr(1, ['data', 'state', 'currentEngine', 'amguPrice'], amguSumResult) as number;
 
-  const gasUnits = 17500000;
+  // const gasUnits = 17500000;
 
-  const mlnSetupCosts = gasUnits * parseFloat(formatBigNumber(amguPrice, 18, 7));
-  const setupCosts = {
-    MLN: mlnSetupCosts.toFixed(4),
-    ETH: (mlnSetupCosts * rates?.MLN.ETH).toFixed(4),
-    USD: (mlnSetupCosts * rates?.MLN.USD).toFixed(0),
-  };
+  // const mlnSetupCosts = gasUnits * parseFloat(formatBigNumber(amguPrice, 18, 7));
+  // const setupCosts = {
+  //   MLN: mlnSetupCosts.toFixed(4),
+  //   ETH: (mlnSetupCosts * rates?.MLN.ETH).toFixed(4),
+  //   USD: (mlnSetupCosts * rates?.MLN.USD).toFixed(0),
+  // };
 
-  const gasCostsInEth = gasUnits * gasPrices?.average * 0.000000001;
+  // const gasCostsInEth = gasUnits * gasPrices?.average * 0.000000001;
 
-  const gasCosts = {
-    ETH: gasCostsInEth.toFixed(4),
-    USD: (gasCostsInEth * rates?.ETH.USD).toFixed(0),
-  };
+  // const gasCosts = {
+  //   ETH: gasCostsInEth.toFixed(4),
+  //   USD: (gasCostsInEth * rates?.ETH.USD).toFixed(0),
+  // };
 
   const ethAum = melonNetworkHistories.length && melonNetworkHistories[melonNetworkHistories.length - 1].gav;
   const usdAum = formatThousands((ethAum * rates?.ETH.USD).toFixed(0));
@@ -164,7 +163,7 @@ const Network: React.FunctionComponent<NetworkProps> = (props) => {
           </div>
         </Paper>
       </Grid>
-      <Grid item={true} xs={12} sm={12} md={6}>
+      {/* <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5" component="h2">
             Exchange rates
@@ -194,7 +193,7 @@ const Network: React.FunctionComponent<NetworkProps> = (props) => {
             {gasPrices?.average} gwei.
           </Typography>
         </Paper>
-      </Grid>
+      </Grid> */}
       <Grid item={true} xs={12} sm={12} md={6}>
         <Paper className={props.classes.paper}>
           <Typography variant="h5" component="h2">

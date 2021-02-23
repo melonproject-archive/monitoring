@@ -1,20 +1,20 @@
-import React, { ReactNode } from 'react';
 import {
-  Grid,
-  withStyles,
-  Typography,
+  AppBar,
   Divider,
+  Drawer,
+  Grid,
+  Hidden,
+  IconButton,
   List,
   ListItem,
   ListItemText,
-  AppBar,
   Toolbar,
-  IconButton,
-  Hidden,
-  Drawer,
+  Typography,
+  withStyles,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import Link from 'next/link';
+import React, { ReactNode } from 'react';
 import PriceFeedUpdate from '../PriceFeedUpdate';
 
 export interface LayoutProps {
@@ -192,6 +192,23 @@ class Layout extends React.Component<LayoutProps> {
                 spacing={2}
                 style={{ paddingLeft: '16px', paddingTop: '16px' }}
               >
+                <div
+                  style={{
+                    width: '100%',
+                    height: '60px',
+                    textAlign: 'center',
+                    background: '#6852ED',
+                    color: 'white',
+                    paddingTop: '20px',
+                    paddingBottom: '20px',
+                    paddingLeft: '10px',
+                    paddingRight: '20px',
+                    fontFamily: 'sans-serif',
+                  }}
+                >
+                  You are browsing the Network Monitor for Melon v1 (deprecated). Enzyme v2 has launched to mainnet and
+                  is available <a href="https://app.enzyme.finance">here</a>.
+                </div>
                 {this.props.children}
               </Grid>
             </Grid>

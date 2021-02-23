@@ -1,6 +1,6 @@
-import React from 'react';
-import BaseDocument, { Head, Main, NextScript, DocumentContext, DocumentInitialProps } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/styles';
+import BaseDocument, { DocumentContext, DocumentInitialProps, Head, Main, NextScript } from 'next/document';
+import React from 'react';
 import { theme } from '~/theme';
 
 export default class Document extends BaseDocument {
