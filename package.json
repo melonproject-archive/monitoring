@@ -36,7 +36,7 @@
     "highcharts-react-official": "^3.0.0",
     "hoist-non-react-statics": "^3.3.2",
     "material-table": "^1.57.2",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "next-with-apollo": "^5.0.0",
     "ramda": "^0.27.0",
     "react": "^16.13.1",
